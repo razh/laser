@@ -54,6 +54,8 @@ var Game = function() {
   this._running = true;
 
   this._objects = [];
+
+  this.EPSILON = 1e-5;
 };
 
 Game.prototype.tick = function() {

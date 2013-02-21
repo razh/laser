@@ -1,5 +1,9 @@
 var Geometry = (function() {
   return {
+    createRectangle: function() {
+
+    },
+
     createRing: function( options ) {
       var outerRadius   = options.outerRadius   || 1.0,
           innerRadius   = options.innerRadius   || 0.5,
