@@ -10,13 +10,12 @@ var Shape = function() {
 Shape.prototype = new Object2D();
 Shape.prototype.constructor = Shape;
 
-Shape.prototype.update = function( elapsedTime ) {};
-
 Shape.prototype.drawPath = function( ctx ) {
   ctx.beginPath();
 
   var x = this._vertices[ 2 * this._edges[0] ],
       y = this._vertices[ 2 * this._edges[0] + 1 ];
+
   ctx.moveTo( x, y );
 
   for ( var i = 1, n = this._edges.length; i < n; i++ ) {
@@ -117,7 +116,7 @@ Shape.prototype.setGeometry = function() {
     this.setEdges( arguments[0].edges );
   } else if ( arguments.length === 2 ) {
     this.setVertices( arguments[0] );
-    this.setVertices( arguments[1] );
+    this.setEdges( arguments[1] );
   }
 
   return this;

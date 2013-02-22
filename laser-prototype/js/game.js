@@ -20,6 +20,21 @@ var _game;
 function init() {
   _game = new Game();
 
+  var test = new Entity().setPosition( 200, 300 )
+                         .setWidth( 200 )
+                         .setHeight( 200 );
+
+  var shape = new Shape().setGeometry( Geometry.createRing({
+                            subdivisions: 64,
+                            startAngle: Math.PI / 180 * 20,
+                            endAngle: Math.PI / 180 * 160,
+                            anticlockwise: false
+                          }))
+                         .setColor( new Color( 255, 0, 0, 1.0 ) );
+
+  test.addShape( shape );
+  _game.addEntity( test );
+
   loop();
 }
 
@@ -72,7 +87,7 @@ Game.prototype.update = function() {
 
   var entities = this.getEntities();
   for ( var i = 0, n = entities.length; i < n; i++ ) {
-    entities.update( elapsedTime );
+    entities[i].update( elapsedTime );
   }
 };
 
@@ -83,7 +98,7 @@ Game.prototype.draw = function() {
 
   var entities = this.getEntities();
   for ( var i = 0, n = entities.length; i < n; i++ ) {
-    entities.draw( this._ctx );
+    entities[i].draw( this._ctx );
   }
 };
 

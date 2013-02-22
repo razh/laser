@@ -4,8 +4,8 @@ var Object2D = function() {
     y: 0.0
   };
 
-  this._width = 0.0;
-  this._height = 0.0;
+  this._width = 1.0;
+  this._height = 1.0;
   this._rotation = 0.0;
 };
 
