@@ -7,6 +7,9 @@ var Shape = function() {
   this._edges = [];
 };
 
+Shape.prototype = new Object2D();
+Shape.prototype.constructor = Shape;
+
 Shape.prototype.update = function( elapsedTime ) {};
 
 Shape.prototype.drawPath = function( ctx ) {
@@ -106,6 +109,18 @@ Shape.prototype.getGeometry = function() {
     vertices: this._vertices,
     edges: this._edges
   };
+};
+
+Shape.prototype.setGeometry = function() {
+  if ( arguments.length === 1 ) {
+    this.setVertices( arguments[0].vertices );
+    this.setEdges( arguments[0].edges );
+  } else if ( arguments.length === 2 ) {
+    this.setVertices( arguments[0] );
+    this.setVertices( arguments[1] );
+  }
+
+  return this;
 };
 
 // JSON.

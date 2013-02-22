@@ -49,11 +49,13 @@ var Game = function() {
 
   this._ctx = this._canvas.getContext( '2d' );
 
+  this._backgroundColor = new Color( 127, 127, 127, 1.0 );
+
   this._prevTime = Date.now();
   this._currTime = this._prevTime;
   this._running = true;
 
-  this._objects = [];
+  this._entities = [];
 
   this.EPSILON = 1e-5;
 };
@@ -68,19 +70,29 @@ Game.prototype.update = function() {
   var elapsedTime = this._currTime - this._prevTime;
   this._prevTime = this._currTime;
 
-  for ( var i = 0, n = this._entities.length; i < n; i++ ) {
-    this._objects.update( elapsedTime );
+  var entities = this.getEntities();
+  for ( var i = 0, n = entities.length; i < n; i++ ) {
+    entities.update( elapsedTime );
   }
 };
 
 Game.prototype.draw = function() {
-  this._canvas.style.backgroundColor = '#ddd';
+  this._canvas.style.backgroundColor = this.getBackgroundColor().toHexString();
 
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
-  for ( var i = 0, n = this._objects.length; i < n; i++ ) {
-    this._objects.draw( this._ctx );
+  var entities = this.getEntities();
+  for ( var i = 0, n = entities.length; i < n; i++ ) {
+    entities.draw( this._ctx );
   }
+};
+
+Game.prototype.getEntities = function() {
+  return this._entities;
+};
+
+Game.prototype.addEntity = function( entity ) {
+  this.getEntities().push( entity );
 };
 
 // Background color.

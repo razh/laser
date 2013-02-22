@@ -4,6 +4,9 @@ var Entity = function() {
   this._shapes = [];
 };
 
+Entity.prototype = new Object2D();
+Entity.prototype.constructor = Entity;
+
 Entity.prototype.update = function( elapsedTime ) {};
 
 Entity.prototype.draw = function( ctx ) {
@@ -31,7 +34,13 @@ Entity.prototype.addShape = function( shape ) {
 };
 
 Entity.prototype.removeShape = function( shape ) {
+  var shapes = this.getShapes();
+  var index = shapes.indexOf( shape );
+  if ( index !== -1 ) {
+    shapes.splice( index, 1 );
+  }
 
+  return this;
 };
 
 // JSON.
