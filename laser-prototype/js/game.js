@@ -25,14 +25,24 @@ function init() {
                          .setHeight( 200 );
 
   var shape = new Shape().setGeometry( Geometry.createRing({
-                            subdivisions: 64,
-                            startAngle: Math.PI / 180 * 20,
-                            endAngle: Math.PI / 180 * 160,
+                            subdivisions: 3,
+                            startAngle: Math.PI / 180 * 200,
+                            endAngle: Math.PI / 180 * 0,
                             anticlockwise: false
                           }))
-                         .setColor( new Color( 255, 0, 0, 1.0 ) );
+                         // .setGeometry( Geometry.createRectangle() )
+                         .setColor( new Color( 127, 0, 0, 1.0 ) );
 
+  var shape2 = new Shape().setGeometry( Geometry.createRing({
+                             subdivisions: 3,
+                             startAngle: Math.PI / 180 * 200,
+                             endAngle: Math.PI / 180 * 0,
+                             anticlockwise: true
+                          }))
+                          .setPosition( 2.0, 0.0 )
+                          .setColor( new Color( 0, 0, 127, 1.0 ) );
   test.addShape( shape );
+  test.addShape( shape2 );
   _game.addEntity( test );
 
   loop();
