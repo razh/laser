@@ -24,6 +24,21 @@ Entity.prototype.draw = function( ctx ) {
   ctx.restore();
 };
 
+Entity.prototype.contains = function( x, y ) {
+  var point = this.worldToLocalCoordinates( x, y );
+  x = point.x;
+  y = point.y;
+
+  var shapes = this.getShapes();
+  for ( var i = 0, n = shapes.length; i < n; i++ ) {
+    if ( shapes[i].contains( x, y ) ) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 Entity.prototype.getShapes = function() {
   return this._shapes;
 };

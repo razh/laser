@@ -47,6 +47,10 @@ function init() {
   test.addShape( shape2 );
   _game.addEntity( test );
 
+  _game._canvas.addEventListener( 'mousedown', onMouseDown, null );
+  _game._canvas.addEventListener( 'mousemove', onMouseMove, null );
+  _game._canvas.addEventListener( 'mouseup', onMouseUp, null );
+
   loop();
 }
 
@@ -82,6 +86,7 @@ var Game = function() {
   this._currTime = this._prevTime;
   this._running = true;
 
+  this._player = new Player();
   this._entities = [];
 
   this.EPSILON = 1e-5;
@@ -108,10 +113,28 @@ Game.prototype.draw = function() {
 
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
+  this._ctx.save();
+  // Origin is at bottom left corner in OpenGL.
+  this._ctx.translate( 0, this.HEIGHT );
+  this._ctx.scale( 1, -1 );
+
   var entities = this.getEntities();
   for ( var i = 0, n = entities.length; i < n; i++ ) {
     entities[i].draw( this._ctx );
   }
+
+  this._ctx.restore();
+};
+
+Game.prototype.hit = function( x, y ) {
+  var entities = this.getEntities();
+  for ( var i = 0, n = entities.length; i < n; i++ ) {
+    if ( entities[i].contains( x, y ) ) {
+      return entities[i];
+    }
+  }
+
+  return null;
 };
 
 Game.prototype.getEntities = function() {
@@ -120,6 +143,10 @@ Game.prototype.getEntities = function() {
 
 Game.prototype.addEntity = function( entity ) {
   this.getEntities().push( entity );
+};
+
+Game.prototype.getPlayer = function() {
+  return this._player;
 };
 
 // Background color.

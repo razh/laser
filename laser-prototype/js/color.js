@@ -1,7 +1,7 @@
 var Color = function() {
-  this._red   = 0;
+  this._red = 0;
   this._green = 0;
-  this._blue  = 0;
+  this._blue = 0;
   this._alpha = 0.0;
 
   if ( arguments.length !== 0 ) {
