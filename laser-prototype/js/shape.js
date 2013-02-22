@@ -5,6 +5,15 @@ var Shape = function() {
 
   this._vertices = [];
   this._edges = [];
+
+  this._aabb = {
+    x0: 0.0,
+    y0: 0.0,
+    x1: 0.0,
+    y1: 0.0
+  };
+
+  this._radius = 0.0;
 };
 
 Shape.prototype = new Object2D();
@@ -119,37 +128,108 @@ Shape.prototype.setGeometry = function() {
     this.setEdges( arguments[1] );
   }
 
+  this.calculateAABB();
+  this.calculateRadius();
+
   return this;
+};
+
+Shape.prototype.getAABB = function() {
+  return this._aabb;
+};
+
+Shape.prototype.calculateAABB = function() {
+  var vertices = this.getVertices();
+  var edges = this.getEdges();
+
+  var x, y;
+  // Handle degenerate case.
+  if ( vertices.length === 0 || edges.length === 0 ) {
+    x = this.getX();
+    y = this.getY();
+
+    this._aabb = {
+      x0: x,
+      y0: y,
+      x1: x,
+      y1: y
+    };
+
+    return;
+  }
+
+  var xmin = Number.MAX_VALUE,
+      ymin = Number.MAX_VALUE,
+      xmax = Number.MIN_VALUE,
+      ymax = Number.MIN_VALUE;
+
+  // Only check vertices on an edge.
+  for ( var i = edges.length - 1; i >= 0; i-- ) {
+    x = vertices[ 2 * edges[i] ];
+    y = vertices[ 2 * edges[i] + 1 ];
+
+    if ( x < xmin ) {
+      xmin = x;
+    }
+    if ( xmax < x ) {
+      xmax = x;
+    }
+    if ( y < ymin ) {
+      ymin = y;
+    }
+    if ( ymax < y ) {
+      ymax = y;
+    }
+  }
+
+  this._aabb = {
+    x0: xmin,
+    y0: ymin,
+    x1: xmax,
+    y1: ymax
+  };
+};
+
+Shape.prototype.getRadius = function() {
+  return this._radius;
+};
+
+Shape.prototype.calculateRadius = function() {
+  var distanceSquared = 0;
+
+  var vertices = this.getVertices();
+  var edges = this.getEdges();
+
+  var x, y;
+  for ( var i = edges.length - 1; i >= 0; i-- ) {
+    x = vertices[ 2 * edges[i] ];
+    y = vertices[ 2 * edges[i] + 1 ];
+
+    distanceSquared = Math.max( distanceSquared, x * x + y * y );
+  }
+
+  this._radius = Math.sqrt( distanceSquared );
 };
 
 // JSON.
 Shape.prototype.fromJSON = function( json ) {
+  Object2D.prototype.fromJSON.call( this, json );
+
   var jsonObject = JSON.parse( json );
 
-  var color = new Color().fromJSON( JSON.stringify( jsonObject.color ) );
-
-  return this.setX( jsonObject.x || 0 )
-             .setY( jsonObject.y || 0 )
-             .setWidth( jsonObject.width || 1 )
-             .setHeight( jsonObject.height || 1 )
-             .setRotationInDegrees( jsonObject.rotation || 0 )
-             .setVertices( jsonObject.vertices || [] )
-             .setEdges( jsonObject.edges || [] )
-             .setColor( color );
+  var color = new Color().fromJSON( JSON.stringify( jsonObject.color || {} ) );
+  return this.setColor( color )
+             .setGeometry( jsonObject.vertices || [],
+                           jsonObject.edges || [] );
 };
 
 Shape.prototype.toJSON = function() {
-  var object = {};
-
-  object.x = this.getX();
-  object.y = this.getY();
-  object.width = this.getWidth();
-  object.height = this.getHeight();
-
-  // Round rotation in increments of 0.01 degrees.
-  object.rotation = parseFloat( this.getRotationInDegrees().toFixed(2) );
+  var object = Object2D.prototype.toJSON.call( this );
 
   object.color = this.getColor().toJSON();
+
+  object.vertices = this.getVertices();
+  object.edges = this.getEdges();
 
   return object;
 };

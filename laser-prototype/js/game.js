@@ -25,7 +25,8 @@ function init() {
                          .setHeight( 200 );
 
   var shape = new Shape().setGeometry( Geometry.createRing({
-                            subdivisions: 3,
+                            innerRadius: 0.80,
+                            subdivisions: 64,
                             startAngle: Math.PI / 180 * 200,
                             endAngle: Math.PI / 180 * 0,
                             anticlockwise: false
@@ -34,7 +35,8 @@ function init() {
                          .setColor( new Color( 127, 0, 0, 1.0 ) );
 
   var shape2 = new Shape().setGeometry( Geometry.createRing({
-                             subdivisions: 3,
+                             innerRadius: 0.80,
+                             subdivisions: 64,
                              startAngle: Math.PI / 180 * 200,
                              endAngle: Math.PI / 180 * 0,
                              anticlockwise: true
