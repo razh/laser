@@ -7,10 +7,10 @@ var Shape = function() {
   this._edges = [];
 
   this._aabb = {
-    x0: 0.0,
-    y0: 0.0,
-    x1: 0.0,
-    y1: 0.0
+    xmin: 0.0,
+    ymin: 0.0,
+    xmax: 0.0,
+    ymax: 0.0
   };
 
   this._radius = 0.0;
@@ -149,10 +149,10 @@ Shape.prototype.calculateAABB = function() {
     y = this.getY();
 
     this._aabb = {
-      x0: x,
-      y0: y,
-      x1: x,
-      y1: y
+      xmin: x,
+      ymin: y,
+      xmax: x,
+      ymax: y
     };
 
     return;
@@ -183,10 +183,10 @@ Shape.prototype.calculateAABB = function() {
   }
 
   this._aabb = {
-    x0: xmin,
-    y0: ymin,
-    x1: xmax,
-    y1: ymax
+    xmin: xmin,
+    ymin: ymin,
+    xmax: xmax,
+    ymax: ymax
   };
 };
 

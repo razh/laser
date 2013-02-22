@@ -65,9 +65,6 @@ var Geometry = (function() {
         edges.push(i);
       }
 
-      // // Edge conncting inner and outer radius.
-      // edges.push( subdivisions );
-
       // Inner radius.
       for ( i = 0; i < subdivisions + 1; i++ ) {
         vertices.push( innerRadius * Math.sin( endAngle - i * subdivAngle ) );
