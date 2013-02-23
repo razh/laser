@@ -104,12 +104,15 @@ Game.prototype.tick = function() {
   if (testing) {
     var ctx = _game._ctx;
     var x, y;
-    // console.clear();
-    for ( var i = 0; i < 50; i++ ) {
-      for ( var j = 0; j < 50; j++ ) {
-        x = 20 + i * 5;
-        y = 20 + j * 5;
-        // console.log( y)
+    var xCount = 60;
+    var yCount = 60;
+    var dx = ( this.WIDTH - 40 ) / xCount;
+    var dy = ( this.HEIGHT - 40 ) / yCount;
+    for ( var i = 0; i < xCount; i++ ) {
+      for ( var j = 0; j < yCount; j++ ) {
+        x = 20 + i * dx;
+        y = 20 + j * dy;
+
         var coords = transformCoords( x, y );
         if ( _game.hit( coords.x, coords.y ) !== null ) {
           ctx.fillStyle = 'rgba( 0, 255, 0, 1.0 )';

@@ -69,5 +69,5 @@ function transformCoords( x, y ) {
 
 var testing = false;
 function test() {
-  testing = true;
+  testing = !testing;
 }

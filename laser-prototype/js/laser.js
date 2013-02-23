@@ -22,21 +22,18 @@ var Emitter = function() {
 Emitter.prototype = new Entity();
 Emitter.prototype.constructor = new Emitter();
 
-var it = 0;
 Emitter.prototype.update = function( elapsedTime ) {
   Entity.prototype.update.call( this, elapsedTime );
-  it++;
 
   var rotation = this.getRotation();
   var sin = Math.sin( rotation );
   var cos = Math.cos( rotation );
-  // console.log( rotation + ", " + cos + ", " + sin );
 
   var rayOrigin, rayDirection;
+  var shapeRayOrigin, shapeRayDirection;
 
   var entities = _game.getEntities();
   var entity, shapes, shape;
-  var shapeRotation, entityRotation;
   var i, j, il, jl;
   for ( i = 0, il = entities.length; i < il; i++ ) {
     entity = entities[i];
@@ -44,32 +41,33 @@ Emitter.prototype.update = function( elapsedTime ) {
       continue;
     }
 
-    entityScale = Math.max( entity.getWidth(), entity.getHeight() );
     shapes = entity.getShapes();
+
+    rayOrigin = entity.worldToLocalCoordinates( this.getX(), this.getY() );
+    rayDirection = entity.worldToLocalCoordinates( this.getX() + cos, this.getY() + sin );
+
+    // rayDirection.x -= rayOrigin.x;
+    // rayDirection.y -= rayOrigin.y;
+
     for ( j = 0, jl = shapes.length; j < jl; j++ ) {
       shape = shapes[j];
-      rayOrigin = entity.worldToLocalCoordinates( this.getX(), this.getY() );
-      // rayOrigin = shape.worldToLocalCoordinates( rayOrigin.x, rayOrigin.y );
-      rayDirection = entity.worldToLocalCoordinates( this.getX() + cos, this.getY() + sin );
-      // rayDirection = shape.worldToLocalCoordinates( rayDirection.x, rayDirection.y );
 
-      rayDirection.x -= rayOrigin.x;
-      rayDirection.y -= rayOrigin.y;
+      shapeRayOrigin = shape.worldToLocalCoordinates( rayOrigin.x, rayOrigin.y );
+      shapeRayDirection = shape.worldToLocalCoordinates( rayDirection.x, rayDirection.y );
 
-      if ( j === 1 && it % 60 === 0) {
-        // console.log( rayOrigin.x + ", " + rayOrigin.y + ", " + rayDirection.x + ", " + rayDirection.y);
-      }
+      shapeRayDirection.x -= shapeRayOrigin.x;
+      shapeRayDirection.y -= shapeRayOrigin.y;
 
       shape.ray = {
-        x: rayOrigin.x,
-        y: rayOrigin.y,
-        dx: rayDirection.x,
-        dy: rayDirection.y
+        x: shapeRayOrigin.x,
+        y: shapeRayOrigin.y,
+        dx: shapeRayDirection.x,
+        dy: shapeRayDirection.y
       };
 
-      if ( Intersection.rayCircle( rayOrigin.x, rayOrigin.y,
-                                   rayDirection.x, rayDirection.y,
-                                   shape.getX(), shape.getY(),
+      if ( Intersection.rayCircle( shapeRayOrigin.x, shapeRayOrigin.y,
+                                   shapeRayDirection.x, shapeRayDirection.y,
+                                   0, 0,
                                    shape.getRadius() ) !== null ) {
         shape.setColor( 0, 127, 0, 1.0 );
       } else {
@@ -92,7 +90,7 @@ Emitter.prototype.draw = function( ctx ) {
   ctx.strokeStyle = new Color( 255, 0, 0, 1.0 ).toString();
   ctx.lineWidth = 1;
 
-  // ctx.stroke();
+  ctx.stroke();
 
   ctx.restore();
 };
