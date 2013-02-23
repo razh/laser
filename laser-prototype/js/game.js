@@ -46,10 +46,13 @@ function init() {
   test.addShape( shape );
   test.addShape( shape2 );
   _game.addEntity( test );
+  _game.addEntity( new Emitter() );
 
   _game._canvas.addEventListener( 'mousedown', onMouseDown, null );
   _game._canvas.addEventListener( 'mousemove', onMouseMove, null );
   _game._canvas.addEventListener( 'mouseup', onMouseUp, null );
+
+  document.addEventListener( 'keydown', onKeyDown, null );
 
   loop();
 }

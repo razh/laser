@@ -49,6 +49,15 @@ Shape.prototype.draw = function( ctx ) {
   ctx.fillStyle = this.getColor().toString();
   ctx.fill();
 
+  // Draw debug circle.
+  ctx.beginPath()
+  ctx.moveTo( 0, 0 );
+  ctx.arc( 0, 0, this.getRadius(), 0, Math.PI * 2, true );
+  ctx.strokeStyle = this.getColor().toString();
+  ctx.lineWidth = 0.01;
+  ctx.closePath();
+  ctx.stroke();
+
   ctx.restore();
 };
 
