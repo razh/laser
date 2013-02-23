@@ -29,9 +29,11 @@ Emitter.prototype.update = function( elapsedTime ) {
   var sin = Math.sin( rotation );
   var cos = Math.cos( rotation );
 
+  var rayOrigin, rayDirection;
+
   var entities = _game.getEntities();
   var entity, shapes, shape;
-  var center, shapeCenter;
+  var shapeRotation, entityRotation;
   var i, j, il, jl;
   for ( i = 0, il = entities.length; i < il; i++ ) {
     entity = entities[i];
@@ -43,12 +45,33 @@ Emitter.prototype.update = function( elapsedTime ) {
     shapes = entity.getShapes();
     for ( j = 0, jl = shapes.length; j < jl; j++ ) {
       shape = shapes[j];
-      shapeCenter = shape.localToWorldCoordinates( shape.getX(), shape.getY() );
-      center = entity.localToWorldCoordinates( shapeCenter.x, shapeCenter.y );
-      if ( Intersection.rayCircle( this.getX(), this.getY(),
-                                   sin, cos,
-                                   center.x, center.y,
-                                   entityScale * shape.getRadius() ) !== null ) {
+      rayOrigin = entity.worldToLocalCoordinates( this.getX(), this.getY() );
+      rayOrigin = shape.worldToLocalCoordinates( rayOrigin.x, rayOrigin.y );
+      entityRotation = entity.getRotation();
+      var eCos = Math.cos( entityRotation ),
+          eSin = Math.sin( entityRotation );
+
+      var rcos = eCos * cos - eSin * sin;
+      var rsin = eSin * cos + eCos * sin;
+
+      cos = rcos;
+      sin = rsin;
+
+      shapeRotation = shape.getRotation();
+      var sCos = Math.cos( shapeRotation );
+      var sSin = Math.sin( shapeRotation );
+
+      rcos = sCos * cos - sSin * sin;
+      rsin = sSin * cos + sCos * sin;
+
+      cos = rcos;
+      sin = rsin;
+
+      shapeRotation = shape.getRotation();
+      if ( Intersection.rayCircle( rayOrigin.x, rayOrigin.y,
+                                   cos, sin,
+                                   shape.getX(), shape.getY(),
+                                   shape.getRadius() ) !== null ) {
         shape.setColor( 0, 127, 0, 1.0 );
       } else {
         shape.setColor( 127, 0, 0, 1.0 );
@@ -66,7 +89,7 @@ Emitter.prototype.draw = function( ctx ) {
   ctx.rotate( this.getRotation() );
 
   ctx.moveTo( 0, 0 );
-  ctx.lineTo( 0, 1000 );
+  ctx.lineTo( 1000, 0 );
   ctx.strokeStyle = new Color( 255, 0, 0, 1.0 ).toString();
   ctx.lineWidth = 5;
 
