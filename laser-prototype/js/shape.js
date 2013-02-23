@@ -14,6 +14,13 @@ var Shape = function() {
   };
 
   this._radius = 0.0;
+
+  this.ray = {
+    x: 0,
+    y: 0,
+    dx: 0,
+    dy: 0
+  };
 };
 
 Shape.prototype = new Object2D();
@@ -53,6 +60,7 @@ Shape.prototype.draw = function( ctx ) {
   ctx.beginPath();
   ctx.moveTo( 0, 0 );
   ctx.arc( 0, 0, this.getRadius(), 0, Math.PI * 2, true );
+  // Draw debug AABB.
   var aabb = this.getAABB();
   ctx.moveTo( aabb.xmin, aabb.ymin );
   ctx.lineTo( aabb.xmax, aabb.ymin );
@@ -60,11 +68,15 @@ Shape.prototype.draw = function( ctx ) {
   ctx.lineTo( aabb.xmin, aabb.ymax );
   ctx.lineTo( aabb.xmin, aabb.ymin );
 
+  // Draw debug ray.
+  var ray = this.ray;
+  ctx.moveTo( ray.x, ray.y );
+  ctx.lineTo( ray.x + 1000 * ray.dx, ray.y + 1000 * ray.dy );
+
   ctx.strokeStyle = this.getColor().toString();
-  ctx.lineWidth = 0.01;
+  ctx.lineWidth = 0.005;
   ctx.stroke();
 
-  // Draw debug AABB.
 
   ctx.restore();
 };

@@ -130,12 +130,12 @@ var Intersection = (function() {
         }
       }
 
-      // Intersects the line, but not the ray.
+      // The circle intersects the line, but not the ray.
       if ( t < 0 ) {
         return null;
       }
 
-      // Transform ray back to
+      // Transform ray back to world space.
       return {
         x: cx + rx + t * dx,
         y: cy + ry + t * dy

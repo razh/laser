@@ -119,7 +119,16 @@ Object2D.prototype.setRotationInDegrees = function( rotation ) {
 };
 
 // Coordinate transforms.
-Object2D.prototype.worldToLocalCoordinates = function( x, y ) {
+Object2D.prototype.worldToLocalCoordinates = function() {
+  var x, y;
+  if ( arguments.length === 1 ) {
+    x = arguments[0].x;
+    y = arguments[0].y;
+  } else if ( arguments.length === 2 ) {
+    x = arguments[0];
+    y = arguments[1];
+  }
+
   // Translate.
   x -= this.getX();
   y -= this.getY();
@@ -147,7 +156,16 @@ Object2D.prototype.worldToLocalCoordinates = function( x, y ) {
   };
 };
 
-Object2D.prototype.localToWorldCoordinates = function( x, y ) {
+Object2D.prototype.localToWorldCoordinates = function() {
+  var x, y;
+  if ( arguments.length === 1 ) {
+    x = arguments[0].x;
+    y = arguments[0].y;
+  } else if ( arguments.length === 2 ) {
+    x = arguments[0];
+    y = arguments[1];
+  }
+
   // Scale.
   x *= this.getWidth();
   y *= this.getHeight();

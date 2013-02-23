@@ -11,7 +11,7 @@ var Emitter = function() {
   Entity.call( this );
 
   this.addShape( new Shape().setGeometry( Geometry.createRectangle() )
-                            .setColor( 127, 0, 0, 1.0 ) );
+                            .setColor( 127, 0, 0, 0.25 ) );
 
   this.setWidth( 100 );
   this.setHeight( 100 );
@@ -22,8 +22,10 @@ var Emitter = function() {
 Emitter.prototype = new Entity();
 Emitter.prototype.constructor = new Emitter();
 
+var it = 0;
 Emitter.prototype.update = function( elapsedTime ) {
   Entity.prototype.update.call( this, elapsedTime );
+  it++;
 
   var rotation = this.getRotation();
   var sin = Math.sin( rotation );
@@ -47,29 +49,25 @@ Emitter.prototype.update = function( elapsedTime ) {
       shape = shapes[j];
       rayOrigin = entity.worldToLocalCoordinates( this.getX(), this.getY() );
       rayOrigin = shape.worldToLocalCoordinates( rayOrigin.x, rayOrigin.y );
-      entityRotation = entity.getRotation();
-      var eCos = Math.cos( entityRotation ),
-          eSin = Math.sin( entityRotation );
+      rayDirection = entity.worldToLocalCoordinates( this.getX() + cos, this.getY() + sin );
+      rayDirection = shape.worldToLocalCoordinates( rayDirection.x, rayDirection.y );
 
-      var rcos = eCos * cos - eSin * sin;
-      var rsin = eSin * cos + eCos * sin;
+      rayDirection.x -= rayOrigin.x;
+      rayDirection.y -= rayOrigin.y;
 
-      cos = rcos;
-      sin = rsin;
+      if ( j === 1 && it % 60 === 0) {
+        console.log( rayOrigin.x + ", " + rayOrigin.y + ", " + rayDirection.x + ", " + rayDirection.y);
+      }
 
-      shapeRotation = shape.getRotation();
-      var sCos = Math.cos( shapeRotation );
-      var sSin = Math.sin( shapeRotation );
+      shape.ray = {
+        x: rayOrigin.x,
+        y: rayOrigin.y,
+        dx: rayDirection.x,
+        dy: rayDirection.y
+      };
 
-      rcos = sCos * cos - sSin * sin;
-      rsin = sSin * cos + sCos * sin;
-
-      cos = rcos;
-      sin = rsin;
-
-      shapeRotation = shape.getRotation();
       if ( Intersection.rayCircle( rayOrigin.x, rayOrigin.y,
-                                   cos, sin,
+                                   rayDirection.x, rayDirection.y,
                                    shape.getX(), shape.getY(),
                                    shape.getRadius() ) !== null ) {
         shape.setColor( 0, 127, 0, 1.0 );
@@ -91,9 +89,9 @@ Emitter.prototype.draw = function( ctx ) {
   ctx.moveTo( 0, 0 );
   ctx.lineTo( 1000, 0 );
   ctx.strokeStyle = new Color( 255, 0, 0, 1.0 ).toString();
-  ctx.lineWidth = 5;
+  ctx.lineWidth = 1;
 
-  ctx.stroke();
+  // ctx.stroke();
 
   ctx.restore();
 };
