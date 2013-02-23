@@ -30,6 +30,7 @@ Emitter.prototype.update = function( elapsedTime ) {
   var rotation = this.getRotation();
   var sin = Math.sin( rotation );
   var cos = Math.cos( rotation );
+  // console.log( rotation + ", " + cos + ", " + sin );
 
   var rayOrigin, rayDirection;
 
@@ -48,15 +49,15 @@ Emitter.prototype.update = function( elapsedTime ) {
     for ( j = 0, jl = shapes.length; j < jl; j++ ) {
       shape = shapes[j];
       rayOrigin = entity.worldToLocalCoordinates( this.getX(), this.getY() );
-      rayOrigin = shape.worldToLocalCoordinates( rayOrigin.x, rayOrigin.y );
+      // rayOrigin = shape.worldToLocalCoordinates( rayOrigin.x, rayOrigin.y );
       rayDirection = entity.worldToLocalCoordinates( this.getX() + cos, this.getY() + sin );
-      rayDirection = shape.worldToLocalCoordinates( rayDirection.x, rayDirection.y );
+      // rayDirection = shape.worldToLocalCoordinates( rayDirection.x, rayDirection.y );
 
       rayDirection.x -= rayOrigin.x;
       rayDirection.y -= rayOrigin.y;
 
       if ( j === 1 && it % 60 === 0) {
-        console.log( rayOrigin.x + ", " + rayOrigin.y + ", " + rayDirection.x + ", " + rayDirection.y);
+        // console.log( rayOrigin.x + ", " + rayOrigin.y + ", " + rayDirection.x + ", " + rayDirection.y);
       }
 
       shape.ray = {

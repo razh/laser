@@ -70,8 +70,8 @@ Shape.prototype.draw = function( ctx ) {
 
   // Draw debug ray.
   var ray = this.ray;
-  ctx.moveTo( ray.x, ray.y );
-  ctx.lineTo( ray.x + 1000 * ray.dx, ray.y + 1000 * ray.dy );
+  ctx.moveTo( ray.x - this.getX(), ray.y - this.getY() );
+  ctx.lineTo( ray.x - this.getX() + 1000 * ray.dx, ray.y - this.getY() + 1000 * ray.dy );
 
   ctx.strokeStyle = this.getColor().toString();
   ctx.lineWidth = 0.005;

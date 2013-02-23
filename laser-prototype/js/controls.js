@@ -49,6 +49,11 @@ function onKeyDown( event ) {
       }
       break;
 
+    // SPACE.
+    case 32:
+      test();
+      break;
+
     default:
       console.log( event.which );
       break;
@@ -60,4 +65,9 @@ function transformCoords( x, y ) {
     x: x - _game._canvas.offsetLeft,
     y: _game.HEIGHT - ( y - _game._canvas.offsetTop )
   };
+}
+
+var testing = false;
+function test() {
+  testing = true;
 }

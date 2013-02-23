@@ -134,7 +134,7 @@ Object2D.prototype.worldToLocalCoordinates = function() {
   y -= this.getY();
 
   // Rotate.
-  var rotation = this.getRotation();
+  var rotation = -this.getRotation();
   if ( rotation !== 0 ) {
     var cos = Math.cos( rotation ),
         sin = Math.sin( rotation );

@@ -100,6 +100,26 @@ var Game = function() {
 Game.prototype.tick = function() {
   this.update();
   this.draw();
+
+  if (testing) {
+    var ctx = _game._ctx;
+    var x, y;
+    // console.clear();
+    for ( var i = 0; i < 50; i++ ) {
+      for ( var j = 0; j < 50; j++ ) {
+        x = 20 + i * 5;
+        y = 20 + j * 5;
+        // console.log( y)
+        var coords = transformCoords( x, y );
+        if ( _game.hit( coords.x, coords.y ) !== null ) {
+          ctx.fillStyle = 'rgba( 0, 255, 0, 1.0 )';
+        } else {
+          ctx.fillStyle = 'rgba( 255, 0, 0, 1.0 )';
+        }
+        ctx.fillRect( x - 1, y - 1, 2, 2 );
+      }
+    }
+  }
 };
 
 Game.prototype.update = function() {
