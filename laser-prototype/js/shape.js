@@ -50,13 +50,21 @@ Shape.prototype.draw = function( ctx ) {
   ctx.fill();
 
   // Draw debug circle.
-  ctx.beginPath()
+  ctx.beginPath();
   ctx.moveTo( 0, 0 );
   ctx.arc( 0, 0, this.getRadius(), 0, Math.PI * 2, true );
+  var aabb = this.getAABB();
+  ctx.moveTo( aabb.xmin, aabb.ymin );
+  ctx.lineTo( aabb.xmax, aabb.ymin );
+  ctx.lineTo( aabb.xmax, aabb.ymax );
+  ctx.lineTo( aabb.xmin, aabb.ymax );
+  ctx.lineTo( aabb.xmin, aabb.ymin );
+
   ctx.strokeStyle = this.getColor().toString();
   ctx.lineWidth = 0.01;
-  ctx.closePath();
   ctx.stroke();
+
+  // Draw debug AABB.
 
   ctx.restore();
 };
