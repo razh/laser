@@ -46,9 +46,6 @@ Emitter.prototype.update = function( elapsedTime ) {
     rayOrigin = entity.worldToLocalCoordinates( this.getX(), this.getY() );
     rayDirection = entity.worldToLocalCoordinates( this.getX() + cos, this.getY() + sin );
 
-    // rayDirection.x -= rayOrigin.x;
-    // rayDirection.y -= rayOrigin.y;
-
     for ( j = 0, jl = shapes.length; j < jl; j++ ) {
       shape = shapes[j];
 
