@@ -124,6 +124,13 @@ var Intersection = (function() {
       };
     },
 
+    rayAABB: function() {
+      return {
+        x: 0,
+        y: 0
+      };
+    },
+
     /**
      * Calculates the nearest intersection point of the ray given by r + td,
      * where t >= 0, and the circle given by

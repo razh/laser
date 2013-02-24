@@ -66,6 +66,8 @@ var Test = function() {
   this.circle2.x = 200;
   this.circle2.y = 400;
   this.circle2.radius = 200;
+
+  this.intersections = [];
 };
 
 Test.prototype.tick = function() {
@@ -92,12 +94,14 @@ Test.prototype.update = function() {
   this.ray.dy = cos;
 
   // Intersection.
+  this.intersections = [];
   var intersectCircle1 = Intersection.rayCircle( this.ray.x, this.ray.y,
                                                  this.ray.dx, this.ray.dy,
                                                  this.circle1.x, this.circle1.y,
                                                  this.circle1.radius );
   if ( intersectCircle1 !== null ) {
     this.circle1.fillStyle = 'rgba( 0, 127, 0, 1.0 )';
+    this.intersections.push( intersectCircle1 );
   } else {
     this.circle1.fillStyle = 'rgba( 0, 0, 127, 1.0 )';
   }
@@ -108,6 +112,7 @@ Test.prototype.update = function() {
                                                  this.circle2.radius );
   if ( intersectCircle2 !== null ) {
     this.circle2.fillStyle = 'rgba( 0, 127, 0, 1.0 )';
+    this.intersections.push( intersectCircle2 );
   } else {
     this.circle2.fillStyle = 'rgba( 127, 0, 0, 1.0 )';
   }
@@ -143,4 +148,9 @@ Test.prototype.draw = function() {
   this.ctx.lineWidth = 1;
   this.ctx.stroke();
 
+  // Draw intersection points.
+  this.ctx.fillStyle = 'rgba( 0, 0, 255, 1.0 )';
+  for ( i = 0, n = this.intersections.length; i < n; i++ ) {
+    this.ctx.fillRect( this.intersections[i].x - 3, this.intersections[i].y - 3, 6, 6 );
+  }
 };

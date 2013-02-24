@@ -64,7 +64,7 @@ var Test = function() {
   this.currTime = this.prevTime;
 
   this.segments = [];
-  this.intersectionPoints = [];
+  this.intersections = [];
 
   this.ray = new Ray();
   this.ray.x = 400;
@@ -94,7 +94,7 @@ Test.prototype.update = function() {
   this.ray.dy = cos;
 
   // Intersection.
-  this.intersectionPoints = [];
+  this.intersections = [];
   var intersection = null;
   for ( var i = 0, n = this.segments.length; i < n; i++ ) {
     intersection = Intersection.raySegment( this.ray.x, this.ray.y,
@@ -102,7 +102,7 @@ Test.prototype.update = function() {
                                             this.segments[i].x0, this.segments[i].y0,
                                             this.segments[i].x1, this.segments[i].y1 );
     if ( intersection !== null ) {
-      this.intersectionPoints.push( intersection );
+      this.intersections.push( intersection );
       this.segments[i].color = 'rgba( 0, 127, 0, 1.0 )';
     } else {
       this.segments[i].color = 'rgba( 127, 0, 0, 1.0 )';
@@ -141,8 +141,8 @@ Test.prototype.draw = function() {
 
   // Draw intersection points.
   this.ctx.fillStyle = 'rgba( 0, 0, 127, 1.0 )';
-  for ( i = 0, n = this.intersectionPoints.length; i < n; i++ ) {
-    this.ctx.fillRect( this.intersectionPoints[i].x - 2, this.intersectionPoints[i].y - 2, 4, 4 );
+  for ( i = 0, n = this.intersections.length; i < n; i++ ) {
+    this.ctx.fillRect( this.intersections[i].x - 2, this.intersections[i].y - 2, 4, 4 );
   }
 
   // Hacky way of running tests.
