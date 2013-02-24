@@ -103,10 +103,8 @@ Test.prototype.update = function() {
     aabb.y0 += aabb.velocityY;
     aabb.y1 += aabb.velocityY;
 
-    if ( aabb.y1 > this.HEIGHT - 150 ) {
-      aabb.velocityY = -aabb.velocityY;
-    }
-    if ( aabb.y0 < 150 ) {
+    if ( aabb.y0 < 150 ||
+         aabb.y1 > this.HEIGHT - 150 ) {
       aabb.velocityY = -aabb.velocityY;
     }
   }
@@ -176,9 +174,6 @@ Test.prototype.draw = function() {
   }
 };
 
-/**
- * Generates aabbs in an arc.
- */
 Test.prototype.generateAABBs = function() {
   var originX = 50;
   var originY = 150;

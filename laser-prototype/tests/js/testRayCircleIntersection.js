@@ -3,7 +3,8 @@ var Circle = function() {
   this.y = 0;
   this.radius = 100;
 
-  this.fillStyle = 'rgba( 127, 0, 0, 1.0 )';
+  this.fillStyle = 'rgba( 0, 127, 127, 1.0 )';
+  this.velocityY = 2;
 };
 
 var Ray = function() {
@@ -53,19 +54,12 @@ var Test = function() {
   this.prevTime = Date.now();
   this.currTime = this.prevTime;
 
-  this.circle1 = new Circle();
-  this.circle2 = new Circle();
+  this.circles = [];
+  this.generateCircles();
 
   this.ray = new Ray();
   this.ray.x = 400;
   this.ray.y = 200;
-
-  this.circle1.y = 200;
-  this.circle1.fillStyle = 'rgba( 0, 0, 127, 1.0 )';
-
-  this.circle2.x = 200;
-  this.circle2.y = 400;
-  this.circle2.radius = 200;
 
   this.intersections = [];
 };
@@ -82,39 +76,42 @@ Test.prototype.update = function() {
   var elapsedTime = this.currTime - this.prevTime;
   this.prevTime = this.currTime;
 
-  this.circle2.x += velocityX;
-  if ( 100 > this.circle2.x || this.circle2.x > 600 ) {
-    velocityX = -velocityX;
-  }
-
   rotation += 0.01;
   var sin = Math.sin( rotation );
   var cos = Math.cos( rotation );
   this.ray.dx = sin;
   this.ray.dy = cos;
 
-  // Intersection.
-  this.intersections = [];
-  var intersectCircle1 = Intersection.rayCircle( this.ray.x, this.ray.y,
-                                                 this.ray.dx, this.ray.dy,
-                                                 this.circle1.x, this.circle1.y,
-                                                 this.circle1.radius );
-  if ( intersectCircle1 !== null ) {
-    this.circle1.fillStyle = 'rgba( 0, 127, 0, 1.0 )';
-    this.intersections.push( intersectCircle1 );
-  } else {
-    this.circle1.fillStyle = 'rgba( 0, 0, 127, 1.0 )';
+  // Update circle locations.
+  var i, n;
+  var circle;
+  for ( i = 0, n = this.circles.length; i < n; i++ ) {
+    circle = this.circles[i];
+
+    circle.y += circle.velocityY;
+
+    if ( circle.y - circle.radius < 0 ||
+         circle.y + circle.radius > this.HEIGHT ) {
+      circle.velocityY = -circle.velocityY;
+    }
   }
 
-  var intersectCircle2 = Intersection.rayCircle( this.ray.x, this.ray.y,
-                                                 this.ray.dx, this.ray.dy,
-                                                 this.circle2.x, this.circle2.y,
-                                                 this.circle2.radius );
-  if ( intersectCircle2 !== null ) {
-    this.circle2.fillStyle = 'rgba( 0, 127, 0, 1.0 )';
-    this.intersections.push( intersectCircle2 );
-  } else {
-    this.circle2.fillStyle = 'rgba( 127, 0, 0, 1.0 )';
+  // Intersection.
+  this.intersections = [];
+  var intersection = null;
+  for ( i = 0, n = this.circles.length; i < n; i++ ) {
+    circle = this.circles[i];
+
+    intersection = Intersection.rayCircle( this.ray.x, this.ray.y,
+                                           this.ray.dx, this.ray.dy,
+                                           circle.x, circle.y,
+                                           circle.radius );
+    if ( intersection !== null ) {
+      circle.fillStyle = 'rgba( 0, 127, 0, 1.0 )';
+      this.intersections.push( intersection );
+    } else {
+      circle.fillStyle = 'rgba( 0, 0, 127, 1.0 )';
+    }
   }
 };
 
@@ -122,19 +119,19 @@ Test.prototype.draw = function() {
   this.canvas.style.backgroundColor = '#ddd';
   this.ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
-  this.ctx.beginPath();
-  this.ctx.arc( this.circle1.x, this.circle1.y, this.circle1.radius, 0, Math.PI * 2, true );
-  this.ctx.closePath();
+  // Draw circles.
+  var circle;
+  var i, n;
+  for ( i = 0, n = this.circles.length; i < n; i++ ) {
+    circle = this.circles[i];
 
-  this.ctx.fillStyle = this.circle1.fillStyle;
-  this.ctx.fill();
+    this.ctx.beginPath();
+    this.ctx.arc( circle.x, circle.y, circle.radius, 0, Math.PI * 2, true );
+    this.ctx.closePath();
 
-  this.ctx.beginPath();
-  this.ctx.arc( this.circle2.x, this.circle2.y, this.circle2.radius, 0, Math.PI * 2, true );
-  this.ctx.closePath();
-
-  this.ctx.fillStyle = this.circle2.fillStyle;
-  this.ctx.fill();
+    this.ctx.fillStyle = circle.fillStyle;
+    this.ctx.fill();
+  }
 
   // Draw ray.
   this.ctx.fillStyle = 'rgba( 255, 0, 0, 1.0 )';
@@ -152,5 +149,22 @@ Test.prototype.draw = function() {
   this.ctx.fillStyle = 'rgba( 0, 0, 255, 1.0 )';
   for ( i = 0, n = this.intersections.length; i < n; i++ ) {
     this.ctx.fillRect( this.intersections[i].x - 3, this.intersections[i].y - 3, 6, 6 );
+  }
+};
+
+Test.prototype.generateCircles = function() {
+  var originX = 50;
+  var originY = 150;
+
+  var circle;
+  var count = 9;
+  var dx = ( this.WIDTH ) / count;
+  var dy = ( this.HEIGHT - 200 ) / count;
+  for ( var i = 0; i < count; i++ ) {
+    circle = new Circle();
+    circle.x = originX + i * dx;
+    circle.y = originY + i * dy;
+    circle.radius = 35 + i * 3;
+    this.circles.push( circle );
   }
 };
