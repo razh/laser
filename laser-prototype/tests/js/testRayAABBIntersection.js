@@ -1,10 +1,11 @@
-var Segment = function() {
+var AABB = function() {
   this.x0 = 0;
   this.y0 = 0;
   this.x1 = 0;
   this.y1 = 0;
 
   this.color = 'rgba( 127, 0, 0, 1.0 )';
+  this.velocityY = 2;
 };
 
 var Ray = function() {
@@ -63,7 +64,7 @@ var Test = function() {
   this.prevTime = Date.now();
   this.currTime = this.prevTime;
 
-  this.segments = [];
+  this.aabbs = [];
   this.intersections = [];
 
   this.ray = new Ray();
@@ -73,7 +74,7 @@ var Test = function() {
   this.tests = [];
   this.testSlope();
 
-  this.generateSegments();
+  this.generateAABBs();
 };
 
 Test.prototype.tick = function() {
@@ -93,19 +94,38 @@ Test.prototype.update = function() {
   this.ray.dx = sin;
   this.ray.dy = cos;
 
+  // Update AABB locations.
+  var i, n;
+  var aabb;
+  for ( i = 0, n = this.aabbs.length; i < n; i++ ) {
+    aabb = this.aabbs[i];
+
+    aabb.y0 += aabb.velocityY;
+    aabb.y1 += aabb.velocityY;
+
+    if ( aabb.y1 > this.HEIGHT - 150 ) {
+      aabb.velocityY = -aabb.velocityY;
+    }
+    if ( aabb.y0 < 150 ) {
+      aabb.velocityY = -aabb.velocityY;
+    }
+  }
+
   // Intersection.
   this.intersections = [];
   var intersection = null;
-  for ( var i = 0, n = this.segments.length; i < n; i++ ) {
-    intersection = Intersection.raySegment( this.ray.x, this.ray.y,
-                                            this.ray.dx, this.ray.dy,
-                                            this.segments[i].x0, this.segments[i].y0,
-                                            this.segments[i].x1, this.segments[i].y1 );
+  for ( i = 0, n = this.aabbs.length; i < n; i++ ) {
+    aabb = this.aabbs[i];
+
+    intersection = Intersection.rayAABB( this.ray.x, this.ray.y,
+                                         this.ray.dx, this.ray.dy,
+                                         aabb.x0, aabb.y0,
+                                         aabb.x1, aabb.y1 );
     if ( intersection !== null ) {
       this.intersections.push( intersection );
-      this.segments[i].color = 'rgba( 0, 127, 0, 1.0 )';
+      aabb.color = 'rgba( 0, 127, 0, 1.0 )';
     } else {
-      this.segments[i].color = 'rgba( 127, 0, 0, 1.0 )';
+      aabb.color = 'rgba( 127, 0, 0, 1.0 )';
     }
   }
 };
@@ -126,17 +146,16 @@ Test.prototype.draw = function() {
   this.ctx.lineWidth = 1;
   this.ctx.stroke();
 
-  // Draw segments.
+  // Draw aabbs.
   var i, n;
-  for ( i = 0, n = this.segments.length; i < n; i++ ) {
-    this.ctx.beginPath();
-    this.ctx.moveTo( this.segments[i].x0, this.segments[i].y0 );
-    this.ctx.lineTo( this.segments[i].x1, this.segments[i].y1 );
-    this.ctx.closePath();
+  var width, height;
+  for ( i = 0, n = this.aabbs.length; i < n; i++ ) {
+    width = this.aabbs[i].x1 - this.aabbs[i].x0;
+    height = this.aabbs[i].y1 - this.aabbs[i].y0;
 
-    this.ctx.strokeStyle = this.segments[i].color;
-    this.ctx.lineWidth = 1;
-    this.ctx.stroke();
+    this.ctx.fillStyle = this.aabbs[i].color;
+    this.ctx.fillRect( this.aabbs[i].x0, this.aabbs[i].y0, width, height );
+    this.ctx.fill();
   }
 
   // Draw intersection points.
@@ -158,26 +177,23 @@ Test.prototype.draw = function() {
 };
 
 /**
- * Generates segments in an arc.
+ * Generates aabbs in an arc.
  */
-Test.prototype.generateSegments = function() {
-  var originX = this.WIDTH * 0.5;
-  var originY = this.HEIGHT * 0.5;
+Test.prototype.generateAABBs = function() {
+  var originX = 50;
+  var originY = 150;
 
-  var outerRadius = 200;
-  var innerRadius = 100;
-  var sin, cos;
-  var segment;
-  var count = 36;
+  var aabb;
+  var count = 10;
+  var dx = ( this.WIDTH - 100 ) / count;
+  var dy = ( this.HEIGHT - 300 ) / count;
   for ( var i = 0; i < count; i++ ) {
-    sin = Math.sin( ( Math.PI / 180 ) * ( i * 360 / count ) );
-    cos = Math.cos( ( Math.PI / 180 ) * ( i * 360 / count ) );
-    segment = new Segment();
-    segment.x0 = originX + innerRadius * cos;
-    segment.y0 = originY + innerRadius * sin;
-    segment.x1 = originX + outerRadius * cos;
-    segment.y1 = originY + outerRadius * sin;
-    this.segments.push( segment );
+    aabb = new AABB();
+    aabb.x0 = originX + i * dx;
+    aabb.y0 = originY + i * dy;
+    aabb.x1 = aabb.x0 + 50;
+    aabb.y1 = aabb.y0 + 40 + i * 3;
+    this.aabbs.push( aabb );
   }
 };
 
@@ -185,124 +201,124 @@ Test.prototype.testSlope = function() {
   var angle45 = Math.PI / 180 * 45;
   var cos = Math.cos( angle45 );
   var sin = Math.sin( angle45 );
-  // Test if ray with same slope and y-intercept as segment intersects correctly.
+  // Test if ray with same slope and y-intercept as aabb intersects correctly.
   var ray = new Ray();
   ray.x = 200;
   ray.y = 200;
   ray.dx = cos;
   ray.dy = sin;
 
-  var segment = new Segment();
-  segment.x0 = 200;
-  segment.y0 = 200;
-  segment.x1 = 200 + cos;
-  segment.y1 = 200 + sin;
+  var aabb = new AABB();
+  aabb.x0 = 200;
+  aabb.y0 = 200;
+  aabb.x1 = 200 + cos;
+  aabb.y1 = 200 + sin;
 
   this.tests.push(
-    Intersection.raySegment(
+    Intersection.rayAABB(
       ray.x, ray.y,
       ray.dx, ray.dy,
-      segment.x0, segment.y0,
-      segment.x1, segment.y1
+      aabb.x0, aabb.y0,
+      aabb.x1, aabb.y1
     ) !== null
   );
 
-  // Reverse segment.
+  // Reverse aabb.
   this.tests.push(
-    Intersection.raySegment(
+    Intersection.rayAABB(
       ray.x, ray.y,
       ray.dx, ray.dy,
-      segment.x1, segment.y1,
-      segment.x0, segment.y0
+      aabb.x1, aabb.y1,
+      aabb.x0, aabb.y0
     ) !== null
   );
 
-  // Segment behind ray.
-  segment.x0 = 199;
-  segment.y0 = 199;
-  segment.x1 = 199 - cos;
-  segment.x2 = 199 - sin;
+  // AABB behind ray.
+  aabb.x0 = 199;
+  aabb.y0 = 199;
+  aabb.x1 = 199 - cos;
+  aabb.x2 = 199 - sin;
 
   this.tests.push(
-    Intersection.raySegment(
+    Intersection.rayAABB(
       ray.x, ray.y,
       ray.dx, ray.dy,
-      segment.x0, segment.y0,
-      segment.x1, segment.y1
+      aabb.x0, aabb.y0,
+      aabb.x1, aabb.y1
     ) === null
   );
 
-  // Reverse segment.
+  // Reverse aabb.
   this.tests.push(
-    Intersection.raySegment(
+    Intersection.rayAABB(
       ray.x, ray.y,
       ray.dx, ray.dy,
-      segment.x1, segment.y1,
-      segment.x0, segment.y0
+      aabb.x1, aabb.y1,
+      aabb.x0, aabb.y0
     ) === null
   );
 
   // Vertical slope.
   ray.dx = 0;
   ray.dy = 1;
-  segment.x0 = 200;
-  segment.y0 = 300;
-  segment.x1 = 200;
-  segment.y1 = 400;
+  aabb.x0 = 200;
+  aabb.y0 = 300;
+  aabb.x1 = 200;
+  aabb.y1 = 400;
   this.tests.push(
     (function() {
-      var point = Intersection.raySegment(
+      var point = Intersection.rayAABB(
         ray.x, ray.y,
         ray.dx, ray.dy,
-        segment.x0, segment.y0,
-        segment.x1, segment.y1
+        aabb.x0, aabb.y0,
+        aabb.x1, aabb.y1
       );
-      return closeEnough( point.x, point.y, segment.x0, segment.y0 );
+      return closeEnough( point.x, point.y, aabb.x0, aabb.y0 );
     }) ()
   );
 
-  // Reverse segment.
+  // Reverse aabb.
   this.tests.push(
     (function() {
-      var point = Intersection.raySegment(
+      var point = Intersection.rayAABB(
         ray.x, ray.y,
         ray.dx, ray.dy,
-        segment.x1, segment.y1,
-        segment.x0, segment.y0
+        aabb.x1, aabb.y1,
+        aabb.x0, aabb.y0
       );
-      return closeEnough( point.x, point.y, segment.x0, segment.y0 );
+      return closeEnough( point.x, point.y, aabb.x0, aabb.y0 );
     }) ()
   );
 
   // Horizontal slope.
   ray.dx = 1;
   ray.dy = 0;
-  segment.x0 = 300;
-  segment.y0 = 200;
-  segment.x1 = 400;
-  segment.y1 = 200;
+  aabb.x0 = 300;
+  aabb.y0 = 200;
+  aabb.x1 = 400;
+  aabb.y1 = 200;
   this.tests.push(
     (function() {
-      var point = Intersection.raySegment(
+      var point = Intersection.rayAABB(
         ray.x, ray.y,
         ray.dx, ray.dy,
-        segment.x0, segment.y0,
-        segment.x1, segment.y1
+        aabb.x0, aabb.y0,
+        aabb.x1, aabb.y1
       );
-      return closeEnough( point.x, point.y, segment.x0, segment.y0 );
+      return closeEnough( point.x, point.y, aabb.x0, aabb.y0 );
     }) ()
   );
 
-  // Reverse segment.
+  // Reverse aabb.
   this.tests.push(
     (function() {
-      var point = Intersection.raySegment(
+      var point = Intersection.rayAABB(
         ray.x, ray.y,
         ray.dx, ray.dy,
-        segment.x1, segment.y1,
-        segment.x0, segment.y0
+        aabb.x1, aabb.y1,
+        aabb.x0, aabb.y0
       );
-      return closeEnough( point.x, point.y, segment.x0, segment.y0 );
+      return closeEnough( point.x, point.y, aabb.x0, aabb.y0 );
     }) ()
   );
 };

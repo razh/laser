@@ -77,7 +77,6 @@ Shape.prototype.draw = function( ctx ) {
   ctx.lineWidth = 0.005;
   ctx.stroke();
 
-
   ctx.restore();
 };
 

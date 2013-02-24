@@ -2,8 +2,8 @@ var Intersection = (function() {
   var EPSILON = 1e-5;
   return {
     /**
-     * Calculates the intersection of the ray given by r + td, where t >= 0,
-     * and the line segment given by x + sy, where 0 <= s <= 1.
+     * Calculates the nearest intersection point of the ray given by r + td,
+     * where t >= 0, and the line segment given by x + sy, where 0 <= s <= 1.
      * @param  {number} rx x-coordinate of ray origin.
      * @param  {number} ry y-coordinate of ray origin.
      * @param  {number} dx x-direction of ray.
@@ -124,10 +124,69 @@ var Intersection = (function() {
       };
     },
 
-    rayAABB: function() {
+    /**
+     * Calculates the nearest intersection point of the ray given by r + td,
+     * where t >= 0, and the axis-aligned bounding-box given by
+     * [ ( x0, y0 ), ( x1, y1 ) ].
+     * @param  {number} rx x-coordinate of ray origin.
+     * @param  {number} ry y-coordinate of ray origin.
+     * @param  {number} dx x-direction of ray.
+     * @param  {number} dy y-direction of ray.
+     * @param  {[type]} x0 x-coordinate of first point in AABB.
+     * @param  {[type]} y0 y-coordinate of first point in AABB.
+     * @param  {[type]} x1 x-coordinate of second point in AABB.
+     * @param  {[type]} y1 y-coordinate of second point in AABB.
+     * @return {x: number, y: number} Coordinate of intersection, or null if no intersection.
+     */
+    rayAABB: function( rx, ry, dx, dy, x0, y0, x1, y1 ) {
+      // Project the ray on to each line segment (assuming ( x0, y0 ) is min,
+      // although it doesn't matter).
+      var points = [];
+      // Left.
+      points.push( Intersection.raySegment( rx, ry, dx, dy, x0, y0, x0, y1 ) );
+      // Right.
+      points.push( Intersection.raySegment( rx, ry, dx, dy, x1, y0, x1, y1 ) );
+      // Top.
+      points.push( Intersection.raySegment( rx, ry, dx, dy, x0, y1, x1, y1 ) );
+      // Bottom.
+      points.push( Intersection.raySegment( rx, ry, dx, dy, x0, y0, x1, y0 ) );
+
+      var point;
+      // Determine minimum postive parameter of intersection points.
+      var min = -1;
+      // Default value (if all four intersections are null, return null).
+      var t;
+      for ( var i = 0, n = points.length; i < n; i++ ) {
+        if ( points[i] === null ) {
+          continue;
+        }
+
+        point = points[i];
+        // Find the parameter where the intersection lies.
+        if ( Math.abs( dx ) > EPSILON ) {
+          t = ( point.x - rx ) / dx;
+        } else if ( Math.abs( dy ) > EPSILON ) {
+          t = ( point.y - ry ) / dy;
+        } else {
+          continue;
+        }
+
+        // If min is negative, the value has not been initialized.
+        // We want t's >= 0 and less than min.
+        if ( min < 0 || ( t >= 0 && t < min ) ) {
+          min = t;
+        }
+      }
+
+      t = min;
+
+      if ( t < 0 ) {
+        return null;
+      }
+
       return {
-        x: 0,
-        y: 0
+        x: rx + t * dx,
+        y: ry + t * dy
       };
     },
 
