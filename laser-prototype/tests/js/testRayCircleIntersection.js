@@ -13,11 +13,9 @@ var Ray = function() {
   this.dy = 0;
 };
 
-$(
-  function() {
-    init();
-  }
-);
+$(function() {
+  init();
+});
 
 var _test;
 function init() {

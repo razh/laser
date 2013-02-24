@@ -1,4 +1,5 @@
 var Intersection = (function() {
+  var EPSILON = 1e-5;
   return {
     /**
      * Calculates the intersection of the ray given by r + td, where t >= 0,
@@ -60,10 +61,7 @@ var Intersection = (function() {
                ----------  *  [    -dy           dx      ]
                 det( A )
 
-        and det( A ) = dx * ( j - y ) - dy * ( i - x )
-
-        Since we are only solving for t, we only need to calculate the top half
-        of the matrix inverse.
+        and det( A ) = dx * ( j - y ) - dy * ( i - x ).
       */
 
       // Compute determinant.
@@ -72,14 +70,14 @@ var Intersection = (function() {
       // Parameter.
       var t;
       // If determinant is 0, ray and line segment are parallel.
-      if ( Math.abs( det ) < _game.EPSILON ) {
+      if ( Math.abs( det ) < EPSILON ) {
         // Parameters of line segment points.
         var t0, t1;
         // Check if the start and end point of the line segment lie on the ray.
-        if ( Math.abs( dx ) > _game.EPSILON ) {
+        if ( Math.abs( dx ) > EPSILON ) {
           t0 = ( x0 - rx ) / dx;
           t1 = ( x1 - rx ) / dx;
-        } else if ( Math.abs( dy ) > _game.EPSILON ) {
+        } else if ( Math.abs( dy ) > EPSILON ) {
           t0 = ( y0 - ry ) / dy;
           t1 = ( y1 - ry ) / dy;
         } else {
@@ -94,17 +92,28 @@ var Intersection = (function() {
         } else {
           t = t1;
         }
-      } else {
+      }
+      // Otherwise use the method described above.
+      else {
         var detInverse = 1 / det;
 
-        // Top half of inverse matrix.
+        // Matrix inverse.
         var a = detInverse *  ( y1 - y0 ),
-            b = detInverse * -( x1 - x0 );
+            b = detInverse * -( x1 - x0 ),
+            c = detInverse * -dy,
+            d = detInverse *  dx;
 
-        // Matrix multiplication.
+        // Calculate s first to check if intersection is on line segment.
+        s = c * ( x1 - rx ) + d * ( y1 - ry );
+        // Intersection point is not on segment.
+        if ( 0 > s || s > 1 ) {
+          return null;
+        }
+
         t = a * ( x1 - rx ) + b * ( y1 - ry );
       }
 
+      // Intersection is on segment, but not the ray.
       if ( t < 0 ) {
         return null;
       }
@@ -182,7 +191,8 @@ var Intersection = (function() {
       }
 
       var t;
-      if ( d === 0 ) {
+      // Near zero or zero discriminant.
+      if ( Math.abs( d ) < EPSILON ) {
         t = -b / ( 2 * a );
       } else {
         // The lowest, non-negative parameter gives us the intersection point
