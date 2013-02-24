@@ -289,6 +289,74 @@ var Intersection = (function() {
         x: cx + rx + t * dx,
         y: cy + ry + t * dy
       };
+    },
+
+    /**
+     * [rayGeometry description]
+     * @param  {[type]} rx
+     * @param  {[type]} ry
+     * @param  {[type]} dx
+     * @param  {[type]} dy
+     * @param  {[type]} geometry
+     * @return {[type]}
+     */
+    rayGeometry: function( rx, ry, dx, dy, geometry ) {
+      var vertices = geometry.vertices || [];
+      var edges = geometry.edges || [];
+
+      var intersection;
+      // Index of edge where the nearest intersection lies.
+      var edgeIndex;
+      // Parameters.
+      var min = -1;
+      var t;
+      var x0, y0, x1, y1;
+      for ( var i = 0, n = edges.length; i < n; i++ ) {
+        x0 = vertices[ 2 * edges[i] ];
+        y0 = vertices[ 2 * edges[i] + 1 ];
+        x1 = vertices[ 2 * edges[ ( i + 1 ) % n ] ];
+        y1 = vertices[ 2 * edges[ ( i + 1 ) % n ] + 1 ];
+
+        intersection = Intersection.raySegment( rx, ry, dx, dy,
+                                                x0, y0, x1, y1 );
+
+        if ( intersection === null ) {
+          continue;
+        }
+
+        if ( Math.abs( dx ) > EPSILON ) {
+          t = ( point.x - rx ) / dx;
+        } else if ( Math.abs( dy ) > EPSILON ) {
+          t = ( point.y - ry ) / dy;
+        } else {
+          continue;
+        }
+
+        // If min is not yet defined, or if t < min.
+        if ( min < 0 || ( t >= 0 && t < min ) ) {
+          min = t;
+          edgeIndex = i;
+        }
+      }
+
+      t = min;
+
+      if ( t < 0 ) {
+        return null;
+      }
+
+      // Calculate normal of edge (in the 'right' direction).
+
+      return {
+        intersection: {
+          x: 0,
+          y: 0
+        },
+        normal: {
+          x: 0,
+          y: 0
+        }
+      };
     }
   };
 }) ();
