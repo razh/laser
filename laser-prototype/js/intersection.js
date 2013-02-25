@@ -93,17 +93,17 @@ var Intersection = (function() {
           t = t1;
         }
 
-        // TEMP: Debugging code.
-        var sx0 = rx + t * dx;
-        var sy0 = ry + t * dy;
+        // Find parameter along line segment.
+        var sx = ( ( rx + t * dx ) - x1 ) / ( x0 - x1 );
+        var sy = ( ( ry + t * dy ) - y1 ) / ( y0 - y1 );
 
-        sx = ( sx0 - x1 ) / ( x0 - x1 );
-        sy = ( sy0 - y1 ) / ( y0 - y1 );
+        // Discard if parameter is outside of line segment.
+        // If line segment is vertical/horizontal, either sx/sy will be
+        // Number.NaN. The following check will not quit if this is the case.
         if ( 0 > sx || sx > 1 ||
              0 > sy || sy > 1 ) {
           return null;
         }
-        console.log( parseFloat(sx.toFixed(2)) + ", " + parseFloat(sy.toFixed(2)) );
       }
       // Otherwise use the method described above.
       else {
@@ -359,17 +359,12 @@ var Intersection = (function() {
       if ( t < 0 || edgeIndex === null ) {
         return null;
       }
-      // console.log( 't, idx: ' + t + ', ' + edgeIndex );
 
       // Calculate normal of edge (in the 'right' direction).
       x0 = vertices[ 2 * indices[ edgeIndex ] ];
       y0 = vertices[ 2 * indices[ edgeIndex ] + 1 ];
       x1 = vertices[ 2 * indices[ edgeIndex + 1 ] ];
       y1 = vertices[ 2 * indices[ edgeIndex + 1 ] + 1 ];
-      // console.log( ( 2 * indices[ edgeIndex ] ) + ', ' +
-      //              ( 2 * indices[ edgeIndex ] + 1 ) + ', ' +
-      //              ( 2 * indices[ edgeIndex + 1 ] ) + ', ' +
-      //              ( 2 * indices[ edgeIndex + 1 ] + 1 ) );
 
       var sx = x1 - x0,
           sy = y1 - y0;

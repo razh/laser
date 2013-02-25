@@ -104,7 +104,7 @@ Test.prototype.update = function() {
     aabb.y1 += aabb.velocityY;
 
     if ( aabb.y0 < 150 ||
-         aabb.y1 > this.HEIGHT - 150 ) {
+         aabb.y0 > this.HEIGHT - 150 ) {
       aabb.velocityY = -aabb.velocityY;
     }
   }

@@ -22,10 +22,6 @@ function init() {
                    _test.ray.dy );
       return;
     }
-
-    for ( var i = 0, n = _test.intersections.length; i < n; i++ ) {
-      console.log( _test.intersections[i] );
-    }
   }, null );
 
 
@@ -286,14 +282,14 @@ Test.prototype.update = function() {
   // Update shape locations.
   var i, n;
   var shape;
-  for ( i = 0, n = this.shapes.length; i < n; i++ ) {
+  for ( i = 0, n = Math.min( this.shapes.length, 2 ); i < n; i++ ) {
     shape = this.shapes[i];
 
-    // shape.y += shape.velocityY;
-    // shape.rotation += shape.angularVelocity;
+    shape.y += shape.velocityY;
+    shape.rotation += shape.angularVelocity;
 
-    if ( shape.y - shape.height < 0 ||
-         shape.y + shape.height > this.HEIGHT ) {
+    if ( shape.y - Math.max( shape.width, shape.height ) < 0 ||
+         shape.y + Math.max( shape.width, shape.height ) > this.HEIGHT ) {
       shape.velocityY = -shape.velocityY;
     }
   }
@@ -387,7 +383,7 @@ Test.prototype.generateShapes = function() {
   var shape;
   var count = 9;
   var dx = ( this.WIDTH - 100 ) / count;
-  var dy = ( this.HEIGHT - 200 ) / count;
+  var dy = ( this.HEIGHT - 300 ) / count;
   for ( var i = 0; i < count; i++ ) {
     shape = new Shape();
     shape.x = originX + i * dx;
