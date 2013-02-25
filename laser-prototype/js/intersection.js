@@ -68,7 +68,7 @@ var Intersection = (function() {
       var det = dx * ( y1 - y0 ) - dy * ( x1 - x0 );
 
       // Parameter.
-      var t;
+      var t = -1;
       // If determinant is 0, ray and line segment are parallel.
       if ( Math.abs( det ) < EPSILON ) {
         // Parameters of line segment points.
@@ -89,9 +89,17 @@ var Intersection = (function() {
           t = Math.min( t0, t1 );
         } else if ( t0 >= 0 ) {
           t = t0;
-        } else {
+        } else if ( t1 >= 0 ){
           t = t1;
         }
+
+        // TEMP: Debugging code.
+        var sx0 = rx + t * dx;
+        var sy0 = ry + t * dy;
+
+        sx = ( sx0 + x1 ) / ( x0 - x1 );
+        sy = ( sy0 + y1 ) / ( y0 - y1 );
+        console.log( parseFloat(sx.toFixed(2)) + ", " + parseFloat(sy.toFixed(2)) );
       }
       // Otherwise use the method described above.
       else {
@@ -347,16 +355,17 @@ var Intersection = (function() {
       if ( t < 0 || edgeIndex === null ) {
         return null;
       }
-      console.log( 't, idx: ' + t + ', ' + edgeIndex );
+      // console.log( 't, idx: ' + t + ', ' + edgeIndex );
+
       // Calculate normal of edge (in the 'right' direction).
       x0 = vertices[ 2 * indices[ edgeIndex ] ];
       y0 = vertices[ 2 * indices[ edgeIndex ] + 1 ];
       x1 = vertices[ 2 * indices[ edgeIndex + 1 ] ];
       y1 = vertices[ 2 * indices[ edgeIndex + 1 ] + 1 ];
-      console.log( ( 2 * indices[ edgeIndex ] ) + ', ' +
-                   ( 2 * indices[ edgeIndex ] + 1 ) + ', ' +
-                   ( 2 * indices[ edgeIndex + 1 ] ) + ', ' +
-                   ( 2 * indices[ edgeIndex + 1 ] + 1 ) );
+      // console.log( ( 2 * indices[ edgeIndex ] ) + ', ' +
+      //              ( 2 * indices[ edgeIndex ] + 1 ) + ', ' +
+      //              ( 2 * indices[ edgeIndex + 1 ] ) + ', ' +
+      //              ( 2 * indices[ edgeIndex + 1 ] + 1 ) );
 
       var sx = x1 - x0,
           sy = y1 - y0;

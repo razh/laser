@@ -11,6 +11,11 @@ function init() {
   document.addEventListener( 'keydown', function( event ) {
     if ( event.which === 81 ) {
       _test.running = false;
+      console.log( 'ray: ' +
+                   _test.ray.x + ', ' +
+                   _test.ray.y + ', ' +
+                   _test.ray.dx + ', ' +
+                   _test.ray.dy );
       return;
     }
 
@@ -53,6 +58,8 @@ var Shape = function() {
   this.fillStyle = 'rgba( 0, 127, 127, 1.0 )';
   this.velocityY = 2;
   this.angularVelocity = Math.PI / 180;
+
+  this.ray = new Ray();
 };
 
 Shape.prototype.worldToLocalCoordinates = function() {
@@ -148,9 +155,6 @@ Shape.prototype.drawPath = function( ctx ) {
 };
 
 Shape.prototype.drawNormals = function( ctx ) {
-  ctx.strokeStyle = 'rgba( 0, 127, 0, 1.0 )';
-  ctx.lineWidth = 0.01;
-
   ctx.beginPath();
 
   var x0, y0, x1, y1;
@@ -186,6 +190,18 @@ Shape.prototype.drawNormals = function( ctx ) {
   ctx.closePath();
 };
 
+Shape.prototype.drawRay = function( ctx ) {
+  ctx.beginPath();
+
+  ctx.moveTo( this.ray.x, this.ray.y );
+  ctx.lineTo( this.ray.x + 1000 * this.ray.dx, this.ray.y + 1000 * this.ray.dy );
+  ctx.lineWidth = 0.01;
+  ctx.strokeStyle = 'rgba( 0, 0, 255, 1.0 )';
+  ctx.stroke();
+
+  ctx.closePath();
+};
+
 Shape.prototype.draw = function( ctx ) {
   ctx.save();
 
@@ -194,6 +210,8 @@ Shape.prototype.draw = function( ctx ) {
   ctx.scale( this.width, this.height );
 
   this.drawNormals( ctx );
+  ctx.strokeStyle = 'rgba( 0, 127, 0, 1.0 )';
+  ctx.lineWidth = 0.01;
   ctx.stroke();
 
   ctx.fillStyle = this.fillStyle;
@@ -202,6 +220,8 @@ Shape.prototype.draw = function( ctx ) {
   ctx.lineWidth = 0.01;
   ctx.stroke();
   // ctx.fill();
+
+  this.drawRay( ctx );
 
   ctx.restore();
 };
@@ -293,6 +313,12 @@ Test.prototype.update = function() {
                                              rayDirection.x, rayDirection.y,
                                              { vertices: shape.vertices,
                                                indices: shape.indices });
+
+    shape.ray.x = rayOrigin.x;
+    shape.ray.y = rayOrigin.y;
+    shape.ray.dx = rayDirection.x;
+    shape.ray.dy = rayDirection.y;
+
     if ( intersection !== null ) {
       shape.fillStyle = 'rgba( 0, 127, 0, 1.0 )';
       intersection.normal = shape.localToWorldCoordinates( intersection.normal.x + intersection.intersection.x,
@@ -380,7 +406,7 @@ Test.prototype.generateShapes = function() {
     shape.vertices = geometry.vertices;
     shape.indices = geometry.indices;
 
-    if ( i === 8 )
+    // if ( i === 8 )
     this.shapes.push( shape );
   }
 };
