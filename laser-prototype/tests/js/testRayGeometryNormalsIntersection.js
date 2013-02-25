@@ -10,6 +10,10 @@ function init() {
 
   document.addEventListener( 'keydown', function( event ) {
     if ( event.which === 81 ) {
+      if ( _test.intersections.length === 0 ) {
+        return;
+      }
+
       _test.running = false;
       console.log( 'ray: ' +
                    _test.ray.x + ', ' +

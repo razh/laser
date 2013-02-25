@@ -97,8 +97,12 @@ var Intersection = (function() {
         var sx0 = rx + t * dx;
         var sy0 = ry + t * dy;
 
-        sx = ( sx0 + x1 ) / ( x0 - x1 );
-        sy = ( sy0 + y1 ) / ( y0 - y1 );
+        sx = ( sx0 - x1 ) / ( x0 - x1 );
+        sy = ( sy0 - y1 ) / ( y0 - y1 );
+        if ( 0 > sx || sx > 1 ||
+             0 > sy || sy > 1 ) {
+          return null;
+        }
         console.log( parseFloat(sx.toFixed(2)) + ", " + parseFloat(sy.toFixed(2)) );
       }
       // Otherwise use the method described above.
