@@ -179,7 +179,6 @@ var Intersection = (function() {
       }
 
       t = min;
-
       if ( t < 0 ) {
         return null;
       }
@@ -292,21 +291,25 @@ var Intersection = (function() {
     },
 
     /**
-     * [rayGeometry description]
-     * @param  {[type]} rx
-     * @param  {[type]} ry
-     * @param  {[type]} dx
-     * @param  {[type]} dy
-     * @param  {[type]} geometry
-     * @return {[type]}
+     * Calculates the nearest intersection point of the ray given by r + td,
+     * where t >= 0, and a geometry object: a collection of vertices and edges.
+     * @param  {number} rx x-coordinate of ray origin.
+     * @param  {number} ry y-coordinate of ray origin.
+     * @param  {number} dx x-direction of ray.
+     * @param  {number} dy y-direction of ray.
+     * @param  {{vertices: [], edges: []}} geometry
+     * @return {{intersection: {x: number, y: number},  Coordinate of intersection
+     *           normal:       {x: number, y: number}}} and geometry normal, or
+     *                                                  null if no intersecton.
+     *
      */
     rayGeometry: function( rx, ry, dx, dy, geometry ) {
       var vertices = geometry.vertices || [];
       var edges = geometry.edges || [];
 
-      var intersection;
+      var point;
       // Index of edge where the nearest intersection lies.
-      var edgeIndex;
+      var edgeIndex = -1;
       // Parameters.
       var min = -1;
       var t;
@@ -317,13 +320,14 @@ var Intersection = (function() {
         x1 = vertices[ 2 * edges[ ( i + 1 ) % n ] ];
         y1 = vertices[ 2 * edges[ ( i + 1 ) % n ] + 1 ];
 
-        intersection = Intersection.raySegment( rx, ry, dx, dy,
-                                                x0, y0, x1, y1 );
+        point = Intersection.raySegment( rx, ry, dx, dy,
+                                         x0, y0, x1, y1 );
 
-        if ( intersection === null ) {
+        if ( point === null ) {
           continue;
         }
 
+        // Calculate parameter.
         if ( Math.abs( dx ) > EPSILON ) {
           t = ( point.x - rx ) / dx;
         } else if ( Math.abs( dy ) > EPSILON ) {
@@ -340,21 +344,39 @@ var Intersection = (function() {
       }
 
       t = min;
-
-      if ( t < 0 ) {
+      if ( t < 0 || edgeIndex < 0 ) {
         return null;
       }
 
       // Calculate normal of edge (in the 'right' direction).
+      x0 = vertices[ 2 * edges[ edgeIndex ] ];
+      y0 = vertices[ 2 * edges[ edgeIndex ] + 1 ];
+      x1 = vertices[ 2 * edges[ ( edgeIndex + 1 ) % edges.length ] ];
+      y1 = vertices[ 2 * edges[ ( edgeIndex + 1 ) % edges.length ] + 1 ];
+      console.log( ( 2 * edges[ edgeIndex ] ) + ', ' +
+                   ( 2 * edges[ edgeIndex ] + 1 ) + ', ' +
+                   ( 2 * edges[ ( edgeIndex + 1 ) % edges.length ] ) + ', ' +
+                   ( 2 * edges[ ( edgeIndex + 1 ) % edges.length ] + 1 ) );
+
+      var sx = x1 - x0,
+          sy = y1 - y0;
+
+      // Normalize normal.
+      var length = Math.sqrt( sx * sx + sy * sy );
+      if ( Math.abs( length ) < EPSILON ) {
+        return null;
+      }
+
+      length = 1 / length;
 
       return {
         intersection: {
-          x: 0,
-          y: 0
+          x: rx + t * dx,
+          y: ry + t * dy
         },
         normal: {
-          x: 0,
-          y: 0
+          x:  sy * length,
+          y: -sx * length
         }
       };
     }

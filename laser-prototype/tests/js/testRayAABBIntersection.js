@@ -89,10 +89,10 @@ Test.prototype.update = function() {
   this.prevTime = this.currTime;
 
   rotation += 0.01;
-  var sin = Math.sin( rotation );
   var cos = Math.cos( rotation );
-  this.ray.dx = sin;
-  this.ray.dy = cos;
+  var sin = Math.sin( rotation );
+  this.ray.dx = cos;
+  this.ray.dy = sin;
 
   // Update AABB locations.
   var i, n;
