@@ -4,7 +4,7 @@ var Shape = function() {
   this._color = new Color( 255, 255, 255, 1.0 );
 
   this._vertices = [];
-  this._edges = [];
+  this._indices = [];
 
   this._aabb = {
     xmin: 0.0,
@@ -29,14 +29,14 @@ Shape.prototype.constructor = Shape;
 Shape.prototype.drawPath = function( ctx ) {
   ctx.beginPath();
 
-  var x = this._vertices[ 2 * this._edges[0] ],
-      y = this._vertices[ 2 * this._edges[0] + 1 ];
+  var x = this._vertices[ 2 * this._indices[0] ],
+      y = this._vertices[ 2 * this._indices[0] + 1 ];
 
   ctx.moveTo( x, y );
 
-  for ( var i = 1, n = this._edges.length; i < n; i++ ) {
-    x = this._vertices[ 2 * this._edges[i] ];
-    y = this._vertices[ 2 * this._edges[i] + 1 ];
+  for ( var i = 1, n = this._indices.length; i < n; i++ ) {
+    x = this._vertices[ 2 * this._indices[i] ];
+    y = this._vertices[ 2 * this._indices[i] + 1 ];
 
     ctx.lineTo( x, y );
   }
@@ -131,29 +131,29 @@ Shape.prototype.setVertices = function( vertices ) {
   return this;
 };
 
-Shape.prototype.getEdges = function() {
-  return this._edges;
+Shape.prototype.getIndices = function() {
+  return this._indices;
 };
 
-Shape.prototype.setEdges = function( edges ) {
-  this._edges = edges;
+Shape.prototype.setIndices = function( indices ) {
+  this._indices = indices;
   return this;
 };
 
 Shape.prototype.getGeometry = function() {
   return {
     vertices: this._vertices,
-    edges: this._edges
+    indices: this._indices
   };
 };
 
 Shape.prototype.setGeometry = function() {
   if ( arguments.length === 1 ) {
     this.setVertices( arguments[0].vertices );
-    this.setEdges( arguments[0].edges );
+    this.setIndices( arguments[0].indices );
   } else if ( arguments.length === 2 ) {
     this.setVertices( arguments[0] );
-    this.setEdges( arguments[1] );
+    this.setIndices( arguments[1] );
   }
 
   this.calculateAABB();
@@ -168,11 +168,11 @@ Shape.prototype.getAABB = function() {
 
 Shape.prototype.calculateAABB = function() {
   var vertices = this.getVertices();
-  var edges = this.getEdges();
+  var indices = this.getIndices();
 
   var x, y;
   // Handle degenerate case.
-  if ( vertices.length === 0 || edges.length === 0 ) {
+  if ( vertices.length === 0 || indices.length === 0 ) {
     x = this.getX();
     y = this.getY();
 
@@ -192,9 +192,9 @@ Shape.prototype.calculateAABB = function() {
       ymax = Number.MIN_VALUE;
 
   // Only check vertices on an edge.
-  for ( var i = edges.length - 1; i >= 0; i-- ) {
-    x = vertices[ 2 * edges[i] ];
-    y = vertices[ 2 * edges[i] + 1 ];
+  for ( var i = indices.length - 1; i >= 0; i-- ) {
+    x = vertices[ 2 * indices[i] ];
+    y = vertices[ 2 * indices[i] + 1 ];
 
     if ( x < xmin ) {
       xmin = x;
@@ -226,12 +226,12 @@ Shape.prototype.calculateRadius = function() {
   var distanceSquared = 0;
 
   var vertices = this.getVertices();
-  var edges = this.getEdges();
+  var indices = this.getIndices();
 
   var x, y;
-  for ( var i = edges.length - 1; i >= 0; i-- ) {
-    x = vertices[ 2 * edges[i] ];
-    y = vertices[ 2 * edges[i] + 1 ];
+  for ( var i = indices.length - 1; i >= 0; i-- ) {
+    x = vertices[ 2 * indices[i] ];
+    y = vertices[ 2 * indices[i] + 1 ];
 
     distanceSquared = Math.max( distanceSquared, x * x + y * y );
   }
@@ -248,7 +248,7 @@ Shape.prototype.fromJSON = function( json ) {
   var color = new Color().fromJSON( JSON.stringify( jsonObject.color || {} ) );
   return this.setColor( color )
              .setGeometry( jsonObject.vertices || [],
-                           jsonObject.edges || [] );
+                           jsonObject.indices || [] );
 };
 
 Shape.prototype.toJSON = function() {
@@ -257,7 +257,7 @@ Shape.prototype.toJSON = function() {
   object.color = this.getColor().toJSON();
 
   object.vertices = this.getVertices();
-  object.edges = this.getEdges();
+  object.indices = this.getIndices();
 
   return object;
 };

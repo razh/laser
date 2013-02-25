@@ -11,11 +11,11 @@ var Geometry = (function() {
         -halfWidth,  halfHeight
       ];
 
-      var edges = [ 0, 1, 2, 3, 0 ];
+      var indices = [ 0, 1, 2, 3, 0 ];
 
       return {
         vertices: vertices,
-        edges: edges
+        indices: indices
       };
     },
 
@@ -36,7 +36,7 @@ var Geometry = (function() {
       if ( typeof anticlockwise === 'undefined' ) { anticlockwise = true; }
 
       var vertices = [];
-      var edges = [];
+      var indices = [];
 
       var sweepAngle = endAngle - startAngle;
 
@@ -62,7 +62,7 @@ var Geometry = (function() {
         vertices.push( outerRadius * Math.sin( startAngle + i * subdivAngle ) );
         vertices.push( outerRadius * Math.cos( startAngle + i * subdivAngle ) );
 
-        edges.push(i);
+        indices.push(i);
       }
 
       // Inner radius.
@@ -71,15 +71,15 @@ var Geometry = (function() {
         vertices.push( innerRadius * Math.cos( endAngle - i * subdivAngle ) );
 
         // The plus one takes into account the edge connecting inner and outer radii.
-        edges.push( i + subdivisions + 1 );
+        indices.push( i + subdivisions + 1 );
       }
 
       // Edge connecting inner and outer radius.
-      edges.push(0);
+      indices.push(0);
 
       return {
         vertices: vertices,
-        edges: edges
+        indices: indices
       };
     }
   };

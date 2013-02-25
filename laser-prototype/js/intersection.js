@@ -292,12 +292,12 @@ var Intersection = (function() {
 
     /**
      * Calculates the nearest intersection point of the ray given by r + td,
-     * where t >= 0, and a geometry object: a collection of vertices and edges.
+     * where t >= 0, and a geometry object: a collection of vertices and indices.
      * @param  {number} rx x-coordinate of ray origin.
      * @param  {number} ry y-coordinate of ray origin.
      * @param  {number} dx x-direction of ray.
      * @param  {number} dy y-direction of ray.
-     * @param  {{vertices: [], edges: []}} geometry
+     * @param  {{vertices: [], indices: []}} geometry
      * @return {{intersection: {x: number, y: number},  Coordinate of intersection
      *           normal:       {x: number, y: number}}} and geometry normal, or
      *                                                  null if no intersecton.
@@ -305,20 +305,20 @@ var Intersection = (function() {
      */
     rayGeometry: function( rx, ry, dx, dy, geometry ) {
       var vertices = geometry.vertices || [];
-      var edges = geometry.edges || [];
+      var indices = geometry.indices || [];
 
       var point;
       // Index of edge where the nearest intersection lies.
-      var edgeIndex = -1;
+      var edgeIndex = null;
       // Parameters.
       var min = -1;
       var t;
       var x0, y0, x1, y1;
-      for ( var i = 0, n = edges.length; i < n; i++ ) {
-        x0 = vertices[ 2 * edges[i] ];
-        y0 = vertices[ 2 * edges[i] + 1 ];
-        x1 = vertices[ 2 * edges[ ( i + 1 ) % n ] ];
-        y1 = vertices[ 2 * edges[ ( i + 1 ) % n ] + 1 ];
+      for ( var i = 0, n = indices.length - 1; i < n; i++ ) {
+        x0 = vertices[ 2 * indices[i] ];
+        y0 = vertices[ 2 * indices[i] + 1 ];
+        x1 = vertices[ 2 * indices[ i + 1 ] ];
+        y1 = vertices[ 2 * indices[ i + 1 ] + 1 ];
 
         point = Intersection.raySegment( rx, ry, dx, dy,
                                          x0, y0, x1, y1 );
@@ -344,19 +344,19 @@ var Intersection = (function() {
       }
 
       t = min;
-      if ( t < 0 || edgeIndex < 0 ) {
+      if ( t < 0 || edgeIndex === null ) {
         return null;
       }
-
+      console.log( 't, idx: ' + t + ', ' + edgeIndex );
       // Calculate normal of edge (in the 'right' direction).
-      x0 = vertices[ 2 * edges[ edgeIndex ] ];
-      y0 = vertices[ 2 * edges[ edgeIndex ] + 1 ];
-      x1 = vertices[ 2 * edges[ ( edgeIndex + 1 ) % edges.length ] ];
-      y1 = vertices[ 2 * edges[ ( edgeIndex + 1 ) % edges.length ] + 1 ];
-      console.log( ( 2 * edges[ edgeIndex ] ) + ', ' +
-                   ( 2 * edges[ edgeIndex ] + 1 ) + ', ' +
-                   ( 2 * edges[ ( edgeIndex + 1 ) % edges.length ] ) + ', ' +
-                   ( 2 * edges[ ( edgeIndex + 1 ) % edges.length ] + 1 ) );
+      x0 = vertices[ 2 * indices[ edgeIndex ] ];
+      y0 = vertices[ 2 * indices[ edgeIndex ] + 1 ];
+      x1 = vertices[ 2 * indices[ edgeIndex + 1 ] ];
+      y1 = vertices[ 2 * indices[ edgeIndex + 1 ] + 1 ];
+      console.log( ( 2 * indices[ edgeIndex ] ) + ', ' +
+                   ( 2 * indices[ edgeIndex ] + 1 ) + ', ' +
+                   ( 2 * indices[ edgeIndex + 1 ] ) + ', ' +
+                   ( 2 * indices[ edgeIndex + 1 ] + 1 ) );
 
       var sx = x1 - x0,
           sy = y1 - y0;

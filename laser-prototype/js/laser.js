@@ -26,8 +26,8 @@ Emitter.prototype.update = function( elapsedTime ) {
   Entity.prototype.update.call( this, elapsedTime );
 
   var rotation = this.getRotation();
-  var sin = Math.sin( rotation );
   var cos = Math.cos( rotation );
+  var sin = Math.sin( rotation );
 
   var rayOrigin, rayDirection;
   var shapeRayOrigin, shapeRayDirection;

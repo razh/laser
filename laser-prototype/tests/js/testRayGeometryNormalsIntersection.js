@@ -38,6 +38,181 @@ function onMouseMove( event ) {
   _test.ray.y = event.pageY;
 }
 
+
+var Shape = function() {
+  this.x = 0;
+  this.y = 0;
+
+  this.vertices = [];
+  this.indices = [];
+
+  this.width = 20;
+  this.height = 20;
+  this.rotation = 0;
+
+  this.fillStyle = 'rgba( 0, 127, 127, 1.0 )';
+  this.velocityY = 2;
+  this.angularVelocity = Math.PI / 180;
+};
+
+Shape.prototype.worldToLocalCoordinates = function() {
+  var x, y;
+  if ( arguments.length === 1 ) {
+    x = arguments[0].x;
+    y = arguments[0].y;
+  } else if ( arguments.length === 2 ) {
+    x = arguments[0];
+    y = arguments[1];
+  }
+
+  // Translate.
+  x -= this.x;
+  y -= this.y;
+
+  // Rotate.
+  var rotation = -this.rotation;
+  if ( rotation !== 0 ) {
+    var cos = Math.cos( rotation ),
+        sin = Math.sin( rotation );
+
+    var rx = cos * x - sin * y,
+        ry = sin * x + cos * y;
+
+    x = rx;
+    y = ry;
+  }
+
+  // Scale.
+  x /= this.width;
+  y /= this.height;
+
+  return {
+    x: x,
+    y: y
+  };
+};
+
+Shape.prototype.localToWorldCoordinates = function() {
+  var x, y;
+  if ( arguments.length === 1 ) {
+    x = arguments[0].x;
+    y = arguments[0].y;
+  } else if ( arguments.length === 2 ) {
+    x = arguments[0];
+    y = arguments[1];
+  }
+
+  // Scale.
+  x *= this.width;
+  y *= this.height;
+
+  // Rotate.
+  var rotation = this.rotation;
+  if ( rotation !== 0 ) {
+    var cos = Math.cos( rotation ),
+        sin = Math.sin( rotation );
+
+    var rx = cos * x - sin * y,
+        ry = sin * x + cos * y;
+
+    x = rx;
+    y = ry;
+  }
+
+  // Translate.
+  x += this.x;
+  y += this.y;
+
+  return {
+    x: x,
+    y: y
+  };
+};
+
+Shape.prototype.drawPath = function( ctx ) {
+  ctx.beginPath();
+
+  var x = this.vertices[ 2 * this.indices[0] ],
+      y = this.vertices[ 2 * this.indices[0] + 1 ];
+
+  ctx.moveTo( x, y );
+
+  for ( var i = 1, n = this.indices.length; i < n; i++ ) {
+    x = this.vertices[ 2 * this.indices[i] ];
+    y = this.vertices[ 2 * this.indices[i] + 1 ];
+
+    ctx.lineTo( x, y );
+  }
+
+  ctx.closePath();
+};
+
+Shape.prototype.drawNormals = function( ctx ) {
+  ctx.strokeStyle = 'rgba( 0, 127, 0, 1.0 )';
+  ctx.lineWidth = 0.01;
+
+  ctx.beginPath();
+
+  var x0, y0, x1, y1;
+  var hx, hy; // Line segment bisection point.
+  var nx, ny; // Normal.
+  var length;
+  for ( var i = 0, n = this.indices.length - 1; i < n; i++ ) {
+    x0 = this.vertices[ 2 * this.indices[i] ];
+    y0 = this.vertices[ 2 * this.indices[i] + 1 ];
+    x1 = this.vertices[ 2 * this.indices[ i + 1 ] ];
+    y1 = this.vertices[ 2 * this.indices[ i + 1 ] + 1 ];
+
+    hx = 0.5 * ( x0 + x1 );
+    hy = 0.5 * ( y0 + y1 );
+
+    nx = x1 - x0,
+    ny = y1 - y0;
+
+    length = Math.sqrt( nx * nx + ny * ny );
+    if ( Math.abs( length ) < 1e-5 ) {
+      continue;
+    }
+
+    length = 0.05 / length;
+
+    nx *= length;
+    ny *= length;
+
+    ctx.moveTo( hx, hy );
+    ctx.lineTo( hx + ny, hy - nx );
+  }
+
+  ctx.closePath();
+};
+
+Shape.prototype.draw = function( ctx ) {
+  ctx.save();
+
+  ctx.translate( this.x, this.y );
+  ctx.rotate( this.rotation );
+  ctx.scale( this.width, this.height );
+
+  this.drawNormals( ctx );
+  ctx.stroke();
+
+  ctx.fillStyle = this.fillStyle;
+  ctx.strokeStyle = this.fillStyle;
+  this.drawPath( ctx );
+  ctx.lineWidth = 0.01;
+  ctx.stroke();
+  // ctx.fill();
+
+  ctx.restore();
+};
+
+var Ray = function() {
+  this.x = 0;
+  this.y = 0;
+  this.dx = 1;
+  this.dy = 0;
+};
+
 var Test = function() {
   this.WIDTH = window.innerWidth;
   this.HEIGHT = window.innerHeight;
@@ -78,7 +253,7 @@ Test.prototype.update = function() {
   var elapsedTime = this.currTime - this.prevTime;
   this.prevTime = this.currTime;
 
-  rotation += 0.001;
+  rotation += 0.01;
   var cos = Math.cos( rotation );
   var sin = Math.sin( rotation );
   this.ray.dx = cos;
@@ -117,7 +292,7 @@ Test.prototype.update = function() {
     intersection = Intersection.rayGeometry( rayOrigin.x, rayOrigin.y,
                                              rayDirection.x, rayDirection.y,
                                              { vertices: shape.vertices,
-                                               edges: shape.edges });
+                                               indices: shape.indices });
     if ( intersection !== null ) {
       shape.fillStyle = 'rgba( 0, 127, 0, 1.0 )';
       intersection.normal = shape.localToWorldCoordinates( intersection.normal.x + intersection.intersection.x,
@@ -172,20 +347,10 @@ Test.prototype.draw = function() {
     this.ctx.strokeStyle = 'rgba( 0, 0, 127, 1.0 )';
     this.ctx.stroke();
   }
-
-  // this.ctx.beginPath();
-  this.ctx.moveTo( 100, 100 );
-  this.ctx.lineTo( 200, 200 );
-  this.ctx.lineTo( 200, 400 );
-  // this.ctx.closePath();
-
-  this.ctx.strokeStyle = 'rgba( 255, 0, 0, 1.0 )';
-  this.ctx.lineWidth = 1;
-  this.ctx.stroke();
 };
 
 Test.prototype.generateShapes = function() {
-  var originX = 50;
+  var originX = 100;
   var originY = 150;
 
   var geometry;
@@ -197,14 +362,15 @@ Test.prototype.generateShapes = function() {
     shape = new Shape();
     shape.x = originX + i * dx;
     shape.y = originY + i * dy;
-    shape.width = 50 + i * 3;
-    shape.height = 55 + i * 2;
+    shape.width = 100 + i * 3;
+    shape.height = 100 + i * 2;
 
     var startAngle = ( Math.PI / 180 ) * ( i + 1 ) * 4;
     var endAngle = ( Math.PI / 180 ) * ( ( i + 1 ) * 4 + ( i + 1 ) * 30 );
     geometry = Geometry.createRing({
       startAngle: startAngle,
-      endAngle: endAngle
+      endAngle: endAngle,
+      subdivisions: 4
     });
     console.log( shape.x + ', ' +
                  shape.y + ', ' +
@@ -212,140 +378,9 @@ Test.prototype.generateShapes = function() {
                  endAngle * 180 / Math.PI );
 
     shape.vertices = geometry.vertices;
-    shape.edges = geometry.edges;
+    shape.indices = geometry.indices;
 
+    if ( i === 8 )
     this.shapes.push( shape );
   }
-};
-
-var Shape = function() {
-  this.x = 0;
-  this.y = 0;
-
-  this.vertices = [];
-  this.edges = [];
-
-  this.width = 20;
-  this.height = 20;
-  this.rotation = 0;
-
-  this.fillStyle = 'rgba( 0, 127, 127, 1.0 )';
-  this.velocityY = 2;
-  this.angularVelocity = Math.PI / 180;
-};
-
-Shape.prototype.worldToLocalCoordinates = function() {
-  var x, y;
-  if ( arguments.length === 1 ) {
-    x = arguments[0].x;
-    y = arguments[0].y;
-  } else if ( arguments.length === 2 ) {
-    x = arguments[0];
-    y = arguments[1];
-  }
-
-  // Translate.
-  x -= this.x;
-  y -= this.y;
-
-  // Rotate.
-  var rotation = -this.rotation;
-  if ( rotation !== 0 ) {
-    var cos = Math.cos( rotation ),
-        sin = Math.sin( rotation );
-
-    var rx = cos * x - sin * y,
-        ry = sin * x + cos * y;
-
-    x = rx;
-    y = ry;
-  }
-
-  // Scale.
-  x /= this.width;
-  y /= this.height;
-
-  return {
-    x: x,
-    y: y
-  };
-};
-
-
-Shape.prototype.localToWorldCoordinates = function() {
-  var x, y;
-  if ( arguments.length === 1 ) {
-    x = arguments[0].x;
-    y = arguments[0].y;
-  } else if ( arguments.length === 2 ) {
-    x = arguments[0];
-    y = arguments[1];
-  }
-
-  // Scale.
-  x *= this.width;
-  y *= this.height;
-
-  // Rotate.
-  var rotation = this.rotation;
-  if ( rotation !== 0 ) {
-    var cos = Math.cos( rotation ),
-        sin = Math.sin( rotation );
-
-    var rx = cos * x - sin * y,
-        ry = sin * x + cos * y;
-
-    x = rx;
-    y = ry;
-  }
-
-  // Translate.
-  x += this.x;
-  y += this.y;
-
-  return {
-    x: x,
-    y: y
-  };
-};
-
-Shape.prototype.drawPath = function( ctx ) {
-  ctx.beginPath();
-
-  var x = this.vertices[ 2 * this.edges[0] ],
-      y = this.vertices[ 2 * this.edges[0] + 1 ];
-
-  ctx.moveTo( x, y );
-
-  for ( var i = 1, n = this.edges.length; i < n; i++ ) {
-    x = this.vertices[ 2 * this.edges[i] ];
-    y = this.vertices[ 2 * this.edges[i] + 1 ];
-
-    ctx.lineTo( x, y );
-  }
-
-  ctx.closePath();
-};
-
-Shape.prototype.draw = function( ctx ) {
-  ctx.save();
-
-  ctx.translate( this.x, this.y );
-  ctx.rotate( this.rotation );
-  ctx.scale( this.width, this.height );
-
-  this.drawPath( ctx );
-
-  ctx.strokeStyle = this.fillStyle;
-  ctx.lineWidth = 0.001;
-  ctx.stroke();
-
-  ctx.restore();
-};
-
-var Ray = function() {
-  this.x = 0;
-  this.y = 0;
-  this.dx = 1;
-  this.dy = 0;
 };
