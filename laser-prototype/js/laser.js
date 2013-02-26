@@ -52,8 +52,9 @@ Emitter.prototype.update = function( elapsedTime ) {
     for ( j = 0, jl = shapes.length; j < jl; j++ ) {
       shape = shapes[j];
 
-      if ( shape.intersectsRay( rayOrigin.x, rayOrigin.y,
-                                rayDirection.x, rayDirection.y ) !== null ) {
+      var point = shape.intersectsRay( rayOrigin.x, rayOrigin.y,
+                                       rayDirection.x, rayDirection.y );
+      if ( point !== null ) {
         shape.setColor( 0, 127, 0, 1.0 );
       } else {
         shape.setColor( 127, 0, 0, 1.0 );

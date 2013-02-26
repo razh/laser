@@ -268,25 +268,29 @@ Shape.prototype.intersectsRay = function( rx, ry, dx, dy ) {
   };
 
   // Check against bounding circle.
-  if ( Intersection.rayCircle( rayOrigin.x, rayOrigin.y,
-                               rayDirection.x, rayDirection.y,
-                               0, 0,
-                               this.getRadius() ) === null ) {
+  var t = Intersection.rayCircleParameter( rayOrigin.x, rayOrigin.y,
+                                           rayDirection.x, rayDirection.y,
+                                           0, 0,
+                                           this.getRadius() );
+
+  if ( t === null || t < 0 ) {
     return null;
   }
 
   // Check against bounding box.
   var aabb = this.getAABB();
-  if ( Intersection.rayAABB( rayOrigin.x, rayOrigin.y,
-                             rayDirection.x, rayDirection.y,
-                             aabb.xmin, aabb.ymin,
-                             aabb.xmax, aabb.ymax ) === null ) {
+  t = Intersection.rayAABBParameter( rayOrigin.x, rayOrigin.y,
+                                     rayDirection.x, rayDirection.y,
+                                     aabb.xmin, aabb.ymin,
+                                     aabb.xmax, aabb.ymax );
+
+  if ( t === null || t < 0 ) {
     return null;
   }
 
-  return Intersection.rayGeometry( rayOrigin.x, rayOrigin.y,
-                                   rayDirection.x, rayDirection.y,
-                                   this.getGeometry() );
+  return Intersection.rayGeometryParameter( rayOrigin.x, rayOrigin.y,
+                                            rayDirection.x, rayDirection.y,
+                                            this.getGeometry() );
 };
 
 // JSON.
