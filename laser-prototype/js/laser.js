@@ -46,26 +46,14 @@ Emitter.prototype.update = function( elapsedTime ) {
     rayOrigin = entity.worldToLocalCoordinates( this.getX(), this.getY() );
     rayDirection = entity.worldToLocalCoordinates( this.getX() + cos, this.getY() + sin );
 
+    rayDirection.x -= rayOrigin.x;
+    rayDirection.y -= rayOrigin.y;
+
     for ( j = 0, jl = shapes.length; j < jl; j++ ) {
       shape = shapes[j];
 
-      shapeRayOrigin = shape.worldToLocalCoordinates( rayOrigin.x, rayOrigin.y );
-      shapeRayDirection = shape.worldToLocalCoordinates( rayDirection.x, rayDirection.y );
-
-      shapeRayDirection.x -= shapeRayOrigin.x;
-      shapeRayDirection.y -= shapeRayOrigin.y;
-
-      shape.ray = {
-        x: shapeRayOrigin.x,
-        y: shapeRayOrigin.y,
-        dx: shapeRayDirection.x,
-        dy: shapeRayDirection.y
-      };
-
-      if ( Intersection.rayCircle( shapeRayOrigin.x, shapeRayOrigin.y,
-                                   shapeRayDirection.x, shapeRayDirection.y,
-                                   0, 0,
-                                   shape.getRadius() ) !== null ) {
+      if ( shape.intersectsRay( rayOrigin.x, rayOrigin.y,
+                                rayDirection.x, rayDirection.y ) !== null ) {
         shape.setColor( 0, 127, 0, 1.0 );
       } else {
         shape.setColor( 127, 0, 0, 1.0 );

@@ -15,7 +15,7 @@ var Shape = function() {
 
   this._radius = 0.0;
 
-  this.ray = {
+  this.debugRay = {
     x: 0,
     y: 0,
     dx: 0,
@@ -69,7 +69,7 @@ Shape.prototype.draw = function( ctx ) {
   ctx.lineTo( aabb.xmin, aabb.ymin );
 
   // Draw debug ray.
-  var ray = this.ray;
+  var ray = this.debugRay;
   ctx.moveTo( ray.x, ray.y );
   ctx.lineTo( ray.x + 1000 * ray.dx, ray.y + 1000 * ray.dy );
 
@@ -222,6 +222,9 @@ Shape.prototype.getRadius = function() {
   return this._radius;
 };
 
+/**
+ * Precalculates the radius of the given shape.
+ */
 Shape.prototype.calculateRadius = function() {
   var distanceSquared = 0;
 
@@ -237,6 +240,53 @@ Shape.prototype.calculateRadius = function() {
   }
 
   this._radius = Math.sqrt( distanceSquared );
+};
+
+/**
+ * Returns the nearest intersection point and geometry normal of this shape with
+ * the ray given by r + td, where t >= 0.
+ * @param  {number} rx x-coordinate of ray origin in world/parent space.
+ * @param  {number} ry y-coordinate of ray origin in world/parent space.
+ * @param  {number} dx x-direction of ray in world/parent space.
+ * @param  {number} dy y-direction of ray in world/parent space.
+ * @return {{intersection: {x: number, y: number},  Coordinate of intersection
+ *           normal:       {x: number, y: number}}} and geometry normal, or
+ *                                                  null if no intersecton.
+ */
+Shape.prototype.intersectsRay = function( rx, ry, dx, dy ) {
+  var rayOrigin = this.worldToLocalCoordinates( rx, ry );
+  var rayDirection = this.worldToLocalCoordinates( rx + dx, ry + dy );
+
+  rayDirection.x -= rayOrigin.x;
+  rayDirection.y -= rayOrigin.y;
+
+  this.debugRay = {
+    x: rayOrigin.x,
+    y: rayOrigin.y,
+    dx: rayDirection.x,
+    dy: rayDirection.y
+  };
+
+  // Check against bounding circle.
+  if ( Intersection.rayCircle( rayOrigin.x, rayOrigin.y,
+                               rayDirection.x, rayDirection.y,
+                               0, 0,
+                               this.getRadius() ) === null ) {
+    return null;
+  }
+
+  // Check against bounding box.
+  var aabb = this.getAABB();
+  if ( Intersection.rayAABB( rayOrigin.x, rayOrigin.y,
+                             rayDirection.x, rayDirection.y,
+                             aabb.xmin, aabb.ymin,
+                             aabb.xmax, aabb.ymax ) === null ) {
+    return null;
+  }
+
+  return Intersection.rayGeometry( rayOrigin.x, rayOrigin.y,
+                                   rayDirection.x, rayDirection.y,
+                                   this.getGeometry() );
 };
 
 // JSON.
