@@ -2,8 +2,30 @@ var Intersection = (function() {
   var EPSILON = 1e-5;
   return {
     /**
-     * Calculates the nearest intersection point of the ray given by r + td,
+     * Returns the point given by the ray r + td and parameter t, where t >= 0.
+     * @param  {number} rx x-coordinate of ray origin.
+     * @param  {number} ry y-coordinate of ray origin.
+     * @param  {number} dx x-direction of ray.
+     * @param  {number} dy y-direction of ray.
+     * @param  {number} t  ray parameter.
+     * @return {x: number, y: number} Coordinate of point on parameter t, or
+     *                                null if t < 0.
+     */
+    projectRayParameter: function( rx, ry, dx, dy, t ) {
+      if ( t === null || t < 0 ) {
+        return null;
+      }
+
+      return {
+        x: rx + t * dx,
+        y: ry + t * dy
+      };
+    },
+
+    /**
+     * Returns the nearest intersection point of the ray given by r + td,
      * where t >= 0, and the line segment given by x + sy, where 0 <= s <= 1.
+     * Need to convert coordinate back to world space.
      * @param  {number} rx x-coordinate of ray origin.
      * @param  {number} ry y-coordinate of ray origin.
      * @param  {number} dx x-direction of ray.
@@ -14,8 +36,30 @@ var Intersection = (function() {
      * @param  {number} y1 y-coordinate of second point in line segment.
      * @return {x: number, y: number} Coordinate of intersection, or null if no intersection.
      */
-    raySegment: function( rx, ry, dx, dy,
-                          x0, y0, x1, y1 ) {
+    raySegment: function( rx, ry, dx, dy, x0, y0, x1, y1 ) {
+
+      var t = Intersection.raySegmentParameter( rx, ry, dx, dy,
+                                                x0, y0, x1, y1 );
+
+      return Intersection.projectRayParameter( rx, ry, dx, dy, t );
+     },
+
+    /**
+     * Returns the parameter of the nearest intersection point of the ray
+     * given by r + td, where t >= 0, and the line segment given by x + sy,
+     * where 0 <= s <= 1.
+     * @param  {number} rx x-coordinate of ray origin.
+     * @param  {number} ry y-coordinate of ray origin.
+     * @param  {number} dx x-direction of ray.
+     * @param  {number} dy y-direction of ray.
+     * @param  {number} x0 x-coordinate of first point in line segment.
+     * @param  {number} y0 y-coordinate of first point in line segment.
+     * @param  {number} x1 x-coordinate of second point in line segment.
+     * @param  {number} y1 y-coordinate of second point in line segment.
+     * @return {number} Parameter of intersection point along ray, or null if
+     *                  no intersection.
+     */
+    raySegmentParameter: function( rx, ry, dx, dy, x0, y0, x1, y1 ) {
       /*
         Given the parametric equation of a ray:
 
@@ -130,14 +174,11 @@ var Intersection = (function() {
         return null;
       }
 
-      return {
-        x: rx + t * dx,
-        y: ry + t * dy
-      };
+      return t;
     },
 
     /**
-     * Calculates the nearest intersection point of the ray given by r + td,
+     * Returns the nearest intersection point of the ray given by r + td,
      * where t >= 0, and the axis-aligned bounding-box given by
      * [ ( x0, y0 ), ( x1, y1 ) ].
      * @param  {number} rx x-coordinate of ray origin.
@@ -151,41 +192,59 @@ var Intersection = (function() {
      * @return {x: number, y: number} Coordinate of intersection, or null if no intersection.
      */
     rayAABB: function( rx, ry, dx, dy, x0, y0, x1, y1 ) {
+
+      var t = Intersection.rayAABBParameter( rx, ry, dx, dy,
+                                             x0, y0, x1, y1 );
+
+      return Intersection.projectRayParameter( rx, ry, dx, dy, t );
+    },
+
+    /**
+     * Returns the parameter of the nearest intersection point of the ray given
+     * by r + td, where t >= 0, and the axis-aligned bounding-box given by
+     * [ ( x0, y0 ), ( x1, y1 ) ].
+     * @param  {number} rx x-coordinate of ray origin.
+     * @param  {number} ry y-coordinate of ray origin.
+     * @param  {number} dx x-direction of ray.
+     * @param  {number} dy y-direction of ray.
+     * @param  {[type]} x0 x-coordinate of first point in AABB.
+     * @param  {[type]} y0 y-coordinate of first point in AABB.
+     * @param  {[type]} x1 x-coordinate of second point in AABB.
+     * @param  {[type]} y1 y-coordinate of second point in AABB.
+     * @return {number} Parameter of intersection point along ray, or null if
+     *                  no intersection.
+     */
+
+    rayAABBParameter: function( rx, ry, dx, dy, x0, y0, x1, y1 ) {
       // Project the ray on to each line segment (assuming ( x0, y0 ) is min,
       // although it doesn't matter).
-      var points = [];
+      var parameters = [];
       // Left.
-      points.push( Intersection.raySegment( rx, ry, dx, dy, x0, y0, x0, y1 ) );
+      parameters.push( Intersection.raySegmentParameter( rx, ry, dx, dy,
+                                                         x0, y0, x0, y1 ) );
       // Right.
-      points.push( Intersection.raySegment( rx, ry, dx, dy, x1, y0, x1, y1 ) );
+      parameters.push( Intersection.raySegmentParameter( rx, ry, dx, dy,
+                                                         x1, y0, x1, y1 ) );
       // Top.
-      points.push( Intersection.raySegment( rx, ry, dx, dy, x0, y1, x1, y1 ) );
+      parameters.push( Intersection.raySegmentParameter( rx, ry, dx, dy,
+                                                         x0, y1, x1, y1 ) );
       // Bottom.
-      points.push( Intersection.raySegment( rx, ry, dx, dy, x0, y0, x1, y0 ) );
+      parameters.push( Intersection.raySegmentParameter( rx, ry, dx, dy,
+                                                         x0, y0, x1, y0 ) );
 
-      var point;
-      // Determine minimum postive parameter of intersection points.
+      // Determine minimum positive parameter of intersection points.
       var min = -1;
       // Default value (if all four intersections are null, return null).
       var t;
-      for ( var i = 0, n = points.length; i < n; i++ ) {
-        if ( points[i] === null ) {
-          continue;
-        }
-
-        point = points[i];
-        // Find the parameter where the intersection lies.
-        if ( Math.abs( dx ) > EPSILON ) {
-          t = ( point.x - rx ) / dx;
-        } else if ( Math.abs( dy ) > EPSILON ) {
-          t = ( point.y - ry ) / dy;
-        } else {
+      for ( var i = 0, n = parameters.length; i < n; i++ ) {
+        t = parameters[i];
+        if ( t === null || t < 0 ) {
           continue;
         }
 
         // If min is negative, the value has not been initialized.
         // We want t's >= 0 and less than min.
-        if ( min < 0 || ( t >= 0 && t < min ) ) {
+        if ( min < 0 || t < min ) {
           min = t;
         }
       }
@@ -195,14 +254,11 @@ var Intersection = (function() {
         return null;
       }
 
-      return {
-        x: rx + t * dx,
-        y: ry + t * dy
-      };
+      return t;
     },
 
     /**
-     * Calculates the nearest intersection point of the ray given by r + td,
+     * Returns the nearest intersection point of the ray given by r + td,
      * where t >= 0, and the circle given by
      * ( x - cx ) ^ 2 + ( y - cy ) ^ 2 <= r.
      * @param  {number} rx x-coordinate of ray origin.
@@ -215,6 +271,27 @@ var Intersection = (function() {
      * @return {x: number, y: number} Coordinate of intersection, or null if no intersection.
      */
     rayCircle: function( rx, ry, dx, dy, cx, cy, r ) {
+      var t = Intersection.rayCircleParameter( rx, ry, dx, dy, cx, cy, r );
+
+      return Intersection.projectRayParameter( rx, ry, dx, dy, t );
+    },
+
+
+    /**
+     * Returns the parameter of nearest intersection point of the ray given by
+     * r + td, where t >= 0, and the circle given by
+     * ( x - cx ) ^ 2 + ( y - cy ) ^ 2 <= r.
+     * @param  {number} rx x-coordinate of ray origin.
+     * @param  {number} ry y-coordinate of ray origin.
+     * @param  {number} dx x-direction of ray.
+     * @param  {number} dy y-direction of ray.
+     * @param  {number} cx x-coordinate of circle center.
+     * @param  {number} cy y-coordinate of circle center.
+     * @param  {number} r  radius of circle.
+     * @return {number} Parameter of intersection point along ray, or null if
+     *                  no intersection.
+     */
+    rayCircleParameter: function( rx, ry, dx, dy, cx, cy, r ) {
       /* Given the parametric equation of a ray:
 
           x(t) = rx + t * dx
@@ -295,15 +372,11 @@ var Intersection = (function() {
         return null;
       }
 
-      // Transform ray back to world space.
-      return {
-        x: cx + rx + t * dx,
-        y: cy + ry + t * dy
-      };
+      return t;
     },
 
     /**
-     * Calculates the nearest intersection point of the ray given by r + td,
+     * Returns the nearest intersection point of the ray given by r + td,
      * where t >= 0, and a geometry object: a collection of vertices and indices.
      * @param  {number} rx x-coordinate of ray origin.
      * @param  {number} ry y-coordinate of ray origin.
@@ -312,10 +385,35 @@ var Intersection = (function() {
      * @param  {{vertices: [], indices: []}} geometry
      * @return {{intersection: {x: number, y: number},  Coordinate of intersection
      *           normal:       {x: number, y: number}}} and geometry normal, or
-     *                                                  null if no intersecton.
-     *
+     *                                                  null if no intersection.
      */
     rayGeometry: function( rx, ry, dx, dy, geometry ) {
+      var point = Intersection.rayGeometryParameter( rx, ry, dx, dy, geometry );
+      if ( point === null ) {
+        return null;
+      }
+
+      return {
+        intersection: Intersection.projectRayParameter( rx, ry, dx, dy,
+                                                        point.parameter ),
+        normal: point.normal
+      };
+    },
+
+    /**
+     * Returns the parameter of the nearest intersection point of the ray given
+     * by r + td, where t >= 0, and a geometry object: a collection of vertices
+     * and indices.
+     * @param  {number} rx x-coordinate of ray origin.
+     * @param  {number} ry y-coordinate of ray origin.
+     * @param  {number} dx x-direction of ray.
+     * @param  {number} dy y-direction of ray.
+     * @param  {{vertices: [], indices: []}} geometry
+     * @return {{parameter: number,                  Parameter of intersection
+     *           normal:    {x: number, y: number}}} point and geometry normal,
+     *                                               or null if no intersection.
+     */
+    rayGeometryParameter: function( rx, ry, dx, dy, geometry ) {
       var vertices = geometry.vertices || [];
       var indices = geometry.indices || [];
 
@@ -378,10 +476,7 @@ var Intersection = (function() {
       length = 1 / length;
 
       return {
-        intersection: {
-          x: rx + t * dx,
-          y: ry + t * dy
-        },
+        parameter: t,
         normal: {
           x:  sy * length,
           y: -sx * length
