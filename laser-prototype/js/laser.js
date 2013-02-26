@@ -50,13 +50,18 @@ Laser.prototype.addDirection = function( direction ) {
 };
 
 Laser.prototype.addRay = function() {
+  // For arguments: ({origin: [], direction: []}).
   if ( arguments.length === 1 ) {
     this.addOrigin( arguments[0].origin );
     this.addDirection( arguments[0].direction );
-  } else if ( arguments.length === 2 ) {
+  }
+  // For arguments: ( origin, direction ).
+  else if ( arguments.length === 2 ) {
     this.addOrigin( arguments[0] );
     this.addDirection( arguments[1] );
-  } else if ( arguments.length === 4 ) {
+  }
+  // For arguments: ( rx, ry, dx, dy ).
+  else if ( arguments.length === 4 ) {
     this.addOrigin({
       x: arguments[0],
       y: arguments[1]
@@ -66,6 +71,13 @@ Laser.prototype.addRay = function() {
       y: arguments[3]
     });
   }
+};
+
+Laser.prototype.getLastRay = function() {
+  return {
+    origin: this.getOrigins()[ this.getOrigins().length - 1 ],
+    direction: this.getDirections()[ this.getDirections().length - 1 ]
+  };
 };
 
 Laser.prototype.getLineWidth = function() {
