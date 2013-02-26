@@ -1,10 +1,88 @@
 var Laser = function() {
+  // Ray origins.
+  this._origins = [];
+  // Ray directions.
+  this._directions = [];
 
+  this._lineWidth = 1;
+  this._color = new Color( 255, 0, 0, 1.0 );
+};
+
+Laser.prototype.clear = function() {
+  this._origins = [];
+  this._directions = [];
 };
 
 Laser.prototype.draw = function( ctx ) {
+  var origins = this.getOrigins();
+  var directions = this.getDirections();
+
+  if ( origins.length <= 0 || directions.length <= 0 ) {
+    return;
+  }
+
+  ctx.moveTo( origins[0].x, origins[0].y );
+
+  for ( var i = 1; i < origins.length; i++ ) {
+    ctx.lineTo( origins[1].x, origins[1].y );
+  }
+
+  ctx.strokeStyle = this.getColor().toString();
+  ctx.lineWidth = this.getLineWidth();
+
+  ctx.stroke();
 };
 
+Laser.prototype.getOrigins = function() {
+  return this._origins;
+};
+
+Laser.prototype.addOrigin = function( origin ) {
+  this._origins.push( origin );
+};
+
+Laser.prototype.getDirections = function() {
+  return this._directions;
+};
+
+Laser.prototype.addDirection = function( direction ) {
+  this._directions.push( direction );
+};
+
+Laser.prototype.addRay = function() {
+  if ( arguments.length === 1 ) {
+    this.addOrigin( arguments[0].origin );
+    this.addDirection( arguments[0].direction );
+  } else if ( arguments.length === 2 ) {
+    this.addOrigin( arguments[0] );
+    this.addDirection( arguments[1] );
+  } else if ( arguments.length === 4 ) {
+    this.addOrigin({
+      x: arguments[0],
+      y: arguments[1]
+    });
+    this.addDirection({
+      x: arguments[2],
+      y: arguments[3]
+    });
+  }
+};
+
+Laser.prototype.getLineWidth = function() {
+  return this._lineWidth;
+};
+
+Laser.prototype.setLineWidth = function( lineWidth ) {
+  this._lineWidth = lineWidth;
+};
+
+Laser.prototype.getColor = function() {
+  return this._color;
+};
+
+Laser.prototype.setColor = function( color ) {
+  this.getColor().set( color );
+};
 
 // Laser emitter.
 var Emitter = function() {
@@ -79,4 +157,8 @@ Emitter.prototype.draw = function( ctx ) {
   ctx.stroke();
 
   ctx.restore();
+};
+
+Emitter.prototype.getLaser = function() {
+  return this._laser;
 };
