@@ -4,8 +4,12 @@ var Laser = function() {
   // Ray directions.
   this._directions = [];
 
+  this._parent = null;
+
   this._lineWidth = 1;
   this._color = new Color( 255, 0, 0, 1.0 );
+
+  this._reflectionLimit = 16;
 };
 
 Laser.prototype.clear = function() {
@@ -80,6 +84,14 @@ Laser.prototype.getLastRay = function() {
   };
 };
 
+Laser.prototype.getParent = function() {
+  return this._parent;
+};
+
+Laser.prototype.setParent = function( parent ) {
+  this._parent = parent;
+};
+
 Laser.prototype.getLineWidth = function() {
   return this._lineWidth;
 };
@@ -96,6 +108,45 @@ Laser.prototype.setColor = function( color ) {
   this.getColor().set( color );
 };
 
+Laser.prototype.getReflectionLimit = function() {
+  return this._reflectionLimit;
+};
+
+Laser.prototype.setReflectionLimit = function( reflectionLimit ) {
+  this._reflectionLimit = reflectionLimit;
+};
+
+Laser.prototype.project = function( entities ) {
+  var reflectionLimit = this.getReflectionLimit();
+  var reflectionCount = 0;
+
+  var ray = this.getLastRay();
+
+  var parent = this.getParent();
+  var entity, shapes, shape;
+  var i, j, il, jl;
+  while ( reflectionCount < reflectionLimit ) {
+    for ( i = 0, il = entities.length; i < n; i++ ) {
+      entity = entities[i];
+      if ( entity === parent ) {
+        continue;
+      }
+
+      ray.origin = entity.worldToLocalCoordinates( ray.origin.x, ray.origin.y );
+      ray.direction = entity.worldToLocalCoordinates( ray.origin.x + ray.direction.x,
+                                                      ray.origin.y + ray.direction.y );
+
+      ray.direction.x -= ray.origin.x;
+      ray.direction.y -= ray.origin.y;
+
+      shapes = entity.getShapes();
+      for ( j = 0, jl = shapes.length; j < jl; j++ ) {
+        shape = shapes[j];
+      }
+    }
+  }
+};
+
 // Laser emitter.
 var Emitter = function() {
   Entity.call( this );
@@ -107,6 +158,7 @@ var Emitter = function() {
   this.setHeight( 100 );
 
   this._laser = new Laser();
+  this._laser.setParent( this );
 };
 
 Emitter.prototype = new Entity();
@@ -120,7 +172,6 @@ Emitter.prototype.update = function( elapsedTime ) {
   var sin = Math.sin( rotation );
 
   var rayOrigin, rayDirection;
-  var shapeRayOrigin, shapeRayDirection;
 
   var entities = _game.getEntities();
   var entity, shapes, shape;
@@ -131,14 +182,13 @@ Emitter.prototype.update = function( elapsedTime ) {
       continue;
     }
 
-    shapes = entity.getShapes();
-
     rayOrigin = entity.worldToLocalCoordinates( this.getX(), this.getY() );
     rayDirection = entity.worldToLocalCoordinates( this.getX() + cos, this.getY() + sin );
 
     rayDirection.x -= rayOrigin.x;
     rayDirection.y -= rayOrigin.y;
 
+    shapes = entity.getShapes();
     for ( j = 0, jl = shapes.length; j < jl; j++ ) {
       shape = shapes[j];
 

@@ -7,6 +7,9 @@ var Object2D = function() {
   this._width = 1.0;
   this._height = 1.0;
   this._rotation = 0.0;
+
+  this._visible = true;
+  this._colliding = true;
 };
 
 Object2D.prototype.getX = function() {
@@ -116,6 +119,22 @@ Object2D.prototype.getRotationInDegrees = function() {
 Object2D.prototype.setRotationInDegrees = function( rotation ) {
   this._rotation = rotation * Math.PI / 180;
   return this;
+};
+
+Object2D.prototype.isVisible = function() {
+  return this._visible;
+};
+
+Object2D.prototype.setVisible = function( visible ) {
+  this._visible = visible;
+};
+
+Object2D.prototype.isColliding = function() {
+  return this._colliding;
+};
+
+Object2D.prototype.setColliding = function( colliding ) {
+  this._colliding = colliding;
 };
 
 // Coordinate transforms.

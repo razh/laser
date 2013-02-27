@@ -45,6 +45,10 @@ Shape.prototype.drawPath = function( ctx ) {
 };
 
 Shape.prototype.draw = function( ctx ) {
+  if ( !this.isVisible() ) {
+    return;
+  }
+
   ctx.save();
 
   ctx.translate( this.getX(), this.getY() );

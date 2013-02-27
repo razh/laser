@@ -10,6 +10,10 @@ Entity.prototype.constructor = Entity;
 Entity.prototype.update = function( elapsedTime ) {};
 
 Entity.prototype.draw = function( ctx ) {
+  if ( !this.isVisible() ) {
+    return;
+  }
+
   ctx.save();
 
   ctx.translate( this.getX(), this.getY() );
