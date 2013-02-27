@@ -9,12 +9,22 @@ var Laser = function() {
   this._lineWidth = 1;
   this._color = new Color( 255, 0, 0, 1.0 );
 
-  this._reflectionLimit = 16;
+  this._reflectionLimit = 2;
 };
 
 Laser.prototype.clear = function() {
   this._origins = [];
   this._directions = [];
+
+  this.addOrigin( this.getParent().getPosition() );
+
+  var rotation = this.getParent().getPosition();
+  var cos = Math.cos( rotation );
+  var sin = Math.sin( rotation );
+  this.addDirection({
+    x: cos,
+    y: sin
+  });
 };
 
 Laser.prototype.draw = function( ctx ) {
@@ -28,7 +38,7 @@ Laser.prototype.draw = function( ctx ) {
   ctx.moveTo( origins[0].x, origins[0].y );
 
   for ( var i = 1; i < origins.length; i++ ) {
-    ctx.lineTo( origins[1].x, origins[1].y );
+    ctx.lineTo( origins[i].x, origins[i].y );
   }
 
   ctx.strokeStyle = this.getColor().toString();
@@ -117,16 +127,33 @@ Laser.prototype.setReflectionLimit = function( reflectionLimit ) {
 };
 
 Laser.prototype.project = function( entities ) {
+  this.clear();
+
   var reflectionLimit = this.getReflectionLimit();
   var reflectionCount = 0;
 
-  var ray = this.getLastRay();
+  var ray;
+  var minEntityRay;
 
   var parent = this.getParent();
   var entity, shapes, shape;
+  var entityIndex, shapeIndex = -1;
+  var min = -1;
+  var intersection;
+  // Variables of intersection in shape local space.
+  var point, normal;
+  var shapePoint;
+  var dx, dy;
+  var rayLength, normalLength;
+  var dot, angle;
+  var cos, sin;
+  var direction;
   var i, j, il, jl;
   while ( reflectionCount < reflectionLimit ) {
-    for ( i = 0, il = entities.length; i < n; i++ ) {
+    // Find the entity with the minimum parameter.
+    for ( i = 0, il = entities.length; i < il; i++ ) {
+      ray = this.getLastRay();
+
       entity = entities[i];
       if ( entity === parent ) {
         continue;
@@ -139,11 +166,84 @@ Laser.prototype.project = function( entities ) {
       ray.direction.x -= ray.origin.x;
       ray.direction.y -= ray.origin.y;
 
+      // Find the shape with the minimum parameter.
       shapes = entity.getShapes();
       for ( j = 0, jl = shapes.length; j < jl; j++ ) {
         shape = shapes[j];
+        shape.setColor( new Color( 127, 0, 0, 1.0 ) );
+
+        intersection = shape.intersectsRay( ray.origin.x, ray.origin.y,
+                                            ray.direction.x, ray.direction.y );
+
+        if ( intersection === null ) {
+          return;
+        }
+
+        // We've found a positive parameter smaller than current min.
+        if ( min < 0 || ( intersection.parameter > 0 &&
+                          intersection.parameter < min ) ) {
+          minEntityRay = ray;
+          min = intersection.parameter;
+          point = Intersection.projectRayParameter( ray.origin.x, ray.origin.y,
+                                                    ray.direction.x, ray.direction.y );
+          normal = intersection.normal;
+          entityIndex = i;
+          shapeIndex = j;
+        }
       }
     }
+
+    if ( entityIndex < 0 || shapeIndex < 0 ) {
+      return;
+    }
+
+    entity = entities[ entityIndex ];
+    shape = entity.getShapes()[ shapeIndex ];
+    shape.setColor( new Color( 0, 127, 0, 1.0 ) );
+
+    // Transform normal to entity space (which is what the minEntityRay is in).
+    // First, transform the intersection point to shape local space.
+    shapePoint = shape.worldToLocalCoordinates( point.x, point.y );
+    // Then, use that point to transform normal to entity local space.
+    normal = shape.localToWorldCoordinates( shapePoint.x + normal.x,
+                                            shapePoint.y + normal.y );
+
+    normal.x -= point.x;
+    normal.y -= point.y;
+
+    // Find angle of incidence between normal and ray (dot product).
+    // Magnitude of ray.
+    dx = minEntityRay.origin.x - point.x;
+    dy = minEntityRay.origin.y - point.y;
+
+    rayLength = Math.sqrt( dx * dx + dy * dy );
+    normalLength = Math.sqrt( normal.x * normal.x + normal.y * normal.y );
+
+    dot = dx * normal.x + dy * normal.y;
+    angle = Math.acos( dot / ( rayLength * normalLength ) );
+
+    // The angle of incidence equals the angle of reflectance.
+    cos = Math.cos( angle );
+    sin = Math.sin( angle );
+
+    // Rotate normal by angle.
+    dx = cos * normal.x - sin * normal.y;
+    dy = sin * normal.x + cos * normal.y;
+
+    // Transform new direction to world space.
+    direction = entity.localToWorldCoordinates( point.x + dx, + point.y + dy );
+    point = entity.localToWorldCoordinates( point.x, point.y );
+
+    direction.x -= point.x;
+    direction.y -= point.y;
+
+    // New direction of ray.
+    this.addRay({
+      origin: point,
+      direction: direction
+    });
+
+    reflectionCount++;
   }
 };
 
@@ -167,58 +267,61 @@ Emitter.prototype.constructor = new Emitter();
 Emitter.prototype.update = function( elapsedTime ) {
   Entity.prototype.update.call( this, elapsedTime );
 
-  var rotation = this.getRotation();
-  var cos = Math.cos( rotation );
-  var sin = Math.sin( rotation );
+  this.getLaser().project( _game.getEntities() );
 
-  var rayOrigin, rayDirection;
+  // var rotation = this.getRotation();
+  // var cos = Math.cos( rotation );
+  // var sin = Math.sin( rotation );
 
-  var entities = _game.getEntities();
-  var entity, shapes, shape;
-  var i, j, il, jl;
-  for ( i = 0, il = entities.length; i < il; i++ ) {
-    entity = entities[i];
-    if ( entity === this ) {
-      continue;
-    }
+  // var rayOrigin, rayDirection;
 
-    rayOrigin = entity.worldToLocalCoordinates( this.getX(), this.getY() );
-    rayDirection = entity.worldToLocalCoordinates( this.getX() + cos, this.getY() + sin );
+  // var entities = _game.getEntities();
+  // var entity, shapes, shape;
+  // var i, j, il, jl;
+  // for ( i = 0, il = entities.length; i < il; i++ ) {
+  //   entity = entities[i];
+  //   if ( entity === this ) {
+  //     continue;
+  //   }
 
-    rayDirection.x -= rayOrigin.x;
-    rayDirection.y -= rayOrigin.y;
+  //   rayOrigin = entity.worldToLocalCoordinates( this.getX(), this.getY() );
+  //   rayDirection = entity.worldToLocalCoordinates( this.getX() + cos, this.getY() + sin );
 
-    shapes = entity.getShapes();
-    for ( j = 0, jl = shapes.length; j < jl; j++ ) {
-      shape = shapes[j];
+  //   rayDirection.x -= rayOrigin.x;
+  //   rayDirection.y -= rayOrigin.y;
 
-      var point = shape.intersectsRay( rayOrigin.x, rayOrigin.y,
-                                       rayDirection.x, rayDirection.y );
-      if ( point !== null ) {
-        shape.setColor( 0, 127, 0, 1.0 );
-      } else {
-        shape.setColor( 127, 0, 0, 1.0 );
-      }
-    }
-  }
+  //   shapes = entity.getShapes();
+  //   for ( j = 0, jl = shapes.length; j < jl; j++ ) {
+  //     shape = shapes[j];
+
+  //     var point = shape.intersectsRay( rayOrigin.x, rayOrigin.y,
+  //                                      rayDirection.x, rayDirection.y );
+  //     if ( point !== null ) {
+  //       shape.setColor( 0, 127, 0, 1.0 );
+  //     } else {
+  //       shape.setColor( 127, 0, 0, 1.0 );
+  //     }
+  //   }
+  // }
 };
 
 Emitter.prototype.draw = function( ctx ) {
   Entity.prototype.draw.call( this, ctx );
 
-  ctx.save();
+  this.getLaser().draw( ctx );
+  // ctx.save();
 
-  ctx.translate( this.getX(), this.getY() );
-  ctx.rotate( this.getRotation() );
+  // ctx.translate( this.getX(), this.getY() );
+  // ctx.rotate( this.getRotation() );
 
-  ctx.moveTo( 0, 0 );
-  ctx.lineTo( 1000, 0 );
-  ctx.strokeStyle = new Color( 255, 0, 0, 1.0 ).toString();
-  ctx.lineWidth = 1;
+  // ctx.moveTo( 0, 0 );
+  // ctx.lineTo( 1000, 0 );
+  // ctx.strokeStyle = new Color( 255, 0, 0, 1.0 ).toString();
+  // ctx.lineWidth = 1;
 
-  ctx.stroke();
+  // ctx.stroke();
 
-  ctx.restore();
+  // ctx.restore();
 };
 
 Emitter.prototype.getLaser = function() {

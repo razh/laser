@@ -9,7 +9,7 @@ var Intersection = (function() {
      * @param  {number} dy y-direction of ray.
      * @param  {number} t  ray parameter.
      * @return {x: number, y: number} Coordinate of point on parameter t, or
-     *                                null if t < 0.
+     *                                null if t < 0 or t === null.
      */
     projectRayParameter: function( rx, ry, dx, dy, t ) {
       if ( t === null || t < 0 ) {
@@ -388,15 +388,15 @@ var Intersection = (function() {
      *                                                  null if no intersection.
      */
     rayGeometry: function( rx, ry, dx, dy, geometry ) {
-      var point = Intersection.rayGeometryParameter( rx, ry, dx, dy, geometry );
-      if ( point === null ) {
+      var intersection = Intersection.rayGeometryParameter( rx, ry, dx, dy, geometry );
+      if ( intersection === null ) {
         return null;
       }
 
       return {
         intersection: Intersection.projectRayParameter( rx, ry, dx, dy,
-                                                        point.parameter ),
-        normal: point.normal
+                                                        intersection.parameter ),
+        normal: intersection.normal
       };
     },
 
