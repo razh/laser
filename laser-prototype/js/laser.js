@@ -9,21 +9,19 @@ var Laser = function() {
   this._lineWidth = 1;
   this._color = new Color( 255, 0, 0, 1.0 );
 
-  this._reflectionLimit = 2;
+  this._reflectionLimit = 8;
 };
 
 Laser.prototype.clear = function() {
   this._origins = [];
   this._directions = [];
 
-  this.addOrigin( this.getParent().getPosition() );
+  this.addOrigin({ x: this.getParent().getX(), y: this.getParent().getY() });
 
-  var rotation = this.getParent().getPosition();
-  var cos = Math.cos( rotation );
-  var sin = Math.sin( rotation );
+  var rotation = this.getParent().getRotation();
   this.addDirection({
-    x: cos,
-    y: sin
+    x: Math.cos( rotation ),
+    y: Math.sin( rotation )
   });
 };
 
@@ -35,11 +33,17 @@ Laser.prototype.draw = function( ctx ) {
     return;
   }
 
-  ctx.moveTo( origins[0].x, origins[0].y );
+  ctx.beginPath();
+  var lastPoint = origins[0];
+  ctx.moveTo( lastPoint.x, lastPoint.y );
 
   for ( var i = 1; i < origins.length; i++ ) {
-    ctx.lineTo( origins[i].x, origins[i].y );
+    lastPoint = origins[i];
+    ctx.lineTo( lastPoint.x, lastPoint.y );
   }
+
+  ctx.lineTo( lastPoint.x + 1000 * directions[ directions.length - 1 ].x,
+              lastPoint.y + 1000 * directions[ directions.length - 1 ].y );
 
   ctx.strokeStyle = this.getColor().toString();
   ctx.lineWidth = this.getLineWidth();
@@ -137,7 +141,7 @@ Laser.prototype.project = function( entities ) {
 
   var parent = this.getParent();
   var entity, shapes, shape;
-  var entityIndex, shapeIndex = -1;
+  var entityIndex, shapeIndex;
   var min = -1;
   var intersection;
   // Variables of intersection in shape local space.
@@ -150,6 +154,11 @@ Laser.prototype.project = function( entities ) {
   var direction;
   var i, j, il, jl;
   while ( reflectionCount < reflectionLimit ) {
+    // Reset nearest index.
+    entityIndex = -1;
+    shapeIndex = -1;
+    min = -1;
+
     // Find the entity with the minimum parameter.
     for ( i = 0, il = entities.length; i < il; i++ ) {
       ray = this.getLastRay();
@@ -165,6 +174,7 @@ Laser.prototype.project = function( entities ) {
 
       ray.direction.x -= ray.origin.x;
       ray.direction.y -= ray.origin.y;
+      // console.log( ray.origin.x + ', ' + ray.origin.y )
 
       // Find the shape with the minimum parameter.
       shapes = entity.getShapes();
@@ -176,7 +186,7 @@ Laser.prototype.project = function( entities ) {
                                             ray.direction.x, ray.direction.y );
 
         if ( intersection === null ) {
-          return;
+          continue;
         }
 
         // We've found a positive parameter smaller than current min.
@@ -215,6 +225,7 @@ Laser.prototype.project = function( entities ) {
     // Magnitude of ray.
     dx = minEntityRay.origin.x - point.x;
     dy = minEntityRay.origin.y - point.y;
+    // console.log( 'point: ' + point.x + ', ' + point.y)
 
     rayLength = Math.sqrt( dx * dx + dy * dy );
     normalLength = Math.sqrt( normal.x * normal.x + normal.y * normal.y );
@@ -262,7 +273,7 @@ var Emitter = function() {
 };
 
 Emitter.prototype = new Entity();
-Emitter.prototype.constructor = new Emitter();
+Emitter.prototype.constructor = Emitter;
 
 Emitter.prototype.update = function( elapsedTime ) {
   Entity.prototype.update.call( this, elapsedTime );
