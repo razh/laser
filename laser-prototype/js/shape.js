@@ -76,9 +76,11 @@ Shape.prototype.draw = function( ctx ) {
   var ray = this.debugRay;
   ctx.moveTo( ray.x, ray.y );
   ctx.lineTo( ray.x + 1000 * ray.dx, ray.y + 1000 * ray.dy );
+  // console.log( ray.x + ', ' + (ray.x + 1000 * ray.dx) + ', ' + ray.y + ', ' + (ray.y + 1000 * ray.dy))
 
   ctx.strokeStyle = this.getColor().toString();
   ctx.lineWidth = 0.005;
+  ctx.closePath();
   ctx.stroke();
 
   ctx.restore();

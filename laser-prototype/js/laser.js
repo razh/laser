@@ -9,7 +9,7 @@ var Laser = function() {
   this._lineWidth = 1;
   this._color = new Color( 255, 0, 0, 1.0 );
 
-  this._reflectionLimit = 8;
+  this._reflectionLimit = 1;
 };
 
 Laser.prototype.clear = function() {
@@ -242,7 +242,7 @@ Laser.prototype.project = function( entities ) {
     dy = sin * normal.x + cos * normal.y;
 
     // Transform new direction to world space.
-    direction = entity.localToWorldCoordinates( point.x + dx, + point.y + dy );
+    direction = entity.localToWorldCoordinates( point.x + dx, point.y + dy );
     point = entity.localToWorldCoordinates( point.x, point.y );
 
     direction.x -= point.x;
@@ -263,7 +263,7 @@ var Emitter = function() {
   Entity.call( this );
 
   this.addShape( new Shape().setGeometry( Geometry.createRectangle() )
-                            .setColor( 127, 0, 0, 0.25 ) );
+                            .setColor( 0, 0, 0, 0.25 ) );
 
   this.setWidth( 100 );
   this.setHeight( 100 );
