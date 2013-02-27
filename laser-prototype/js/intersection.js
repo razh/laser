@@ -417,9 +417,8 @@ var Intersection = (function() {
       var vertices = geometry.vertices || [];
       var indices = geometry.indices || [];
 
-      var point;
       // Index of edge where the nearest intersection lies.
-      var edgeIndex = null;
+      var edgeIndex = -1;
       // Parameters.
       var min = -1;
       var t;
@@ -430,31 +429,22 @@ var Intersection = (function() {
         x1 = vertices[ 2 * indices[ i + 1 ] ];
         y1 = vertices[ 2 * indices[ i + 1 ] + 1 ];
 
-        point = Intersection.raySegment( rx, ry, dx, dy,
-                                         x0, y0, x1, y1 );
+        t = Intersection.raySegmentParameter( rx, ry, dx, dy,
+                                              x0, y0, x1, y1 );
 
-        if ( point === null ) {
-          continue;
-        }
-
-        // Calculate parameter.
-        if ( Math.abs( dx ) > EPSILON ) {
-          t = ( point.x - rx ) / dx;
-        } else if ( Math.abs( dy ) > EPSILON ) {
-          t = ( point.y - ry ) / dy;
-        } else {
+        if ( t === null || t < 0 ) {
           continue;
         }
 
         // If min is not yet defined, or if t < min.
-        if ( min < 0 || ( t >= 0 && t < min ) ) {
+        if ( min < 0 || t < min ) {
           min = t;
           edgeIndex = i;
         }
       }
 
       t = min;
-      if ( t < 0 || edgeIndex === null ) {
+      if ( t < 0 || edgeIndex < 0 ) {
         return null;
       }
 
