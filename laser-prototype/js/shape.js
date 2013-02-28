@@ -21,12 +21,7 @@ var Shape = function() {
     dx: 0,
     dy: 0
   };
-  this.debugNormal = {
-    x: 0,
-    y: 0,
-    dx: 0,
-    dy: 0
-  };
+  this.debugNormal = [];
 };
 
 Shape.prototype = new Object2D();
@@ -79,10 +74,10 @@ Shape.prototype.draw = function( ctx ) {
   ctx.lineTo( aabb.xmin, aabb.ymin );
 
   // Draw debug ray.
-  var ray = this.debugRay;
-  ctx.moveTo( ray.x, ray.y );
-  ctx.lineTo( ray.x + 1000 * ray.dx, ray.y + 1000 * ray.dy );
-  // console.log( ray.x + ', ' + (ray.x + 1000 * ray.dx) + ', ' + ray.y + ', ' + (ray.y + 1000 * ray.dy))
+  // var ray = this.debugRay;
+  // ctx.moveTo( ray.x, ray.y );
+  // ctx.lineTo( ray.x + 1000 * ray.dx, ray.y + 1000 * ray.dy );
+  // // console.log( ray.x + ', ' + (ray.x + 1000 * ray.dx) + ', ' + ray.y + ', ' + (ray.y + 1000 * ray.dy))
 
   ctx.strokeStyle = this.getColor().toString();
   ctx.lineWidth = 0.005;
@@ -90,13 +85,15 @@ Shape.prototype.draw = function( ctx ) {
   ctx.stroke();
 
   // Draw debug normal.
-  var normal = this.debugNormal;
+  var normal;
   ctx.beginPath();
-  ctx.moveTo( normal.x, normal.y );
-  ctx.lineTo( normal.x + 1000 * normal.dx, normal.y + 1000 * normal.dy );
-  ctx.closePath();
-  ctx.strokeStyle = 'rgba( 0, 255, 127, 1.0 )';
-  ctx.stroke();
+  for ( var i = 0, n = this.debugNormals.length; i < n; i++ ) {
+    normal = this.debugNormals[i];
+    ctx.moveTo( normal.x, normal.y );
+    ctx.lineTo( normal.x + 1000 * normal.dx, normal.y + 1000 * normal.dy );
+    ctx.strokeStyle = 'rgba( 0, 255, 127, 1.0 )';
+    ctx.stroke();
+  }
 
   ctx.restore();
 };

@@ -7,7 +7,7 @@ var Laser = function() {
   this._parent = null;
 
   this._lineWidth = 1;
-  this._color = new Color( 255, 0, 0, 1.0 );
+  this._color = new Color( 255, 0, 0, 0.5 );
 
   this._reflectionLimit = 2;
 };
@@ -33,7 +33,7 @@ Laser.prototype.draw = function( ctx ) {
     return;
   }
 
-  ctx.beginPath();
+  // ctx.beginPath();
   var lastPoint = origins[0];
   ctx.moveTo( lastPoint.x, lastPoint.y );
 
@@ -225,12 +225,12 @@ Laser.prototype.project = function( entities ) {
 
     normal.x -= point.x;
     normal.y -= point.y;
-    shape.debugNormal = {
+    shape.debugNormals.push({
       x: shapePoint.x,
       y: shapePoint.y,
       dx: normal.x,
       dy: normal.y
-    };
+    });
 
     // Find angle of incidence between normal and ray (dot product).
     // Magnitude of ray.
@@ -244,7 +244,15 @@ Laser.prototype.project = function( entities ) {
     dot = dx * normal.x + dy * normal.y;
     angle = Math.acos( dot / ( rayLength * normalLength ) );
 
+    // Determine which side of the normal the ray lies on.
+    var side = dy * normal.x - dx * normal.y;
+    // On left side, need to subtract angle, rather than add.
+    if ( side > 0 ) {
+      angle = -angle;
+    }
+
     // The angle of incidence equals the angle of reflectance.
+    // console.log( Math.round( angle * 180 / Math.PI ) );
     cos = Math.cos( angle );
     sin = Math.sin( angle );
 
@@ -269,6 +277,8 @@ Laser.prototype.project = function( entities ) {
 
     reflectionCount++;
   }
+
+  return;
 };
 
 // Laser emitter.
@@ -302,12 +312,7 @@ Emitter.prototype.update = function( elapsedTime ) {
     shapes = entity.getShapes();
     for ( j = 0, jl = shapes.length; j < jl; j++ ) {
       shape = shapes[j];
-      shape.debugNormal = {
-        x: 0,
-        y: 0,
-        dx: 0,
-        dy: 0
-      };
+      shape.debugNormals = [];
       shape.setColor( new Color( 127, 0, 0, 1.0 ) );
     }
   }
@@ -354,9 +359,9 @@ Emitter.prototype.draw = function( ctx ) {
 
   this.getLaser().draw( ctx );
 
-  ctx.fillStyle = 'rgba( 0, 0, 127, 1.0 )';
+  ctx.fillStyle = 'rgba( 0, 0, 127, 0.25 )';
   for ( var i = 0, n = this.points.length; i < n; i++ ) {
-    ctx.fillRect( this.points[i].x - 1, this.points[i].y - 1, 2, 2 );
+    ctx.fillRect( this.points[i].x - 3, this.points[i].y - 3, 6, 6 );
   }
 
   // ctx.save();
