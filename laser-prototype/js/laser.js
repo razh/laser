@@ -9,14 +9,14 @@ var Laser = function() {
   this._lineWidth = 1;
   this._color = new Color( 255, 0, 0, 1.0 );
 
-  this._reflectionLimit = 1;
+  this._reflectionLimit = 4;
 };
 
 Laser.prototype.clear = function() {
   this._origins = [];
   this._directions = [];
 
-  this.addOrigin({ x: this.getParent().getX(), y: this.getParent().getY() });
+  this.addOrigin( this.getParent().getPosition() );
 
   var rotation = this.getParent().getRotation();
   this.addDirection({
@@ -131,6 +131,7 @@ Laser.prototype.setReflectionLimit = function( reflectionLimit ) {
 };
 
 Laser.prototype.project = function( entities ) {
+  // console.log( JSON.stringify( this._origins ) );
   this.clear();
 
   var reflectionLimit = this.getReflectionLimit();
@@ -161,30 +162,34 @@ Laser.prototype.project = function( entities ) {
 
     // Find the entity with the minimum parameter.
     for ( i = 0, il = entities.length; i < il; i++ ) {
+      // ray = {
+      //   origin: this.getOrigins()[0],
+      //   direction: this.getDirections()[0]
+      // };
       ray = this.getLastRay();
+      // if (isNaN(ray.origin.x)) {console.log('THIS');}
 
       entity = entities[i];
       if ( entity === parent ) {
         continue;
       }
 
-      ray.origin = entity.worldToLocalCoordinates( ray.origin.x, ray.origin.y );
       ray.direction = entity.worldToLocalCoordinates( ray.origin.x + ray.direction.x,
                                                       ray.origin.y + ray.direction.y );
+      ray.origin = entity.worldToLocalCoordinates( ray.origin.x, ray.origin.y );
 
       ray.direction.x -= ray.origin.x;
       ray.direction.y -= ray.origin.y;
-      // console.log( ray.origin.x + ', ' + ray.origin.y )
 
       // Find the shape with the minimum parameter.
       shapes = entity.getShapes();
       for ( j = 0, jl = shapes.length; j < jl; j++ ) {
         shape = shapes[j];
-        shape.setColor( new Color( 127, 0, 0, 1.0 ) );
 
         intersection = shape.intersectsRay( ray.origin.x, ray.origin.y,
                                             ray.direction.x, ray.direction.y );
 
+          // if ( j === 0 ) { console.log( intersection ); }
         if ( intersection === null ) {
           continue;
         }
@@ -195,7 +200,7 @@ Laser.prototype.project = function( entities ) {
           minEntityRay = ray;
           min = intersection.parameter;
           point = Intersection.projectRayParameter( ray.origin.x, ray.origin.y,
-                                                    ray.direction.x, ray.direction.y );
+                                                    ray.direction.x, ray.direction.y, min );
           normal = intersection.normal;
           entityIndex = i;
           shapeIndex = j;
@@ -231,7 +236,7 @@ Laser.prototype.project = function( entities ) {
     normalLength = Math.sqrt( normal.x * normal.x + normal.y * normal.y );
 
     dot = dx * normal.x + dy * normal.y;
-    angle = Math.acos( dot / ( rayLength * normalLength ) );
+    angle = -Math.acos( dot / ( rayLength * normalLength ) );
 
     // The angle of incidence equals the angle of reflectance.
     cos = Math.cos( angle );
@@ -254,6 +259,8 @@ Laser.prototype.project = function( entities ) {
       direction: direction
     });
 
+    this.getParent().points.push( point );
+
     reflectionCount++;
   }
 };
@@ -270,6 +277,8 @@ var Emitter = function() {
 
   this._laser = new Laser();
   this._laser.setParent( this );
+
+  this.points = [];
 };
 
 Emitter.prototype = new Entity();
@@ -278,6 +287,18 @@ Emitter.prototype.constructor = Emitter;
 Emitter.prototype.update = function( elapsedTime ) {
   Entity.prototype.update.call( this, elapsedTime );
 
+  this.points = [];
+  var entities = _game.getEntities();
+  var entity, shapes, shape;
+  var i, j, il, jl;
+  for ( i = 0, il = entities.length; i < il; i++ ) {
+    entity = entities[i];
+    shapes = entity.getShapes();
+    for ( j = 0, jl = shapes.length; j < jl; j++ ) {
+      shape = shapes[j];
+      shape.setColor( new Color( 127, 0, 0, 1.0 ) );
+    }
+  }
   this.getLaser().project( _game.getEntities() );
 
   // var rotation = this.getRotation();
@@ -320,6 +341,12 @@ Emitter.prototype.draw = function( ctx ) {
   Entity.prototype.draw.call( this, ctx );
 
   this.getLaser().draw( ctx );
+
+  ctx.fillStyle = 'rgba( 0, 0, 127, 1.0 )';
+  for ( var i = 0, n = this.points.length; i < n; i++ ) {
+    ctx.fillRect( this.points[i].x - 1, this.points[i].y - 1, 2, 2 );
+  }
+
   // ctx.save();
 
   // ctx.translate( this.getX(), this.getY() );
