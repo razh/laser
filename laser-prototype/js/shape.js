@@ -90,7 +90,7 @@ Shape.prototype.draw = function( ctx ) {
   for ( var i = 0, n = this.debugNormals.length; i < n; i++ ) {
     normal = this.debugNormals[i];
     ctx.moveTo( normal.x, normal.y );
-    ctx.lineTo( normal.x + 1000 * normal.dx, normal.y + 1000 * normal.dy );
+    ctx.lineTo( normal.x + 0.1 * normal.dx, normal.y + 0.1 * normal.dy );
     ctx.strokeStyle = 'rgba( 0, 255, 127, 1.0 )';
     ctx.stroke();
   }

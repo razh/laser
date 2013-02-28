@@ -9,7 +9,7 @@ var Laser = function() {
   this._lineWidth = 1;
   this._color = new Color( 255, 0, 0, 0.5 );
 
-  this._reflectionLimit = 2;
+  this._reflectionLimit = 16;
 };
 
 Laser.prototype.clear = function() {
@@ -269,7 +269,10 @@ Laser.prototype.project = function( entities ) {
 
     // New direction of ray.
     this.addRay({
-      origin: point,
+      origin: {
+        x: point.x + direction.x * 1e-5,
+        y: point.y + direction.y * 1e-5,
+      },
       direction: direction
     });
 
