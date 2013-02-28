@@ -9,7 +9,7 @@ var Laser = function() {
   this._lineWidth = 1;
   this._color = new Color( 255, 0, 0, 1.0 );
 
-  this._reflectionLimit = 4;
+  this._reflectionLimit = 2;
 };
 
 Laser.prototype.clear = function() {
@@ -225,6 +225,12 @@ Laser.prototype.project = function( entities ) {
 
     normal.x -= point.x;
     normal.y -= point.y;
+    shape.debugNormal = {
+      x: shapePoint.x,
+      y: shapePoint.y,
+      dx: normal.x,
+      dy: normal.y
+    };
 
     // Find angle of incidence between normal and ray (dot product).
     // Magnitude of ray.
@@ -236,7 +242,7 @@ Laser.prototype.project = function( entities ) {
     normalLength = Math.sqrt( normal.x * normal.x + normal.y * normal.y );
 
     dot = dx * normal.x + dy * normal.y;
-    angle = -Math.acos( dot / ( rayLength * normalLength ) );
+    angle = Math.acos( dot / ( rayLength * normalLength ) );
 
     // The angle of incidence equals the angle of reflectance.
     cos = Math.cos( angle );
@@ -296,6 +302,12 @@ Emitter.prototype.update = function( elapsedTime ) {
     shapes = entity.getShapes();
     for ( j = 0, jl = shapes.length; j < jl; j++ ) {
       shape = shapes[j];
+      shape.debugNormal = {
+        x: 0,
+        y: 0,
+        dx: 0,
+        dy: 0
+      };
       shape.setColor( new Color( 127, 0, 0, 1.0 ) );
     }
   }

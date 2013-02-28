@@ -21,6 +21,12 @@ var Shape = function() {
     dx: 0,
     dy: 0
   };
+  this.debugNormal = {
+    x: 0,
+    y: 0,
+    dx: 0,
+    dy: 0
+  };
 };
 
 Shape.prototype = new Object2D();
@@ -62,7 +68,7 @@ Shape.prototype.draw = function( ctx ) {
 
   // Draw debug circle.
   ctx.beginPath();
-  ctx.moveTo( 0, 0 );
+  // ctx.moveTo( 0, 0 );
   ctx.arc( 0, 0, this.getRadius(), 0, Math.PI * 2, true );
   // Draw debug AABB.
   var aabb = this.getAABB();
@@ -81,6 +87,15 @@ Shape.prototype.draw = function( ctx ) {
   ctx.strokeStyle = this.getColor().toString();
   ctx.lineWidth = 0.005;
   ctx.closePath();
+  ctx.stroke();
+
+  // Draw debug normal.
+  var normal = this.debugNormal;
+  ctx.beginPath();
+  ctx.moveTo( normal.x, normal.y );
+  ctx.lineTo( normal.x + 1000 * normal.dx, normal.y + 1000 * normal.dy );
+  ctx.closePath();
+  ctx.strokeStyle = 'rgba( 0, 255, 127, 1.0 )';
   ctx.stroke();
 
   ctx.restore();
