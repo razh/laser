@@ -1,9 +1,3 @@
-var GeometryType = {
-  POLYGON: 0,
-  CIRCLE:  1,
-  RING:    2
-};
-
 var Geometry = (function() {
   return {
     createRectangle: function() {
@@ -22,7 +16,7 @@ var Geometry = (function() {
       return {
         vertices: vertices,
         indices: indices,
-        type: GeometryType.POLYGON
+        type: 'polygon'
       };
     },
 
@@ -87,7 +81,7 @@ var Geometry = (function() {
       return {
         vertices: vertices,
         indices: indices,
-        type: GeometryType.RING,
+        type: 'ring',
         options: {
           outerRadius: outerRadius,
           innerRadius: innerRadius,
