@@ -5,6 +5,8 @@ var Shape = function() {
 
   this._vertices = [];
   this._indices = [];
+  this._type = 'polygon';
+  this._options = null;
 
   this._aabb = {
     xmin: 0.0,
@@ -158,10 +160,30 @@ Shape.prototype.setIndices = function( indices ) {
   return this;
 };
 
+Shape.prototype.getType = function() {
+  return this._type;
+};
+
+Shape.prototype.setType = function( type ) {
+  this._type = type;
+  return this;
+};
+
+Shape.prototype.getOptions = function() {
+  return this._options;
+};
+
+Shape.prototype.setOptions = function( options ) {
+  this._options = options;
+  return this;
+};
+
 Shape.prototype.getGeometry = function() {
   return {
-    vertices: this._vertices,
-    indices: this._indices
+    vertices: this.getVertices(),
+    indices: this.getIndices(),
+    type: this.getType(),
+    options: this.getOptions()
   };
 };
 
@@ -169,6 +191,8 @@ Shape.prototype.setGeometry = function() {
   if ( arguments.length === 1 ) {
     this.setVertices( arguments[0].vertices );
     this.setIndices( arguments[0].indices );
+    this.setType( arguments[0].type );
+    this.setOptions( arguments[0].options );
   } else if ( arguments.length === 2 ) {
     this.setVertices( arguments[0] );
     this.setIndices( arguments[1] );

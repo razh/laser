@@ -417,8 +417,13 @@ var Intersection = (function() {
      *                                               or null if no intersection.
      */
     rayGeometryParameter: function( rx, ry, dx, dy, geometry ) {
-      var vertices = geometry.vertices || [];
-      var indices = geometry.indices || [];
+      var vertices = geometry.vertices || [],
+          indices = geometry.indices || [],
+          type = geometry.type,
+          options = geometry.options;
+
+      if ( typeof type === 'undefined' ) { type = GeometryType.POLYGON; }
+      if ( typeof options === 'undefined' ) { options = null; }
 
       // Index of edge where the nearest intersection lies.
       var edgeIndex = -1;
@@ -451,30 +456,65 @@ var Intersection = (function() {
         return null;
       }
 
-      // Calculate normal of edge (in the 'right' direction).
-      x0 = vertices[ 2 * indices[ edgeIndex ] ];
-      y0 = vertices[ 2 * indices[ edgeIndex ] + 1 ];
-      x1 = vertices[ 2 * indices[ edgeIndex + 1 ] ];
-      y1 = vertices[ 2 * indices[ edgeIndex + 1 ] + 1 ];
+      if ( type === GeometryType.POLYGON ) {
+        // Calculate normal of edge (in the 'right' direction).
+        x0 = vertices[ 2 * indices[ edgeIndex ] ];
+        y0 = vertices[ 2 * indices[ edgeIndex ] + 1 ];
+        x1 = vertices[ 2 * indices[ edgeIndex + 1 ] ];
+        y1 = vertices[ 2 * indices[ edgeIndex + 1 ] + 1 ];
 
-      var sx = x1 - x0,
-          sy = y1 - y0;
+        var sx = x1 - x0,
+            sy = y1 - y0;
 
-      // Normalize normal.
-      var length = Math.sqrt( sx * sx + sy * sy );
-      if ( Math.abs( length ) < EPSILON ) {
+        // Normalize normal.
+        var length = Math.sqrt( sx * sx + sy * sy );
+        if ( Math.abs( length ) < EPSILON ) {
+          return null;
+        }
+
+        length = 1 / length;
+
+        return {
+          parameter: t,
+          normal: {
+            x:  sy * length,
+            y: -sx * length
+          }
+        };
+      } else if ( type === GeometryType.RING && options !== null ) {
+        var innerRadius = options.innerRadius,
+            outerRadius = options.outerRadius || 1.0,
+            startAngle = options.startAngle,
+            endAngle = options.endAngle;
+
+        if ( typeof innerRadius === 'undefined' ) { innerRadius = 0.5; }
+        if ( typeof startAngle === 'undefined' ) { startAngle = 0; }
+        if ( typeof endAngle === 'undefined' ) { endAngle = 2 * Math.PI; }
+
+        var intersection = Intersection.projectRayParameter( rx, ry, dx, dy, t );
+
+        // Check if we are inside start and endAngles.
+        var angle = Math.atan2( intersection.y, intersection.x );
+        if ( startAngle > angle || angle > endAngle ) {
+          return null;
+        }
+
+        // Get parameter of intersection with inner/outerRadius.
+        var tInner = Intersection.rayCircleParameter( rx, ry, dx, dy, 0, 0, innerRadius ),
+            tOuter = Intersection.rayCircleParameter( rx, ry, dx, dy, 0, 0, outerRadius );
+
+        if ( tInner >= 0 && tOuter >= 0 ) {
+          t = Math.min( tInner, tOuter );
+        } else if ( tOuter >= 0 ) {
+          t = tOuter;
+        } else if ( tInner >= 0 ) {
+          t = tInner;
+        } else {
+          t = -1;
+        }
+
         return null;
       }
-
-      length = 1 / length;
-
-      return {
-        parameter: t,
-        normal: {
-          x:  sy * length,
-          y: -sx * length
-        }
-      };
     }
   };
 }) ();

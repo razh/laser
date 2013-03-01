@@ -26,7 +26,7 @@ function init() {
 
   var shape = new Shape().setGeometry( Geometry.createRing({
                             innerRadius: 0.80,
-                            subdivisions: 4,
+                            subdivisions: 64,
                             startAngle: Math.PI / 180 * 0,
                             endAngle: Math.PI / 180 * 200,
                             anticlockwise: true
@@ -36,7 +36,7 @@ function init() {
 
   var shape2 = new Shape().setGeometry( Geometry.createRing({
                              innerRadius: 0.80,
-                             subdivisions: 4,
+                             subdivisions: 64,
                              startAngle: Math.PI / 180 * 200,
                              endAngle: Math.PI / 180 * 0,
                              anticlockwise: true
