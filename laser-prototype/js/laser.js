@@ -190,13 +190,12 @@ Laser.prototype.project = function( entities ) {
                                             ray.direction.x, ray.direction.y );
 
           // if ( j === 0 ) { console.log( intersection ); }
-        if ( intersection === null ) {
+        if ( intersection === null || intersection.parameter < 0 ) {
           continue;
         }
 
         // We've found a positive parameter smaller than current min.
-        if ( min < 0 || ( intersection.parameter > 0 &&
-                          intersection.parameter < min ) ) {
+        if ( min < 0 || intersection.parameter < min ) {
           minEntityRay = ray;
           min = intersection.parameter;
           point = Intersection.projectRayParameter( ray.origin.x, ray.origin.y,
@@ -212,6 +211,10 @@ Laser.prototype.project = function( entities ) {
       return;
     }
 
+    if (isNaN(min)) {
+      console.log('yes');
+      return;
+    }
     entity = entities[ entityIndex ];
     shape = entity.getShapes()[ shapeIndex ];
     shape.setColor( new Color( 0, 127, 0, 1.0 ) );
@@ -242,9 +245,21 @@ Laser.prototype.project = function( entities ) {
     normalLength = Math.sqrt( normal.x * normal.x + normal.y * normal.y );
 
     dot = dx * normal.x + dy * normal.y;
-    angle = Math.acos( dot / ( rayLength * normalLength ) );
+    cos = dot / ( rayLength * normalLength );
+    // Math.acos can only handle values between [-1, 1].
+    if ( cos > 1 ) {
+      cos = 1;
+    } else if ( cos < -1 ) {
+      cos = -1;
+    }
+    angle = Math.acos( cos );
 
     // Determine which side of the normal the ray lies on.
+    if(isNaN(angle)) {
+      console.log(dot +', ' + rayLength + ', ' + normalLength);
+      console.log( dot / ( rayLength * normalLength ) );
+      return;
+    }
     var side = dy * normal.x - dx * normal.y;
     // On left side, need to subtract angle, rather than add.
     if ( side > 0 ) {
@@ -267,11 +282,12 @@ Laser.prototype.project = function( entities ) {
     direction.x -= point.x;
     direction.y -= point.y;
 
+
     // New direction of ray.
     this.addRay({
       origin: {
         x: point.x + direction.x * 1e-5,
-        y: point.y + direction.y * 1e-5,
+        y: point.y + direction.y * 1e-5
       },
       direction: direction
     });
