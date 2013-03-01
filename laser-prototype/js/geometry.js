@@ -15,7 +15,8 @@ var Geometry = (function() {
 
       return {
         vertices: vertices,
-        indices: indices
+        indices: indices,
+        type: 'polygon'
       };
     },
 
@@ -79,7 +80,14 @@ var Geometry = (function() {
 
       return {
         vertices: vertices,
-        indices: indices
+        indices: indices,
+        type: 'ring',
+        options: {
+          outerRadius: outerRadius,
+          innerRadius: innerRadius,
+          startAngle: startAngle,
+          endAngle: endAngle
+        }
       };
     }
   };

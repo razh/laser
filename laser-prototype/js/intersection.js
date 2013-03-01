@@ -144,8 +144,11 @@ var Intersection = (function() {
         // Discard if parameter is outside of line segment.
         // If line segment is vertical/horizontal, either sx/sy will be
         // Number.NaN. The following check will not quit if this is the case.
+        // If one is NaN, then difference between sx and sy will be NaN which
+        // is not greater than EPSILON.
         if ( 0 > sx || sx > 1 ||
-             0 > sy || sy > 1 ) {
+             0 > sy || sy > 1 ||
+             Math.abs( sx - sy ) > EPSILON ) {
           return null;
         }
       }
