@@ -27,8 +27,8 @@ function init() {
   var shape = new Shape().setGeometry( Geometry.createRing({
                             innerRadius: 0.80,
                             subdivisions: 4,
-                            startAngle: Math.PI / 180 * 0,
-                            endAngle: Math.PI / 180 * 200,
+                            startAngle: Math.PI / 180 * 90,
+                            endAngle: Math.PI / 180 * 250,
                             anticlockwise: true
                           }))
                          // .setGeometry( Geometry.createRectangle() )
@@ -37,8 +37,8 @@ function init() {
   var shape2 = new Shape().setGeometry( Geometry.createRing({
                              innerRadius: 0.80,
                              subdivisions: 4,
-                             startAngle: Math.PI / 180 * 200,
-                             endAngle: Math.PI / 180 * 0,
+                             startAngle: Math.PI / 180 * 290,
+                             endAngle: Math.PI / 180 * 90,
                              anticlockwise: true
                           }))
                           .setPosition( 2.0, 0.0 )
