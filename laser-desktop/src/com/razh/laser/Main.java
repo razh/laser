@@ -8,8 +8,8 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "laser";
 		cfg.useGL20 = true;
-		cfg.width = 320;
-		cfg.height = 640;
+		cfg.width = 1280;
+		cfg.height = 720;
 		cfg.useCPUSynch = false;
 
 		new LwjglApplication(new LaserGame(), cfg);

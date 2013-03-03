@@ -1,5 +1,6 @@
 package com.razh.laser;
 
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
@@ -10,11 +11,22 @@ public class MeshActor extends Actor {
 	private Mesh mMesh;
 	private ShaderProgram mShaderProgram;
 
+	private int mMode;
+
 	private Matrix4 mModelMatrix;
 
 	// Hull variables.
 	private float[] mVertices;
 	private short[] mIndices;
+
+	public MeshActor() {
+		super();
+
+		mModelMatrix = new Matrix4();
+
+		// Default value.
+		setMode(GL20.GL_TRIANGLE_FAN);
+	}
 
 	public void draw(ShaderProgram shaderProgram) {
 		if (mShaderProgram != shaderProgram) {
@@ -25,7 +37,17 @@ public class MeshActor extends Actor {
 	}
 
 	public void draw() {
+		if (mShaderProgram == null || !isVisible()) {
+			return;
+		}
 
+		setupModelMatrix();
+		mShaderProgram.setUniformMatrix("modelMatrix", mModelMatrix);
+		mShaderProgram.setUniformf("color", getColor());
+
+		if (hasMesh()) {
+			getMesh().render(mShaderProgram, getMode());
+		}
 	}
 
 	public Mesh getMesh() {
@@ -36,12 +58,24 @@ public class MeshActor extends Actor {
 		mMesh = mesh;
 	}
 
+	public boolean hasMesh() {
+		return getMesh() != null;
+	}
+
 	public ShaderProgram getShaderProgram() {
 		return mShaderProgram;
 	}
 
 	public void setShaderProgram(ShaderProgram shaderProgram) {
 		mShaderProgram = shaderProgram;
+	}
+
+	public int getMode() {
+		return mMode;
+	}
+
+	public void setMode(int mode) {
+		mMode = mode;
 	}
 
 	public Matrix4 getModelMatrix() {
@@ -54,7 +88,6 @@ public class MeshActor extends Actor {
 		                .rotate(Vector3.Z, getRotation())
 		                .scale(getWidth(), getHeight(), 1.0f);
 	}
-
 
 	public float[] getVertices() {
 		return mVertices;
