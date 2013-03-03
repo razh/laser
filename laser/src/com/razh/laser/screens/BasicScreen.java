@@ -45,10 +45,30 @@ public abstract class BasicScreen implements Screen {
 		return mInputMultiplexer;
 	}
 
-	public void setInputMUltiplexer(InputMultiplexer inputMultiplexer) {
+	public void setInputMultiplexer(InputMultiplexer inputMultiplexer) {
 		mInputMultiplexer = inputMultiplexer;
 	}
 
 	public void addInputProcessor(InputProcessor inputProcessor) {
+		mInputMultiplexer.addProcessor(inputProcessor);
+	}
+
+	public void removeInputProcessor(InputProcessor inputProcessor) {
+		mInputMultiplexer.removeProcessor(inputProcessor);
+	}
+
+	@Override
+	public void show() {
+		getGame().getInputMultiplexer().addProcessor(getInputMultiplexer());
+	}
+
+	@Override
+	public void hide() {
+		getGame().getInputMultiplexer().removeProcessor(getInputMultiplexer());
+	}
+
+	@Override
+	public void dispose() {
+		getStage().dispose();
 	}
 }
