@@ -29,22 +29,85 @@ public class Geometry {
 		if (Math.abs(sweepAngle) >= 2 * Math.PI) {
 			endAngle = (float) (startAngle + 2 * Math.PI);
 		} else {
-			// Anticlockwise arcs have negative sweepAngles.
-			// Clockwise arcs have positive sweepAngles.
+			// Anticlockwise arcs have positive sweepAngles.
+			// Clockwise arcs have negative sweepAngles.
 			// If the the above is false, flip the sweepAngle to the correct sign.
-			if (anticlockwise && sweepAngle > 0) {
-				sweepAngle -= 2 * Math.PI;
-			} else if (!anticlockwise && sweepAngle < 0) {
+			if (anticlockwise && sweepAngle < 0) {
 				sweepAngle += 2 * Math.PI;
+			} else if (!anticlockwise && sweepAngle > 0) {
+				sweepAngle -= 2 * Math.PI;
 			}
 		}
-		
+
 		float subdivAngle = sweepAngle / subdivisions;
-		
+
+		int vtxIndex = 0;
+		int idxIndex = 0;
+
+		float cos, sin;
 		for (int i = 0; i < subdivisions; i++) {
-			
+			cos = (float) Math.cos(startAngle + i * subdivAngle);
+			sin = (float) Math.sin(startAngle + i * subdivAngle);
+			// Inner radius.
+			vertices[vtxIndex++] = innerRadius * cos;
+			vertices[vtxIndex++] = innerRadius * sin;
+			// Outer radius.
+			vertices[vtxIndex++] = outerRadius * cos;
+			vertices[vtxIndex++] = outerRadius * sin;
+
+			indices[idxIndex++] = (short) (2 * i);
+			indices[idxIndex++] = (short) (2 * i + 1);
 		}
-		
+
+		mesh.setVertices(vertices);
+		mesh.setIndices(indices);
+
 		return mesh;
 	}
+
+	public static Mesh createCircle(int subdivisions) {
+		return createCircle(1.0f, subdivisions);
+	}
+
+	public static Mesh createCircle(float radius, int subdivisions) {
+		// Subdivisions and center vertex with two components each.
+		int vertexCount = (subdivisions + 1) * 2;
+		// Center vertex and one connecting edge between start and end vertices.
+		int indexCount = subdivisions + 2;
+
+		Mesh mesh = new Mesh(Mesh.VertexDataType.VertexBufferObject,
+		                     true, vertexCount, indexCount,
+		                     new VertexAttribute(Usage.Position, 2,
+		                                         ShaderProgram.POSITION_ATTRIBUTE));
+
+		float subdivAngle = (float) (2 * Math.PI / subdivisions);
+
+		float[] vertices = new float[vertexCount];
+		short[] indices = new short[indexCount];
+
+		int vtxIndex = 0;
+		int idxIndex = 0;
+
+		vertices[vtxIndex++] = 0.0f;
+		vertices[vtxIndex++] = 0.0f;
+
+		// Center.
+		indices[idxIndex++] = 0;
+
+		for (int i = 0; i < subdivisions; i++) {
+			vertices[vtxIndex++] = (float) (radius * Math.cos(i * subdivAngle));
+			vertices[vtxIndex++] = (float) (radius * Math.sin(i * subdivAngle));
+
+			indices[idxIndex++] = (short) (i + 1);
+		}
+
+		// Close triangle fan.
+		indices[idxIndex++] = 1;
+
+		mesh.setVertices(vertices);
+		mesh.setIndices(indices);
+
+		return mesh;
+	}
+
 }
