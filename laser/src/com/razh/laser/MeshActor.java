@@ -3,9 +3,12 @@ package com.razh.laser;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.razh.laser.Geometry.GeometryData;
 import com.razh.laser.entities.Entity;
 
@@ -61,6 +64,69 @@ public class MeshActor extends Actor {
 		if (hasMesh()) {
 			getMesh().render(mShaderProgram, getMode());
 		}
+	}
+
+	@Override
+	public Actor hit(float x, float y, boolean touchable) {
+		if (touchable && getTouchable() != Touchable.enabled) {
+			return null;
+		}
+
+		if (getVertices() == null) {
+			if (Math.abs(x - getX()) <= getWidth() &&
+			    Math.abs(y - getY()) <= getHeight()) {
+				return this;
+			}
+
+			return null;
+		}
+
+		if (contains(x, y)) {
+			return this;
+		}
+
+		return null;
+	}
+
+	public boolean contains(float x, float y) {
+		Vector2 point = worldToLocalCoordinates(new Vector2(x, y));
+		x = point.x;
+		y = point.y;
+
+		// We're not using libgdx's Intersector.isPointInPolygon() as that requires a list.
+		float[] vertices = getVertices();
+		int vertexCount = vertices.length / 2;
+		boolean contains = false;
+
+		float xi, yi, xj, yj;
+		int i, j;
+		for (i = 0, j = vertexCount - 1; i < vertexCount; j = i++) {
+			xi = vertices[2 * i];
+			yi = vertices[2 * i + 1];
+			xj = vertices[2 * j];
+			yj = vertices[2 * j + 1];
+
+			if (((yi > y) != (yj > y)) &&
+			   (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+				contains = !contains;
+			}
+		}
+
+		return contains;
+	}
+
+	public Vector2 worldToLocalCoordinates(Vector2 worldCoords) {
+		return worldCoords.cpy()
+		                  .sub(getX(), getY())
+		                  .rotate(-getRotation())
+		                  .div(getWidth(), getHeight());
+	}
+
+	public Vector2 localToWorldCoordinates(Vector2 localCoords) {
+		return localCoords.cpy()
+		                  .mul(getWidth(), getHeight())
+		                  .rotate(getRotation())
+		                  .add(getX(), getY());
 	}
 
 	public Mesh getMesh() {

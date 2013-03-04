@@ -97,15 +97,17 @@ public class MeshGroup extends Group {
 	@Override
 	public Actor hit(float x, float y, boolean touchable) {
 		// The same as Group.hit(), except we do not transform coordinates.
-		if (touchable && getTouchable() == Touchable.disabled)
+		if (touchable && getTouchable() == Touchable.disabled) {
 			return null;
+		}
 
 		SnapshotArray<Actor> children = getChildren();
 		Actor[] actors = children.begin();
 		for (int i = 0, n = children.size; i < n; i++) {
 			Actor child = actors[i];
-			if (!child.isVisible())
+			if (!child.isVisible()) {
 				continue;
+			}
 
 			Actor hit = child.hit(x, y, touchable);
 

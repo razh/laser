@@ -21,4 +21,8 @@ public class Player {
 	public void setSelected(Actor selected) {
 		mSelected = selected;
 	}
+
+	public boolean hasSelected() {
+		return mSelected != null;
+	}
 }

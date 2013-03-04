@@ -19,6 +19,7 @@ import com.razh.laser.MeshStage;
 import com.razh.laser.Shader;
 import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
+import com.razh.laser.input.GameInputProcessor;
 
 public class GameScreen extends BasicScreen {
 
@@ -31,6 +32,9 @@ public class GameScreen extends BasicScreen {
 
 		Entity entity = EntityFactory.createLaserSource(getMeshStage().getWorld());
 		getStage().addActor(entity.getActor());
+
+		Entity entity2 = EntityFactory.createLaserSource(getMeshStage().getWorld());
+		getStage().addActor(entity2.getActor());
 
 		getMeshStage().setShaderProgram(Shader.createSimpleShader());
 
@@ -48,7 +52,12 @@ public class GameScreen extends BasicScreen {
 		mGroundBody.createFixture(fixtureDef);
 		groundPoly.dispose();
 
+		GameInputProcessor gameInputProcessor = new GameInputProcessor();
+		gameInputProcessor.setStage(getStage());
+		gameInputProcessor.setPlayer(getGame().getPlayer());
+
 		addInputProcessor(getStage());
+//		addInputProcessor(gameInputProcessor);
 		addInputProcessor(new InputProcessor() {
 			private MouseJoint mMouseJoint = null;
 			private Body mHitBody = null;

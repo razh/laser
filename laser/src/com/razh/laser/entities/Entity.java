@@ -34,4 +34,9 @@ public class Entity {
 		mBody = body;
 		body.setUserData(this);
 	}
+
+	public void setPosition(float x, float y) {
+		mBody.setTransform(x, y, mBody.getAngle());
+		mActor.setPosition(x, y);
+	}
 }

@@ -62,6 +62,10 @@ public class MeshStage extends Stage {
 		debugRenderer.render(mWorld, camera.combined);
 		mWorld.step(1.0f / 60.0f, 6, 2);
 	}
+	
+	public Actor hit(float stageX, float stageY, boolean touchable) {
+		return getRoot().hit(stageX, stageY, touchable);
+	}
 
 	@Override
 	public void addActor(Actor actor) {
