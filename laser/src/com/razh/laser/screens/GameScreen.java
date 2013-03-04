@@ -16,8 +16,9 @@ public class GameScreen extends BasicScreen {
 
 		setStage(new MeshStage());
 
-		Entity entity = EntityFactory.createLaserSource();
+		Entity entity = EntityFactory.createLaserSource(getMeshStage().getWorld());
 		getStage().addActor(entity.getActor());
+
 		getMeshStage().setShaderProgram(Shader.createSimpleShader());
 
 		addInputProcessor(getStage());

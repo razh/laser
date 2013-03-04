@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,6 +17,9 @@ public class MeshStage extends Stage {
 
 	// Allows us to set colors with actions.
 	private Actor mColorActor;
+
+	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+	private World mWorld;
 
 	public MeshStage() {
 		this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
@@ -33,6 +39,8 @@ public class MeshStage extends Stage {
 
 		mColorActor = new Actor();
 		mColorActor.setColor(Color.BLACK);
+
+		setWorld(new World(Vector2.Zero, true));
 	}
 
 	@Override
@@ -50,6 +58,9 @@ public class MeshStage extends Stage {
 
 			mShaderProgram.end();
 		}
+
+		debugRenderer.render(mWorld, camera.combined);
+		mWorld.step(1.0f / 45.0f, 6, 2);
 	}
 
 	@Override
@@ -87,6 +98,14 @@ public class MeshStage extends Stage {
 	@Override
 	public void addAction(Action action) {
 		mColorActor.addAction(action);
+	}
+
+	public World getWorld() {
+		return mWorld;
+	}
+
+	public void setWorld(World world) {
+		mWorld = world;
 	}
 
 	@Override
