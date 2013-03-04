@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.razh.laser.Geometry;
+import com.razh.laser.LaserGame;
 import com.razh.laser.MeshActor;
 
 public class EntityFactory {
@@ -30,12 +31,11 @@ public class EntityFactory {
 
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(actor.getX(), actor.getY());
-
+		bodyDef.position.set(actor.getX() / LaserGame.PTM_RATIO, actor.getY() / LaserGame.PTM_RATIO);
 		Body body = world.createBody(bodyDef);
 
 		CircleShape circle = new CircleShape();
-		circle.setRadius(actor.getWidth());
+		circle.setRadius(actor.getWidth() / LaserGame.PTM_RATIO);
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = circle;

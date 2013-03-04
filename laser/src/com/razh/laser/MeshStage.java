@@ -3,6 +3,7 @@ package com.razh.laser;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -20,6 +21,8 @@ public class MeshStage extends Stage {
 
 	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 	private World mWorld;
+
+	private OrthographicCamera mBox2DCamera;
 
 	public MeshStage() {
 		this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
@@ -41,6 +44,11 @@ public class MeshStage extends Stage {
 		mColorActor.setColor(Color.BLACK);
 
 		setWorld(new World(Vector2.Zero, true));
+
+		mBox2DCamera = new OrthographicCamera();
+		mBox2DCamera.viewportWidth = getCamera().viewportWidth / LaserGame.PTM_RATIO;
+		mBox2DCamera.viewportHeight = getCamera().viewportHeight / LaserGame.PTM_RATIO;
+		mBox2DCamera.position.set(getCamera().position.cpy().div(LaserGame.PTM_RATIO));
 	}
 
 	@Override
@@ -59,10 +67,12 @@ public class MeshStage extends Stage {
 			mShaderProgram.end();
 		}
 
-		debugRenderer.render(mWorld, camera.combined);
+		mBox2DCamera.update();
+		debugRenderer.render(mWorld, mBox2DCamera.combined);
 		mWorld.step(1.0f / 60.0f, 6, 2);
 	}
-	
+
+	@Override
 	public Actor hit(float stageX, float stageY, boolean touchable) {
 		return getRoot().hit(stageX, stageY, touchable);
 	}

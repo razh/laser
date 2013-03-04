@@ -39,7 +39,7 @@ public class GameScreen extends BasicScreen {
 		getMeshStage().setShaderProgram(Shader.createSimpleShader());
 
 		PolygonShape groundPoly = new PolygonShape();
-		groundPoly.setAsBox(Gdx.graphics.getWidth(), 10);
+		groundPoly.setAsBox(Gdx.graphics.getWidth() / LaserGame.PTM_RATIO, 0.1f);
 
 		BodyDef groundBodyDef = new BodyDef();
 		groundBodyDef.type = BodyType.StaticBody;
@@ -96,6 +96,7 @@ public class GameScreen extends BasicScreen {
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 				position.set(screenX, screenY);
 				position.set(getStage().screenToStageCoordinates(position));
+				position.div(LaserGame.PTM_RATIO);
 
 				mHitBody = null;
 				getMeshStage().getWorld().QueryAABB(callback,
@@ -108,7 +109,7 @@ public class GameScreen extends BasicScreen {
 					mouseJointDef.bodyB = mHitBody;
 					mouseJointDef.collideConnected = true;
 					mouseJointDef.target.set(position);
-					mouseJointDef.maxForce = 1000.0f * mHitBody.getMass();
+					mouseJointDef.maxForce = 10000.0f * mHitBody.getMass();
 
 					mMouseJoint = (MouseJoint) getMeshStage().getWorld().createJoint(mouseJointDef);
 					mHitBody.setAwake(true);
@@ -132,6 +133,7 @@ public class GameScreen extends BasicScreen {
 				if (mMouseJoint != null) {
 					position.set(screenX, screenY);
 					position.set(getStage().screenToStageCoordinates(position));
+					position.div(LaserGame.PTM_RATIO);
 					mMouseJoint.setTarget(position);
 				}
 

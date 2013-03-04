@@ -3,6 +3,7 @@ package com.razh.laser.entities;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.razh.laser.LaserGame;
 
 public class Entity {
 	private Actor mActor;
@@ -14,6 +15,7 @@ public class Entity {
 		}
 
 		Vector2 position = mBody.getPosition();
+		position.mul(LaserGame.PTM_RATIO);
 		mActor.setPosition(position.x, position.y);
 		mActor.setRotation(mBody.getAngle());
 	}
@@ -36,7 +38,7 @@ public class Entity {
 	}
 
 	public void setPosition(float x, float y) {
-		mBody.setTransform(x, y, mBody.getAngle());
+		mBody.setTransform(x / LaserGame.PTM_RATIO, y * LaserGame.PTM_RATIO, mBody.getAngle());
 		mActor.setPosition(x, y);
 	}
 }
