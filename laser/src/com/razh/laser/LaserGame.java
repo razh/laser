@@ -28,7 +28,7 @@ public class LaserGame extends Game {
 
 	private Map<String, BasicScreen> mScreens;
 
-	public static final float PTM_RATIO = 16.0f;
+	public static final float PTM_RATIO = 120.0f;
 
 	@Override
 	public void create() {

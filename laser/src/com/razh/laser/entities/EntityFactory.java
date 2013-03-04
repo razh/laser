@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.razh.laser.Geometry;
@@ -30,6 +31,8 @@ public class EntityFactory {
 		actor.setHeight(100);
 
 		BodyDef bodyDef = new BodyDef();
+		bodyDef.linearDamping = 1e10f;
+		bodyDef.allowSleep = true;
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(actor.getX() / LaserGame.PTM_RATIO, actor.getY() / LaserGame.PTM_RATIO);
 		Body body = world.createBody(bodyDef);
@@ -39,8 +42,16 @@ public class EntityFactory {
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = circle;
+		fixtureDef.friction = 1.0f;
+		// No bounce.
+		fixtureDef.restitution = 0.0f;
 
 		body.createFixture(fixtureDef);
+
+		// Set initial mass to very high.
+		MassData massData = body.getMassData();
+		massData.mass = 1e12f;
+		body.setMassData(massData);
 
 		circle.dispose();
 

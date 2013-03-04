@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -104,12 +105,15 @@ public class GameScreen extends BasicScreen {
 				                                    position.x + 0.1f, position.y + 0.1f);
 
 				if (mHitBody != null) {
+					// Reset to something normal.
+					mHitBody.resetMassData();
+
 					MouseJointDef mouseJointDef = new MouseJointDef();
 					mouseJointDef.bodyA = mGroundBody;
 					mouseJointDef.bodyB = mHitBody;
 					mouseJointDef.collideConnected = true;
 					mouseJointDef.target.set(position);
-					mouseJointDef.maxForce = 10000.0f * mHitBody.getMass();
+					mouseJointDef.maxForce = 1000.0f * mHitBody.getMass();
 
 					mMouseJoint = (MouseJoint) getMeshStage().getWorld().createJoint(mouseJointDef);
 					mHitBody.setAwake(true);
@@ -123,6 +127,11 @@ public class GameScreen extends BasicScreen {
 				if (mMouseJoint != null) {
 					getMeshStage().getWorld().destroyJoint(mMouseJoint);
 					mMouseJoint = null;
+
+					// Set mass to very high again.
+					MassData massData = mHitBody.getMassData();
+					massData.mass = 1e12f;
+					mHitBody.setMassData(massData);
 				}
 
 				return false;
