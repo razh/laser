@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class Shader {
-
 	public static ShaderProgram createSimpleShader() {
 		String vertexName = "shaders/simple.vert";
 		String fragmentName = "shaders/simple.frag";
@@ -22,5 +21,4 @@ public class Shader {
 
 		return shader;
 	}
-
 }

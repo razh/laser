@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class Geometry {
-
 	public static Mesh createRing(float outerRadius, float innerRadius,
 	                              float startAngle, float endAngle,
 	                              int subdivisions, boolean anticlockwise) {
@@ -110,4 +109,12 @@ public class Geometry {
 		return mesh;
 	}
 
+	public static GeometryData createRingHull() {
+		return null;
+	}
+
+	public class GeometryData {
+		public float[] vertices;
+		public short[] indices;
+	}
 }
