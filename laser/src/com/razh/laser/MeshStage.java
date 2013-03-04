@@ -60,7 +60,7 @@ public class MeshStage extends Stage {
 		}
 
 		debugRenderer.render(mWorld, camera.combined);
-		mWorld.step(1.0f / 45.0f, 6, 2);
+		mWorld.step(1.0f / 60.0f, 6, 2);
 	}
 
 	@Override

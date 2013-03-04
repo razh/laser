@@ -35,7 +35,7 @@ public class GameScreen extends BasicScreen {
 		getMeshStage().setShaderProgram(Shader.createSimpleShader());
 
 		PolygonShape groundPoly = new PolygonShape();
-		groundPoly.setAsBox(50, 1);
+		groundPoly.setAsBox(Gdx.graphics.getWidth(), 10);
 
 		BodyDef groundBodyDef = new BodyDef();
 		groundBodyDef.type = BodyType.StaticBody;
