@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.razh.laser.Geometry.GeometryData;
+import com.razh.laser.entities.Entity;
 
 public class MeshActor extends Actor {
 	private Mesh mMesh;
@@ -19,6 +21,8 @@ public class MeshActor extends Actor {
 	private float[] mVertices;
 	private short[] mIndices;
 
+	private Entity mEntity;
+
 	public MeshActor() {
 		super();
 
@@ -26,6 +30,15 @@ public class MeshActor extends Actor {
 
 		// Default value.
 		setMode(GL20.GL_TRIANGLE_FAN);
+	}
+
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+
+		if (hasEntity()) {
+			getEntity().act(delta);
+		}
 	}
 
 	public void draw(ShaderProgram shaderProgram) {
@@ -103,5 +116,22 @@ public class MeshActor extends Actor {
 
 	public void setIndices(short[] indices) {
 		mIndices = indices;
+	}
+
+	public void setGeometry(GeometryData geometry) {
+		setVertices(geometry.vertices);
+		setIndices(geometry.indices);
+	}
+
+	public Entity getEntity() {
+		return mEntity;
+	}
+
+	public void setEntity(Entity entity) {
+		mEntity = entity;
+	}
+
+	public boolean hasEntity() {
+		return mEntity != null;
 	}
 }

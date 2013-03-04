@@ -1,6 +1,7 @@
 package com.razh.laser;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -35,6 +36,23 @@ public class MeshStage extends Stage {
 	}
 
 	@Override
+	public void draw() {
+		Camera camera = getCamera();
+		camera.update();
+
+		if (mShaderProgram != null) {
+			mShaderProgram.begin();
+
+			mShaderProgram.setUniformMatrix("projectionMatrix", camera.projection);
+			mShaderProgram.setUniformMatrix("viewMatrix", camera.view);
+
+			mRoot.draw(mShaderProgram);
+
+			mShaderProgram.end();
+		}
+	}
+
+	@Override
 	public void addActor(Actor actor) {
 		mRoot.addActor(actor);
 	}
@@ -43,6 +61,14 @@ public class MeshStage extends Stage {
 	public void act(float delta) {
 		mRoot.act(delta);
 		mColorActor.act(delta);
+	}
+
+	public ShaderProgram getShaderProgram() {
+		return mShaderProgram;
+	}
+
+	public void setShaderProgram(ShaderProgram shaderProgram) {
+		mShaderProgram = shaderProgram;
 	}
 
 	@Override

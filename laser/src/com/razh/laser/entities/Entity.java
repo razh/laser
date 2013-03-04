@@ -1,17 +1,17 @@
 package com.razh.laser.entities;
 
-import com.razh.laser.MeshActor;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public abstract class Entity {
-	private MeshActor mActor;
+public class Entity {
+	private Actor mActor;
 
-	public abstract void act(float delta);
+	public void act(float delta) {}
 
-	public MeshActor getActor() {
+	public Actor getActor() {
 		return mActor;
 	}
 
-	public void setActor(MeshActor actor) {
+	public void setActor(Actor actor) {
 		mActor = actor;
 	}
 }

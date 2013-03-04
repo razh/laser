@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.razh.laser.LaserGame;
 import com.razh.laser.MeshStage;
+import com.razh.laser.Shader;
+import com.razh.laser.entities.Entity;
+import com.razh.laser.entities.EntityFactory;
 
 public class GameScreen extends BasicScreen {
 
@@ -12,6 +15,10 @@ public class GameScreen extends BasicScreen {
 		super(game);
 
 		setStage(new MeshStage());
+
+		Entity entity = EntityFactory.createLaserSource();
+		getStage().addActor(entity.getActor());
+		getMeshStage().setShaderProgram(Shader.createSimpleShader());
 
 		addInputProcessor(getStage());
 	}

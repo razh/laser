@@ -10,6 +10,7 @@ public class Main {
 		cfg.useGL20 = true;
 		cfg.width = 1280;
 		cfg.height = 720;
+		cfg.samples = 4;
 		cfg.useCPUSynch = false;
 
 		new LwjglApplication(new LaserGame(), cfg);

@@ -70,7 +70,7 @@ var Geometry = (function() {
         vertices.push( innerRadius * Math.cos( endAngle - i * subdivAngle ) );
         vertices.push( innerRadius * Math.sin( endAngle - i * subdivAngle ) );
 
-        // The plus one takes into account the edge connecting inner and outer radii.
+        // The plus one takes into account the loop variable in outerRadius loop.
         indices.push( i + subdivisions + 1 );
       }
 

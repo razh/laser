@@ -11,8 +11,8 @@ public class Geometry {
 	                              int subdivisions, boolean anticlockwise) {
 
 		// Two vertices on outer and inner radii with two components each.
-		int vertexCount = subdivisions * 4;
-		int indexCount = subdivisions * 2;
+		int vertexCount = (subdivisions + 1) * 4;
+		int indexCount = (subdivisions + 1) * 2;
 
 		Mesh mesh = new Mesh(Mesh.VertexDataType.VertexBufferObject,
 		                     true, vertexCount, indexCount,
@@ -44,7 +44,7 @@ public class Geometry {
 		int idxIndex = 0;
 
 		float cos, sin;
-		for (int i = 0; i < subdivisions; i++) {
+		for (int i = 0; i < subdivisions + 1; i++) {
 			cos = (float) Math.cos(startAngle + i * subdivAngle);
 			sin = (float) Math.sin(startAngle + i * subdivAngle);
 			// Inner radius.
@@ -109,11 +109,58 @@ public class Geometry {
 		return mesh;
 	}
 
-	public static GeometryData createRingHull() {
-		return null;
+	public static GeometryData createRingHull(float outerRadius, float innerRadius,
+	                                          float startAngle, float endAngle,
+                                              int subdivisions, boolean anticlockwise) {
+		float[] vertices = new float[(subdivisions + 1) * 4];
+		// Two radii, plus connecting edge.
+		short[] indices = new short[(subdivisions + 1) * 2 + 1];
+
+		float sweepAngle = endAngle - startAngle;
+
+		// Circle check.
+		if (Math.abs(sweepAngle) >= 2 * Math.PI) {
+			endAngle = (float) (startAngle + 2 * Math.PI);
+		} else {
+			if (anticlockwise && sweepAngle < 0) {
+				sweepAngle += 2 * Math.PI;
+			} else if (!anticlockwise && sweepAngle > 0) {
+				sweepAngle -= 2 * Math.PI;
+			}
+		}
+
+		float subdivAngle = sweepAngle / subdivisions;
+
+		int vtxIndex = 0;
+		int idxIndex = 0;
+
+		// Outer radius.
+		for (int i = 0; i < subdivisions + 1; i++) {
+			vertices[vtxIndex++] = (float) (outerRadius * Math.cos(startAngle + i * subdivAngle));
+			vertices[vtxIndex++] = (float) (outerRadius * Math.sin(startAngle + i * subdivAngle));
+
+			indices[idxIndex++] = (short) i;
+		}
+
+		// Inner radius.
+		for (int i = 0; i < subdivisions + 1; i++) {
+			vertices[vtxIndex++]= (float) (innerRadius * Math.cos(endAngle - i * subdivAngle));
+			vertices[vtxIndex++]= (float) (innerRadius * Math.cos(endAngle - i * subdivAngle));
+
+			indices[idxIndex++] = (short) (i + subdivisions + 1);
+		}
+
+		// Edge connecting inner and outer radius.
+		indices[idxIndex++] = 0;
+
+		GeometryData data = new GeometryData();
+		data.vertices = vertices;
+		data.indices = indices;
+
+		return data;
 	}
 
-	public class GeometryData {
+	public static class GeometryData {
 		public float[] vertices;
 		public short[] indices;
 	}
