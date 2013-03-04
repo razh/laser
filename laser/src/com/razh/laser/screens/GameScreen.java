@@ -97,6 +97,7 @@ public class GameScreen extends BasicScreen {
 					MouseJointDef mouseJointDef = new MouseJointDef();
 					mouseJointDef.bodyA = mGroundBody;
 					mouseJointDef.bodyB = mHitBody;
+					mouseJointDef.collideConnected = true;
 					mouseJointDef.target.set(position);
 					mouseJointDef.maxForce = 1000.0f * mHitBody.getMass();
 
