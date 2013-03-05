@@ -22,6 +22,8 @@ import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
 import com.razh.laser.input.GameInputProcessor;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+
 public class GameScreen extends BasicScreen {
 
 	private Body mGroundBody;
@@ -33,6 +35,11 @@ public class GameScreen extends BasicScreen {
 
 		Entity entity = EntityFactory.createLaserSource(getMeshStage().getWorld());
 		getStage().addActor(entity.getActor());
+		entity.getActor().addAction(
+			forever(
+				rotateBy(360.0f, 1.0f)
+			)
+		);
 
 		Entity entity2 = EntityFactory.createLaserSource(getMeshStage().getWorld());
 		getStage().addActor(entity2.getActor());

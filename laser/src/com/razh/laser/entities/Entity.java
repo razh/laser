@@ -17,7 +17,6 @@ public class Entity {
 		Vector2 position = mBody.getPosition();
 		position.mul(LaserGame.PTM_RATIO);
 		mActor.setPosition(position.x, position.y);
-		mActor.setRotation(mBody.getAngle());
 	}
 
 	public Actor getActor() {
@@ -38,7 +37,7 @@ public class Entity {
 	}
 
 	public void setPosition(float x, float y) {
-		mBody.setTransform(x / LaserGame.PTM_RATIO, y * LaserGame.PTM_RATIO, mBody.getAngle());
+		mBody.setTransform(x, y, mBody.getAngle());
 		mActor.setPosition(x, y);
 	}
 }
