@@ -16,7 +16,7 @@ public class Intersection {
 	 * @param y1 y-coordinate of second point in line segment.
 	 * @return Vector2 Coordinate of intersection, or null if no intersection.
 	 */
-	public static Vector2 raySegment(Ray2D ray, float x0, float y0, float x1, float y1) {
+	public static Vector2 raySegment(final Ray2D ray, final float x0, final float y0, final float x1, final float y1) {
 		float parameter = raySegmentParameter(ray, x0, y0, x1, y1);
 		if (parameter != Float.NaN || parameter < 0 ) {
 			return null;
@@ -35,7 +35,7 @@ public class Intersection {
 	 * @param y1 y-coordinate of second point in line segment.
 	 * @return float Parameter of intersection point along ray, or Float.NaN if no intersection.
 	 */
-	public static float raySegmentParameter(Ray2D ray, float x0, float y0, float x1, float y1) {
+	public static float raySegmentParameter(final Ray2D ray, final float x0, final float y0, final float x1, final float y1) {
 		/*
 			Given the parametric equation of a ray:
 
@@ -154,6 +154,112 @@ public class Intersection {
 		}
 
 		// Intersection is on segment, but not the ray.
+		if (t < 0) {
+			return Float.NaN;
+		}
+
+		return t;
+	}
+
+	public static Vector2 rayCircle(final Ray2D ray, final float cx, final float cy, final float r) {
+		float parameter = rayCircleParameter(ray, cx, cy, r);
+		if (parameter != Float.NaN || parameter < 0) {
+			return null;
+		}
+
+		return ray.getEndPoint(parameter);
+	}
+
+	/**
+	 * Returns the parameter of the nearest intersection point of the ray with
+	 * the circle given by (x - cx)^2 + (y - cy)^2 <= r.
+	 * @param ray
+	 * @param cx x-coordinate of circle center.
+	 * @param cy y-coordinate of circle center.
+	 * @param r  radius of circle.
+	 * @return float Parameter of intersection point along ray, or Float.NaN if no intersection.
+	 */
+	public static float rayCircleParameter(final Ray2D ray, final float cx, final float cy, final float r) {
+		/* Given the parametric equation of a ray:
+
+			x(t) = rx + t * dx
+			y(t) = ry + t * dy
+
+		Plug these into the equation of a circle: x(t) ^ 2 + y(t) ^ 2 = r ^ 2
+		(first, translate coordinates to the circle's center) to get:
+
+			(rx + t * dx)^2 + (ry + t * dy)^2 - r^2 = 0
+
+		which expands to:
+
+			(rx^2 + 2rxdx * t + t^2 * dx^2) +
+			(ry^2 + 2rydy * t + t^2 * dy^2) - r^2 = 0
+
+		This can be written as:
+
+			(dx^2 + dy^2)       * t^2 +
+			(2 * (rxdx + rydy)) * t     +
+			(rx^2 + ry^2 - r^2)
+
+		such that the coefficients of the quadratic equation are:
+
+			a = dx^2 + dy^2
+			b = 2 * (rxdx + rydy)
+			c = rx^2 + ry^2 - r^2
+
+		The discriminant is thus: b^2 - 4ac.
+
+		If the discriminant = 0, there is one intersection point.
+		If the discriminant > 0, there are two intersection points.
+		If the discriminant < 0, there are no intersection points.
+
+		These intersection points lie on the ray if t >= 0.
+		*/
+
+		float rx = ray.origin.x;
+		float ry = ray.origin.y;
+		float dx = ray.direction.x;
+		float dy = ray.direction.y;
+
+		// Translate ray to circle space.
+		rx -= cx;
+		ry -= cy;
+
+		// Compute coefficients.
+		float a = (dx * dx) + (dy * dy);
+		float b = 2 * (rx * dx + ry * dy);
+		float c  = (rx * rx) + (ry * ry) - (r * r);
+
+		// Compute discriminant.
+		float d = b * b - 4 * a * c;
+
+		if (d < 0) {
+			return Float.NaN;
+		}
+
+		float t;
+		// Near zero or sero discriminent.
+		if (Math.abs(d) < EPSILON) {
+			t = -b / (2 * a);
+		} else {
+			// The lowest positive parameter gives us the intersection point relative to the ray.
+			float t0 = (float) ((-b - Math.sqrt(d)) / (2 * a));
+			float t1 = (float) ((-b + Math.sqrt(d)) / (2 * a));
+
+			// Both parameters are >= 0, so use the lower one.
+			if (t0 >= 0 && t1 >= 0) {
+				t = Math.min(t0, t1);
+			} else if (t0 >= 0) {
+				// Only need to check if t0 is positive (t1 must be negative).
+				t = t0;
+			} else {
+				// Handles case where t1 >= 0 and t0 < 0
+				// as well as the case where both t0 and t1 are < 0.
+				t = t1;
+			}
+		}
+
+		// The circle intersects the line but not the ray.
 		if (t < 0) {
 			return Float.NaN;
 		}

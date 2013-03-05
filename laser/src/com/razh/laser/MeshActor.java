@@ -18,9 +18,9 @@ public class MeshActor extends Actor {
 
 	private int mMode;
 
-	private Matrix4 mModelMatrix;
+	private final Matrix4 mModelMatrix;
 	// Similar to modelMatrix, except 3x3.
-	private Matrix3 mTransformMatrix;
+	private final Matrix3 mTransformMatrix;
 
 	// Hull variables.
 	private float[] mVertices;
