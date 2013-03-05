@@ -28,6 +28,8 @@ public class LaserGame extends Game {
 
 	private Map<String, BasicScreen> mScreens;
 
+	public static boolean DEBUG = true;
+
 	@Override
 	public void create() {
 		Gdx.graphics.setVSync(true);

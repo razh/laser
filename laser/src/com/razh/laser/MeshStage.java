@@ -38,28 +38,30 @@ public class MeshStage extends Stage {
 		mColorActor = new Actor();
 		mColorActor.setColor(Color.BLACK);
 
-		mTestGroup = new MeshGroup();
-		float x, y;
-		MeshActor actor;
-		int i, j;
-		int xCount = 120;
-		int yCount = 120;
-		float dx = (Gdx.graphics.getWidth() - 40) / xCount;
-		float dy = (Gdx.graphics.getHeight() - 40) / yCount;
-		for (i = 0; i < xCount; i++ ) {
-			for (j = 0; j < yCount; j++ ) {
-				x = 20 + i * dx;
-				y = 20 + j * dy;
+		if (LaserGame.DEBUG) {
+			mTestGroup = new MeshGroup();
+			float x, y;
+			MeshActor actor;
+			int i, j;
+			int xCount = 20;
+			int yCount = 20;
+			float dx = (Gdx.graphics.getWidth() - 60) / xCount;
+			float dy = (Gdx.graphics.getHeight() - 60) / yCount;
+			for (i = 0; i < xCount; i++ ) {
+				for (j = 0; j < yCount; j++ ) {
+					x = -120 + i * dx;
+					y = 30 + j * dy;
 
-				actor = new MeshActor();
-				actor.setPosition(x, y);
-				actor.setWidth(3);
-				actor.setHeight(3);
-				actor.setMesh(Geometry.createRectangle());
-				actor.setMode(GL20.GL_TRIANGLE_STRIP);
-				actor.setColor(Color.RED);
+					actor = new MeshActor();
+					actor.setPosition(x, y);
+					actor.setWidth(3);
+					actor.setHeight(3);
+					actor.setMesh(Geometry.createRectangle());
+					actor.setMode(GL20.GL_TRIANGLE_STRIP);
+					actor.setColor(Color.RED);
 
-				mTestGroup.addActor(actor);
+					mTestGroup.addActor(actor);
+				}
 			}
 		}
 	}
@@ -69,18 +71,20 @@ public class MeshStage extends Stage {
 		Camera camera = getCamera();
 		camera.update();
 
-		SnapshotArray<Actor> children = mTestGroup.getChildren();
-		Actor[] actors = children.begin();
-		Actor actor;
-		for (int i = 0, n = children.size; i < n; i++) {
-			actor = actors[i];
-			if (hit(actor.getX(), actor.getY(), true) != null) {
-				actor.setColor(Color.GREEN);
-			} else {
-				actor.setColor(Color.RED);
+		if (LaserGame.DEBUG) {
+			SnapshotArray<Actor> children = mTestGroup.getChildren();
+			Actor[] actors = children.begin();
+			Actor actor;
+			for (int i = 0, n = children.size; i < n; i++) {
+				actor = actors[i];
+				if (hit(actor.getX(), actor.getY(), true) != null) {
+					actor.setColor(Color.GREEN);
+				} else {
+					actor.setColor(Color.RED);
+				}
 			}
+			children.end();
 		}
-		children.end();
 
 
 		if (mShaderProgram != null) {
@@ -90,7 +94,9 @@ public class MeshStage extends Stage {
 			mShaderProgram.setUniformMatrix("viewMatrix", camera.view);
 
 			mRoot.draw(mShaderProgram);
-			mTestGroup.draw(mShaderProgram);
+			if (LaserGame.DEBUG) {
+				mTestGroup.draw(mShaderProgram);
+			}
 
 			mShaderProgram.end();
 		}
