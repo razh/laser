@@ -3,14 +3,12 @@ package com.razh.laser;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.SnapshotArray;
 
 public class MeshStage extends Stage {
 	private MeshGroup mRoot;
@@ -19,10 +17,7 @@ public class MeshStage extends Stage {
 	// Allows us to set colors with actions.
 	private Actor mColorActor;
 
-	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-	private World mWorld;
-
-	private OrthographicCamera mBox2DCamera;
+	private MeshGroup mTestGroup;
 
 	public MeshStage() {
 		this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
@@ -43,18 +38,50 @@ public class MeshStage extends Stage {
 		mColorActor = new Actor();
 		mColorActor.setColor(Color.BLACK);
 
-		setWorld(new World(Vector2.Zero, true));
+		mTestGroup = new MeshGroup();
+		float x, y;
+		MeshActor actor;
+		int i, j;
+		int xCount = 120;
+		int yCount = 120;
+		float dx = (Gdx.graphics.getWidth() - 40) / xCount;
+		float dy = (Gdx.graphics.getHeight() - 40) / yCount;
+		for (i = 0; i < xCount; i++ ) {
+			for (j = 0; j < yCount; j++ ) {
+				x = 20 + i * dx;
+				y = 20 + j * dy;
 
-		mBox2DCamera = new OrthographicCamera();
-		mBox2DCamera.viewportWidth = getCamera().viewportWidth / LaserGame.PTM_RATIO;
-		mBox2DCamera.viewportHeight = getCamera().viewportHeight / LaserGame.PTM_RATIO;
-		mBox2DCamera.position.set(getCamera().position.cpy().div(LaserGame.PTM_RATIO));
+				actor = new MeshActor();
+				actor.setPosition(x, y);
+				actor.setWidth(3);
+				actor.setHeight(3);
+				actor.setMesh(Geometry.createRectangle());
+				actor.setMode(GL20.GL_TRIANGLE_STRIP);
+				actor.setColor(Color.RED);
+
+				mTestGroup.addActor(actor);
+			}
+		}
 	}
 
 	@Override
 	public void draw() {
 		Camera camera = getCamera();
 		camera.update();
+
+		SnapshotArray<Actor> children = mTestGroup.getChildren();
+		Actor[] actors = children.begin();
+		Actor actor;
+		for (int i = 0, n = children.size; i < n; i++) {
+			actor = actors[i];
+			if (hit(actor.getX(), actor.getY(), true) != null) {
+				actor.setColor(Color.GREEN);
+			} else {
+				actor.setColor(Color.RED);
+			}
+		}
+		children.end();
+
 
 		if (mShaderProgram != null) {
 			mShaderProgram.begin();
@@ -63,13 +90,10 @@ public class MeshStage extends Stage {
 			mShaderProgram.setUniformMatrix("viewMatrix", camera.view);
 
 			mRoot.draw(mShaderProgram);
+			mTestGroup.draw(mShaderProgram);
 
 			mShaderProgram.end();
 		}
-
-		mBox2DCamera.update();
-		debugRenderer.render(mWorld, mBox2DCamera.combined);
-		mWorld.step(1.0f / 60.0f, 6, 2);
 	}
 
 	@Override
@@ -112,14 +136,6 @@ public class MeshStage extends Stage {
 	@Override
 	public void addAction(Action action) {
 		mColorActor.addAction(action);
-	}
-
-	public World getWorld() {
-		return mWorld;
-	}
-
-	public void setWorld(World world) {
-		mWorld = world;
 	}
 
 	@Override

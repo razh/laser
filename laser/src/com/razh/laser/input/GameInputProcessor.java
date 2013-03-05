@@ -1,10 +1,16 @@
 package com.razh.laser.input;
 
 import com.badlogic.gdx.math.Vector2;
-import com.razh.laser.MeshActor;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.razh.laser.Player;
 
 public class GameInputProcessor extends BasicInputProcessor {
+	// Offsets from touch position to object position.
+	private final Vector2 mOffset;
+
+	public GameInputProcessor() {
+		mOffset = new Vector2();
+	}
 
 	@Override
 	public boolean keyDown(int keycode) {
@@ -29,12 +35,12 @@ public class GameInputProcessor extends BasicInputProcessor {
 
 		Vector2 point = getStage().screenToStageCoordinates(new Vector2(screenX, screenY));
 
-		MeshActor hit = (MeshActor) getStage().hit(point.x, point.y, true);
+		Actor hit = getStage().hit(point.x, point.y, true);
 		if (hit != null) {
+			mOffset.set(point).sub(hit.getX(), hit.getY());
+
 			getPlayer().setSelected(hit);
-			if (hit.hasEntity()) {
-				hit.getEntity().setPosition(point.x, point.y);
-			}
+			hit.setPosition(point.x - mOffset.x, point.y - mOffset.y);
 		}
 
 		return false;
@@ -63,7 +69,7 @@ public class GameInputProcessor extends BasicInputProcessor {
 		Vector2 point = getStage().screenToStageCoordinates(new Vector2(screenX, screenY));
 
 		if (getPlayer().hasSelected()) {
-			((MeshActor) getPlayer().getSelected()).getEntity().setPosition(point.x, point.y);
+			getPlayer().getSelected().setPosition(point.x - mOffset.x, point.y - mOffset.y);
 		}
 
 		return false;

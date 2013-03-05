@@ -6,6 +6,25 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class Geometry {
+	private static Mesh mRectangle;
+
+	public static Mesh createRectangle() {
+		if (mRectangle == null) {
+			mRectangle = new Mesh(Mesh.VertexDataType.VertexBufferObject,
+			                 true, 4, 4,
+			                 new VertexAttribute(Usage.Position, 3,
+			                                     ShaderProgram.POSITION_ATTRIBUTE));
+
+			mRectangle.setVertices(new float[]{-0.5f, -0.5f, 0.0f,
+			                                    0.5f, -0.5f, 0.0f,
+			                                   -0.5f,  0.5f, 0.0f,
+			                                    0.5f,  0.5f, 0.0f});
+			mRectangle.setIndices(new short[]{0, 1, 2, 3});
+		}
+
+		return mRectangle;
+	}
+
 	public static Mesh createRing(float outerRadius, float innerRadius,
 	                              float startAngle, float endAngle,
 	                              int subdivisions, boolean anticlockwise) {
@@ -145,7 +164,7 @@ public class Geometry {
 		// Inner radius.
 		for (int i = 0; i < subdivisions + 1; i++) {
 			vertices[vtxIndex++]= (float) (innerRadius * Math.cos(endAngle - i * subdivAngle));
-			vertices[vtxIndex++]= (float) (innerRadius * Math.cos(endAngle - i * subdivAngle));
+			vertices[vtxIndex++]= (float) (innerRadius * Math.sin(endAngle - i * subdivAngle));
 
 			indices[idxIndex++] = (short) (i + subdivisions + 1);
 		}
