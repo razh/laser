@@ -7,10 +7,17 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.razh.laser.images.DistanceField;
 import com.razh.laser.screens.BasicScreen;
 import com.razh.laser.screens.GameScreen;
 
@@ -25,6 +32,12 @@ public class LaserGame extends Game {
 
 	private SpriteBatch mSpriteBatch;
 	private BitmapFont mFont;
+
+	private Pixmap pixmap;
+	private Pixmap distanceFieldPixmap;
+	private Texture texture;
+	private TextureRegion region;
+	private Sprite sprite;
 
 	private Map<String, BasicScreen> mScreens;
 
@@ -49,6 +62,31 @@ public class LaserGame extends Game {
 
 		mSpriteBatch = new SpriteBatch();
 		mFont = new BitmapFont();
+
+		// Test distance field.
+		DistanceField distanceField = new DistanceField();
+		distanceField.setSpread(16);
+		pixmap = new Pixmap(512, 512, Pixmap.Format.RGBA8888);
+//		pixmap = new Pixmap(Gdx.files.internal("data/libgdx.png"));
+		pixmap.setColor(Color.WHITE);
+//		pixmap.fillRectangle(0, 0, 512, 512);
+		pixmap.fillCircle(256, 256, 128);
+//		pixmap.fill();
+		distanceFieldPixmap = distanceField.generateDistanceField(pixmap);
+//		texture = new Texture(pixmap);
+		texture = new Texture(distanceFieldPixmap);
+//		pixmap.dispose();
+		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		region = new TextureRegion(texture, 0, 0, 512, 512);
+//		texture.dispose();
+
+//		texture = new Texture(Gdx.files.internal("data/libgdx.png"));
+//		region = new TextureRegion(texture, 0, 0, 512, 275);
+
+		sprite = new Sprite(region);
+		sprite.setSize(1024.0f, 1024.0f);
+		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+		sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2, 0);
 
 		mPlayer = new Player();
 
@@ -79,6 +117,7 @@ public class LaserGame extends Game {
 		           Integer.toString(Gdx.graphics.getFramesPerSecond()),
 		           Gdx.graphics.getWidth() * 0.1f,
 		           Gdx.graphics.getHeight() * 0.9f);
+		sprite.draw(mSpriteBatch);
 		mSpriteBatch.end();
 
 		mFPSLogger.log();

@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.Pixmap;
  */
 public class DistanceField {
 
-	private final Color mColor = Color.WHITE;
+	private final Color mColor = new Color(Color.WHITE);
 	private int mDownscale = 1;
 	private float mSpread = 1;
 

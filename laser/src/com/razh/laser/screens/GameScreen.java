@@ -31,6 +31,7 @@ public class GameScreen extends BasicScreen {
 		getStage().addActor(entity2.getActor());
 
 		getMeshStage().setShaderProgram(Shader.createSimpleShader());
+		getMeshStage().setColor(Color.DARK_GRAY);
 
 		GameInputProcessor gameInputProcessor = new GameInputProcessor();
 		gameInputProcessor.setStage(getStage());
