@@ -19,7 +19,7 @@ public class GameScreen extends BasicScreen {
 
 		setStage(new MeshStage());
 
-		Entity entity = EntityFactory.createLaserSource();
+		Entity entity = EntityFactory.createEmitter();
 		getStage().addActor(entity.getActor());
 		entity.getActor().addAction(
 			forever(
@@ -27,7 +27,7 @@ public class GameScreen extends BasicScreen {
 			)
 		);
 
-		Entity entity2 = EntityFactory.createLaserSource();
+		Entity entity2 = EntityFactory.createEmitter();
 		getStage().addActor(entity2.getActor());
 
 		getMeshStage().setShaderProgram(Shader.createSimpleShader());

@@ -8,7 +8,7 @@ import com.razh.laser.Geometry;
 import com.razh.laser.MeshActor;
 
 public class EntityFactory {
-	public static Entity createLaserSource() {
+	public static Entity createEmitter() {
 		MeshActor actor = new MeshActor();
 		actor.setMesh(Geometry.createRing(1.0f, 0.8f, 0, 180 * MathUtils.degreesToRadians, 32, true));
 //		actor.setMesh(Geometry.createCircle(64));
@@ -22,10 +22,10 @@ public class EntityFactory {
 		actor.setWidth(100);
 		actor.setHeight(100);
 
-		Entity entity = new Entity();
-		entity.setActor(actor);
-		actor.setEntity(entity);
+		Entity emitter = new Entity();
+		emitter.setActor(actor);
+		actor.setEntity(emitter);
 
-		return entity;
+		return emitter;
 	}
 }
