@@ -175,6 +175,7 @@ public class Geometry {
 		GeometryData data = new GeometryData();
 		data.vertices = vertices;
 		data.indices = indices;
+		data.options = new RingGeometryOptions();
 
 		return data;
 	}
@@ -182,5 +183,30 @@ public class Geometry {
 	public static class GeometryData {
 		public float[] vertices;
 		public short[] indices;
+		public Type type;
+		public GeometryOptions options;
+	}
+
+	public enum Type {
+		CIRCLE, RECTANGLE, RING
+	}
+
+	public abstract static class GeometryOptions {};
+
+	public static class CircleGeometryOptions extends GeometryOptions {
+		public float radius;
+	}
+
+	public static class RingGeometryOptions extends GeometryOptions {
+		public float outerRadius;
+		public float innerRadius;
+		public float startAngle;
+		public float endAngle;
+		public boolean anticlockwise;
+	}
+
+	public static class RectangleGeometryOptions extends GeometryOptions {
+		public float width;
+		public float height;
 	}
 }
