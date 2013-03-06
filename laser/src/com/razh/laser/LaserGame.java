@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.razh.laser.images.DistanceField;
 import com.razh.laser.screens.BasicScreen;
 import com.razh.laser.screens.GameScreen;
@@ -38,6 +39,7 @@ public class LaserGame extends Game {
 	private Texture texture;
 	private TextureRegion region;
 	private Sprite sprite;
+	private ShaderProgram distanceFieldShader;
 
 	private Map<String, BasicScreen> mScreens;
 
@@ -66,10 +68,11 @@ public class LaserGame extends Game {
 		// Test distance field.
 		DistanceField distanceField = new DistanceField();
 		distanceField.setSpread(16);
+		distanceField.setDownscale(4);
 		pixmap = new Pixmap(512, 512, Pixmap.Format.RGBA8888);
 //		pixmap = new Pixmap(Gdx.files.internal("data/libgdx.png"));
 		pixmap.setColor(Color.WHITE);
-//		pixmap.fillRectangle(0, 0, 512, 512);
+//		pixmap.fillRectangle(256, 0, 5, 512);
 		pixmap.fillCircle(256, 256, 128);
 //		pixmap.fill();
 		distanceFieldPixmap = distanceField.generateDistanceField(pixmap);
@@ -77,16 +80,18 @@ public class LaserGame extends Game {
 		texture = new Texture(distanceFieldPixmap);
 //		pixmap.dispose();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		region = new TextureRegion(texture, 0, 0, 512, 512);
+		region = new TextureRegion(texture, 0, 0, 128, 128);
 //		texture.dispose();
 
 //		texture = new Texture(Gdx.files.internal("data/libgdx.png"));
 //		region = new TextureRegion(texture, 0, 0, 512, 275);
 
 		sprite = new Sprite(region);
-		sprite.setSize(1024.0f, 1024.0f);
+		sprite.setSize(512.0f, 512.0f);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2, 0);
+
+		distanceFieldShader = Shader.createDistanceFieldShader();
 
 		mPlayer = new Player();
 
@@ -117,7 +122,9 @@ public class LaserGame extends Game {
 		           Integer.toString(Gdx.graphics.getFramesPerSecond()),
 		           Gdx.graphics.getWidth() * 0.1f,
 		           Gdx.graphics.getHeight() * 0.9f);
+		mSpriteBatch.setShader(distanceFieldShader);
 		sprite.draw(mSpriteBatch);
+		mSpriteBatch.setShader(null);
 		mSpriteBatch.end();
 
 		mFPSLogger.log();
