@@ -27,6 +27,7 @@ public class Shader {
 		return compileShader(Gdx.files.internal(vertexName).readString(),
 		                     Gdx.files.internal(fragmentName).readString());
 	}
+
 	public static ShaderProgram compileShader(String vertex, String fragment) {
 		ShaderProgram shader = new ShaderProgram(vertex, fragment);
 		if (!shader.isCompiled()) {
