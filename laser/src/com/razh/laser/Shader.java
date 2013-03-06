@@ -20,6 +20,13 @@ public class Shader {
 		                     Gdx.files.internal(fragmentName).readString());
 	}
 
+	public static ShaderProgram createCircleShader() {
+		final String vertexName = "shaders/circle.vert";
+		final String fragmentName = "shaders/circle.frag";
+
+		return compileShader(Gdx.files.internal(vertexName).readString(),
+		                     Gdx.files.internal(fragmentName).readString());
+	}
 	public static ShaderProgram compileShader(String vertex, String fragment) {
 		ShaderProgram shader = new ShaderProgram(vertex, fragment);
 		if (!shader.isCompiled()) {
