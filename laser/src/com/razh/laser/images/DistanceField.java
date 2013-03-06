@@ -140,7 +140,7 @@ public class DistanceField {
 	 * @return boolean
 	 */
 	private boolean isInside(int rgba) {
-		return (rgba & 0x80808080) != 0;
+		return (rgba & 0x80808000) != 0 && (rgba & 0x00000080) != 0;
 	}
 
 	/**

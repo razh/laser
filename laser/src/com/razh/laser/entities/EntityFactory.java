@@ -28,4 +28,24 @@ public class EntityFactory {
 
 		return emitter;
 	}
+
+	public static Entity createCircleThing() {
+		MeshActor actor = new MeshActor();
+		actor.setMesh(Geometry.createCircle(128));
+		actor.setMode(GL20.GL_TRIANGLE_FAN);
+
+//		actor.setGeometry(Geometry.createRingHull(1.0f, 0.8f, 0, 180 * MathUtils.degreesToRadians, 32, true));
+		actor.setColor(Color.WHITE);
+//		actor.setPosition((float) (Gdx.graphics.getWidth() * Math.random()),
+//		                  (float) (Gdx.graphics.getHeight() * Math.random()));
+		actor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		actor.setWidth(512);
+		actor.setHeight(512);
+
+		Entity entity = new Entity();
+		entity.setActor(actor);
+		actor.setEntity(entity);
+
+		return entity;
+	}
 }

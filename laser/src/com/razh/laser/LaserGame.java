@@ -41,9 +41,12 @@ public class LaserGame extends Game {
 	private Sprite sprite;
 	private ShaderProgram distanceFieldShader;
 
+	private float spread = 16;
+	private float scale = 1;
+
 	private Map<String, BasicScreen> mScreens;
 
-	public static boolean DEBUG = true;
+	public static boolean DEBUG = false;
 
 	@Override
 	public void create() {
@@ -67,27 +70,30 @@ public class LaserGame extends Game {
 
 		// Test distance field.
 		DistanceField distanceField = new DistanceField();
-		distanceField.setSpread(16);
+		distanceField.setSpread(spread);
 		distanceField.setDownscale(4);
-		pixmap = new Pixmap(512, 512, Pixmap.Format.RGBA8888);
+		pixmap = new Pixmap(1024, 1024, Pixmap.Format.RGBA8888);
 //		pixmap = new Pixmap(Gdx.files.internal("data/libgdx.png"));
 		pixmap.setColor(Color.WHITE);
 //		pixmap.fillRectangle(256, 0, 5, 512);
-		pixmap.fillCircle(256, 256, 128);
+		pixmap.fillCircle(512, 512, 384);
+//		pixmap.setColor(Color.BLACK);
+//		pixmap.fillRectangle(512, 0, 512, 1024);
 //		pixmap.fill();
 		distanceFieldPixmap = distanceField.generateDistanceField(pixmap);
 //		texture = new Texture(pixmap);
 		texture = new Texture(distanceFieldPixmap);
 //		pixmap.dispose();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		region = new TextureRegion(texture, 0, 0, 128, 128);
+		region = new TextureRegion(texture, 0, 0, 256, 256);
 //		texture.dispose();
 
 //		texture = new Texture(Gdx.files.internal("data/libgdx.png"));
 //		region = new TextureRegion(texture, 0, 0, 512, 275);
 
 		sprite = new Sprite(region);
-		sprite.setSize(512.0f, 512.0f);
+		scale = 256.0f / 256.0f;
+		sprite.setSize(256.0f, 256.0f);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2, 0);
 
@@ -116,6 +122,8 @@ public class LaserGame extends Game {
 	@Override
 	public void render() {
 		super.render();
+		sprite.rotate(0.5f);
+//		sprite.scale(0.01f);
 
 		mSpriteBatch.begin();
 		mFont.draw(mSpriteBatch,
@@ -123,6 +131,8 @@ public class LaserGame extends Game {
 		           Gdx.graphics.getWidth() * 0.1f,
 		           Gdx.graphics.getHeight() * 0.9f);
 		mSpriteBatch.setShader(distanceFieldShader);
+		distanceFieldShader.setUniformf("spread", spread);
+		distanceFieldShader.setUniformf("scale", sprite.getWidth() / 256f);
 		sprite.draw(mSpriteBatch);
 		mSpriteBatch.setShader(null);
 		mSpriteBatch.end();
