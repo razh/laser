@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -40,6 +41,11 @@ public class LaserGame extends Game {
 	private TextureRegion region;
 	private Sprite sprite;
 	private ShaderProgram distanceFieldShader;
+
+	private Texture laserTexture;
+	private TextureRegion laserRegion;
+	private Sprite laserSprite;
+	private ShaderProgram laserShader;
 
 	private float spread = 16;
 	private float scale = 1;
@@ -100,6 +106,19 @@ public class LaserGame extends Game {
 //		distanceFieldShader = Shader.createDistanceFieldShader();
 		distanceFieldShader = Shader.createCircleShader();
 
+		Pixmap laserPixmap = new Pixmap(128, 128, Format.RGBA8888);
+		laserPixmap.setColor(Color.WHITE);
+		laserPixmap.fill();
+		laserTexture = new Texture(laserPixmap);
+		laserTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		laserRegion = new TextureRegion(laserTexture, 0, 0, 128, 128);
+		laserSprite = new Sprite(laserRegion);
+		laserSprite.setSize(1024f, 8f);
+		laserSprite.setPosition(20, 200);
+		laserPixmap.dispose();
+
+		laserShader = Shader.createLaserShader();
+
 		mPlayer = new Player();
 
 		// Screens.
@@ -125,6 +144,7 @@ public class LaserGame extends Game {
 		super.render();
 		sprite.rotate(0.5f);
 //		sprite.scale(0.01f);
+		laserSprite.rotate(0.5f);
 
 		mSpriteBatch.begin();
 		mFont.draw(mSpriteBatch,
@@ -135,6 +155,8 @@ public class LaserGame extends Game {
 //		distanceFieldShader.setUniformf("spread", spread);
 //		distanceFieldShader.setUniformf("scale", sprite.getWidth() / 256f);
 		sprite.draw(mSpriteBatch);
+		mSpriteBatch.setShader(laserShader);
+		laserSprite.draw(mSpriteBatch);
 		mSpriteBatch.setShader(null);
 		mSpriteBatch.end();
 

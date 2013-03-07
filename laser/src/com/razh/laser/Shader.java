@@ -13,7 +13,7 @@ public class Shader {
 	}
 
 	public static ShaderProgram createDistanceFieldShader() {
-		final String vertexName = "shaders/distance-field.vert";
+		final String vertexName = "shaders/spritebatch.vert";
 		final String fragmentName = "shaders/distance-field.frag";
 
 		return compileShader(Gdx.files.internal(vertexName).readString(),
@@ -21,8 +21,16 @@ public class Shader {
 	}
 
 	public static ShaderProgram createCircleShader() {
-		final String vertexName = "shaders/circle.vert";
+		final String vertexName = "shaders/spritebatch.vert";
 		final String fragmentName = "shaders/circle.frag";
+
+		return compileShader(Gdx.files.internal(vertexName).readString(),
+		                     Gdx.files.internal(fragmentName).readString());
+	}
+
+	public static ShaderProgram createLaserShader() {
+		final String vertexName = "shaders/spritebatch.vert";
+		final String fragmentName = "shaders/laser.frag";
 
 		return compileShader(Gdx.files.internal(vertexName).readString(),
 		                     Gdx.files.internal(fragmentName).readString());
