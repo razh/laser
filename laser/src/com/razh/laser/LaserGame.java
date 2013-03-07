@@ -45,6 +45,7 @@ public class LaserGame extends Game {
 	private Texture laserTexture;
 	private TextureRegion laserRegion;
 	private Sprite laserSprite;
+	private Sprite laserSprite2;
 	private ShaderProgram laserShader;
 
 	private float spread = 16;
@@ -113,8 +114,12 @@ public class LaserGame extends Game {
 		laserTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		laserRegion = new TextureRegion(laserTexture, 0, 0, 128, 128);
 		laserSprite = new Sprite(laserRegion);
-		laserSprite.setSize(1024f, 8f);
-		laserSprite.setPosition(20, 200);
+		laserSprite.setSize(1024f, 32f);
+		laserSprite.setPosition(20, 400);
+		laserSprite2 = new Sprite(laserRegion);
+		laserSprite2.setSize(1024f, 32f);
+		laserSprite2.rotate(90.0f);
+		laserSprite2.setPosition(500, 100);
 		laserPixmap.dispose();
 
 		laserShader = Shader.createLaserShader();
@@ -139,14 +144,17 @@ public class LaserGame extends Game {
 		mFont.dispose();
 	}
 
+	public float time = 0.0f;
 	@Override
 	public void render() {
 		super.render();
 		sprite.rotate(0.5f);
 //		sprite.scale(0.01f);
-		laserSprite.rotate(0.5f);
+//		laserSprite.rotate(0.5f);
+		time += 0.1f;
 
 		mSpriteBatch.begin();
+		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		mFont.draw(mSpriteBatch,
 		           Integer.toString(Gdx.graphics.getFramesPerSecond()),
 		           Gdx.graphics.getWidth() * 0.1f,
@@ -155,10 +163,16 @@ public class LaserGame extends Game {
 //		distanceFieldShader.setUniformf("spread", spread);
 //		distanceFieldShader.setUniformf("scale", sprite.getWidth() / 256f);
 		sprite.draw(mSpriteBatch);
+
 		mSpriteBatch.setShader(laserShader);
+		laserShader.setUniformf("time", time);
+		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 		laserSprite.draw(mSpriteBatch);
+		laserSprite2.draw(mSpriteBatch);
 		mSpriteBatch.setShader(null);
 		mSpriteBatch.end();
+
+		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		mFPSLogger.log();
 	}
