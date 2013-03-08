@@ -28,9 +28,25 @@ public class Shader {
 		                     Gdx.files.internal(fragmentName).readString());
 	}
 
-	public static ShaderProgram createLaserShader() {
+	public static ShaderProgram createRingShader() {
 		final String vertexName = "shaders/spritebatch.vert";
-		final String fragmentName = "shaders/laser.frag";
+		final String fragmentName = "shaders/ring.frag";
+
+		return compileShader(Gdx.files.internal(vertexName).readString(),
+		                     Gdx.files.internal(fragmentName).readString());
+	}
+
+	public static ShaderProgram createLaserBeamShader() {
+		final String vertexName = "shaders/spritebatch.vert";
+		final String fragmentName = "shaders/laser-beam.frag";
+
+		return compileShader(Gdx.files.internal(vertexName).readString(),
+		                     Gdx.files.internal(fragmentName).readString());
+	}
+
+	public static ShaderProgram createLaserGlowShader() {
+		final String vertexName = "shaders/spritebatch.vert";
+		final String fragmentName = "shaders/laser-glow.frag";
 
 		return compileShader(Gdx.files.internal(vertexName).readString(),
 		                     Gdx.files.internal(fragmentName).readString());

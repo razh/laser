@@ -40,13 +40,18 @@ public class LaserGame extends Game {
 	private Texture texture;
 	private TextureRegion region;
 	private Sprite sprite;
-	private ShaderProgram distanceFieldShader;
+	private Sprite ringSprite;
+	private ShaderProgram circleShader;
+	private ShaderProgram ringShader;
 
 	private Texture laserTexture;
 	private TextureRegion laserRegion;
 	private Sprite laserSprite;
 	private Sprite laserSprite2;
+	private Sprite laserSprite3;
+	private Sprite laserGlowSprite;
 	private ShaderProgram laserShader;
+	private ShaderProgram laserGlowShader;
 
 	private float spread = 16;
 	private float scale = 1;
@@ -64,6 +69,9 @@ public class LaserGame extends Game {
 			Gdx.app.exit();
 		}
 
+		// Ignore invalid uniforms.
+		ShaderProgram.pedantic = false;
+
 		// Blending.
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -80,19 +88,20 @@ public class LaserGame extends Game {
 		distanceField.setSpread(spread);
 		distanceField.setDownscale(4);
 		pixmap = new Pixmap(1024, 1024, Pixmap.Format.RGBA8888);
+		pixmap = new Pixmap(128, 128, Pixmap.Format.RGBA8888);
 //		pixmap = new Pixmap(Gdx.files.internal("data/libgdx.png"));
 		pixmap.setColor(Color.WHITE);
 //		pixmap.fillRectangle(256, 0, 5, 512);
-		pixmap.fillCircle(512, 512, 384);
+//		pixmap.fillCircle(512, 512, 384);
 //		pixmap.setColor(Color.BLACK);
 //		pixmap.fillRectangle(512, 0, 512, 1024);
-//		pixmap.fill();
-		distanceFieldPixmap = distanceField.generateDistanceField(pixmap);
-//		texture = new Texture(pixmap);
-		texture = new Texture(distanceFieldPixmap);
+		pixmap.fill();
+//		distanceFieldPixmap = distanceField.generateDistanceField(pixmap);
+		texture = new Texture(pixmap);
+//		texture = new Texture(distanceFieldPixmap);
 //		pixmap.dispose();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		region = new TextureRegion(texture, 0, 0, 256, 256);
+		region = new TextureRegion(texture, 0, 0, 128, 128);
 //		texture.dispose();
 
 //		texture = new Texture(Gdx.files.internal("data/libgdx.png"));
@@ -104,8 +113,13 @@ public class LaserGame extends Game {
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2, 0);
 
+		ringSprite = new Sprite(region);
+		ringSprite.setSize(256f, 256f);
+		ringSprite.setPosition(Gdx.graphics.getWidth() * 0.1f, Gdx.graphics.getHeight() * 0.2f);
+
 //		distanceFieldShader = Shader.createDistanceFieldShader();
-		distanceFieldShader = Shader.createCircleShader();
+		circleShader = Shader.createCircleShader();
+		ringShader = Shader.createRingShader();
 
 		Pixmap laserPixmap = new Pixmap(128, 128, Format.RGBA8888);
 		laserPixmap.setColor(Color.WHITE);
@@ -113,16 +127,30 @@ public class LaserGame extends Game {
 		laserTexture = new Texture(laserPixmap);
 		laserTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		laserRegion = new TextureRegion(laserTexture, 0, 0, 128, 128);
+
 		laserSprite = new Sprite(laserRegion);
 		laserSprite.setSize(1024f, 32f);
 		laserSprite.setPosition(20, 400);
+
 		laserSprite2 = new Sprite(laserRegion);
 		laserSprite2.setSize(1024f, 32f);
 		laserSprite2.rotate(90.0f);
 		laserSprite2.setPosition(500, 100);
+
+		laserSprite3 = new Sprite(laserRegion);
+		laserSprite3.setSize(1024f, 32f);
+		laserSprite3.setOrigin(0, 16);
+		laserSprite3.rotate(120.0f);
+		laserSprite3.setPosition(1044f, 400f);
+
+		laserGlowSprite = new Sprite(laserRegion);
+		laserGlowSprite.setSize(32f, 32f);
+		laserGlowSprite.setPosition(1028f, 400f);
+
 		laserPixmap.dispose();
 
-		laserShader = Shader.createLaserShader();
+		laserShader = Shader.createLaserBeamShader();
+		laserGlowShader = Shader.createLaserGlowShader();
 
 		mPlayer = new Player();
 
@@ -151,6 +179,7 @@ public class LaserGame extends Game {
 		sprite.rotate(0.5f);
 //		sprite.scale(0.01f);
 //		laserSprite.rotate(0.5f);
+		laserSprite3.rotate(0.1f);
 		time += 0.1f;
 
 		mSpriteBatch.begin();
@@ -159,16 +188,31 @@ public class LaserGame extends Game {
 		           Integer.toString(Gdx.graphics.getFramesPerSecond()),
 		           Gdx.graphics.getWidth() * 0.1f,
 		           Gdx.graphics.getHeight() * 0.9f);
-		mSpriteBatch.setShader(distanceFieldShader);
+		mSpriteBatch.setShader(circleShader);
+		circleShader.setUniformf("color", Color.GRAY);
+//		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 //		distanceFieldShader.setUniformf("spread", spread);
 //		distanceFieldShader.setUniformf("scale", sprite.getWidth() / 256f);
 		sprite.draw(mSpriteBatch);
 
+		mSpriteBatch.setShader(ringShader);
+		ringShader.setUniformf("color", Color.CYAN);
+		ringShader.setUniformf("outerRadius", 0.5f);
+		ringShader.setUniformf("innerRadius", 0.48f);
+		ringSprite.draw(mSpriteBatch);
+
 		mSpriteBatch.setShader(laserShader);
-		laserShader.setUniformf("time", time);
 		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+		laserShader.setUniformf("time", time);
 		laserSprite.draw(mSpriteBatch);
 		laserSprite2.draw(mSpriteBatch);
+		laserSprite3.draw(mSpriteBatch);
+
+		mSpriteBatch.setShader(laserGlowShader);
+		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+		laserGlowShader.setUniformf("time", time);
+		laserGlowSprite.draw(mSpriteBatch);
+
 		mSpriteBatch.setShader(null);
 		mSpriteBatch.end();
 

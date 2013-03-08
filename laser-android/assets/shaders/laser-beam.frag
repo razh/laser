@@ -22,10 +22,10 @@ void main() {
     color = mix(vec4(1.0, 0.0, 0.0, 0.0), vec4(1.0, 0.0, 0.0, 0.5), smoothstep(0.0, 0.3, y));
   } else if (y < 0.5 - halfWidth) {
     color = mix(vec4(1.0, 0.0, 0.0, 0.5), color, smoothstep(0.3, 0.5 - halfWidth, y));
-  } else if (y < 0.5 + halfWidth) {
-    color = mix(color, vec4(1.0, 0.0, 0.0, 0.5), smoothstep(0.5 + halfWidth, 0.7, y));
-  } else  {
+  } else if (y > 0.7) {
     color = mix(vec4(1.0, 0.0, 0.0, 0.5), vec4(1.0, 0.0, 0.0, 0.0), smoothstep(0.7, 1.0, y));
+  } else if (y > 0.5 + halfWidth) {
+    color = mix(color, vec4(1.0, 0.0, 0.0, 0.5), smoothstep(0.5 + halfWidth, 0.7, y));
   }
   gl_FragColor = color;
 }
