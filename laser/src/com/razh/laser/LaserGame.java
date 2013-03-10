@@ -184,20 +184,21 @@ public class LaserGame extends Game {
 
 		mSpriteBatch.begin();
 		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+//		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_COLOR);
 		mFont.draw(mSpriteBatch,
 		           Integer.toString(Gdx.graphics.getFramesPerSecond()),
 		           Gdx.graphics.getWidth() * 0.1f,
 		           Gdx.graphics.getHeight() * 0.9f);
 		mSpriteBatch.setShader(circleShader);
 		circleShader.setUniformf("size", sprite.getWidth());
-		circleShader.setUniformf("color", Color.GRAY);
+		circleShader.setUniformf("color", Color.WHITE);
 //		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 //		distanceFieldShader.setUniformf("spread", spread);
 //		distanceFieldShader.setUniformf("scale", sprite.getWidth() / 256f);
 		sprite.draw(mSpriteBatch);
 
 		mSpriteBatch.setShader(ringShader);
-		ringShader.setUniformf("color", Color.CYAN);
+		ringShader.setUniformf("color", Color.WHITE);
 		ringShader.setUniformf("size", ringSprite.getWidth());
 		ringShader.setUniformf("outerRadius", 0.5f);
 		ringShader.setUniformf("innerRadius", 0.4f);
