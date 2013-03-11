@@ -17,5 +17,6 @@ void main() {
 
   float stroke_width = 2.56 / size;
   float stroke_radius = (0.5 - stroke_width) * (0.5 - stroke_width);
-  gl_FragColor = mix(color, vec4(0.0), smoothstep(stroke_radius, 0.25, distance_squared));
+  gl_FragColor = color;
+  gl_FragColor.a = mix(color.a, 0.0, smoothstep(stroke_radius, 0.25, distance_squared));
 }
