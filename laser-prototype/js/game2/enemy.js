@@ -42,6 +42,7 @@ Enemy.prototype.update = function( elapsedTime ) {
     return;
   }
 
+  // Set acceleration to distance from target.
   var dx = target.getX() - this.getX(),
       dy = target.getY() - this.getY();
   var length = dx * dx + dy * dy;
