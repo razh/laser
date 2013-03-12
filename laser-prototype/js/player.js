@@ -50,3 +50,21 @@ Player.prototype.setOffset = function() {
     this.setOffsetY( arguments[1] );
   }
 };
+
+
+var PlayerEntity = function() {
+  Entity.call( this );
+
+  this._player = null;
+};
+
+PlayerEntity.prototype = new Entity();
+PlayerEntity.prototype.constructor = PlayerEntity;
+
+PlayerEntity.prototype.getPlayer = function() {
+  return this._player;
+};
+
+PlayerEntity.prototype.setPlayer = function( player ) {
+  this._player = player;
+};
