@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.MathUtils;
 import com.razh.laser.images.DistanceField;
 import com.razh.laser.screens.BasicScreen;
 import com.razh.laser.screens.GameScreen;
@@ -41,8 +42,10 @@ public class LaserGame extends Game {
 	private TextureRegion region;
 	private Sprite sprite;
 	private Sprite ringSprite;
+	private Sprite arcSprite;
 	private ShaderProgram circleShader;
 	private ShaderProgram ringShader;
+	private ShaderProgram arcShader;
 
 	private Texture laserTexture;
 	private TextureRegion laserRegion;
@@ -117,9 +120,14 @@ public class LaserGame extends Game {
 		ringSprite.setSize(256f, 256f);
 		ringSprite.setPosition(Gdx.graphics.getWidth() * 0.1f, Gdx.graphics.getHeight() * 0.1f);
 
+		arcSprite = new Sprite(region);
+		arcSprite.setSize(256.0f, 256.0f);
+		arcSprite.setPosition(Gdx.graphics.getWidth() * 0.7f, Gdx.graphics.getHeight() * 0.2f);
+
 //		distanceFieldShader = Shader.createDistanceFieldShader();
 		circleShader = Shader.createCircleShader();
 		ringShader = Shader.createRingShader();
+		arcShader = Shader.createArcShader();
 
 		Pixmap laserPixmap = new Pixmap(1, 1, Format.RGBA8888);
 		laserPixmap.setColor(Color.WHITE);
@@ -203,6 +211,15 @@ public class LaserGame extends Game {
 		ringShader.setUniformf("outerRadius", 0.5f);
 		ringShader.setUniformf("innerRadius", 0.4f);
 		ringSprite.draw(mSpriteBatch);
+
+		mSpriteBatch.setShader(arcShader);
+		arcShader.setUniformf("color", Color.WHITE);
+		arcShader.setUniformf("size", arcSprite.getWidth());
+		arcShader.setUniformf("outerRadius", 0.5f);
+		arcShader.setUniformf("innerRadius", 0.4f);
+		arcShader.setUniformf("startAngle", 0 * MathUtils.degreesToRadians);
+		arcShader.setUniformf("endAngle", 90 * MathUtils.degreesToRadians);
+		arcSprite.draw(mSpriteBatch);
 
 		mSpriteBatch.setShader(laserShader);
 		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);

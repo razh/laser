@@ -36,6 +36,14 @@ public class Shader {
 		                     Gdx.files.internal(fragmentName).readString());
 	}
 
+	public static ShaderProgram createArcShader() {
+		final String vertexName = "shaders/spritebatch.vert";
+		final String fragmentName = "shaders/arc.frag";
+
+		return compileShader(Gdx.files.internal(vertexName).readString(),
+		                     Gdx.files.internal(fragmentName).readString());
+	}
+
 	public static ShaderProgram createLaserBeamShader() {
 		final String vertexName = "shaders/spritebatch.vert";
 		final String fragmentName = "shaders/laser-beam.frag";
