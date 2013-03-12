@@ -24,6 +24,15 @@ function init() {
   var fighter = EnemyFactory.createFighter();
   fighter.setTarget( emitter );
 
+  var tempFighter;
+  for ( var i = 0; i < 60; i++ ) {
+    tempFighter = EnemyFactory.createFighter();
+    tempFighter.setPosition( Math.random() * _game.WIDTH,
+                             Math.random() * _game.HEIGHT );
+    tempFighter.setTarget( emitter );
+    _game.addEntity( tempFighter );
+  }
+
   _game.addEntity( fighter );
   _game.addEntity( emitter );
 

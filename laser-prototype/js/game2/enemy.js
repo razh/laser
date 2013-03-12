@@ -13,7 +13,7 @@ var EnemyFactory = (function() {
       var fighter = new Enemy().setPosition( 100, 100 )
                                .setWidth( 20 )
                                .setHeight( 20 )
-                               .setMaxSpeed( 80.0 )
+                               .setMaxSpeed( 400.0 )
                                .setMaxAcceleration( 100.0 );
 
       fighter.addShape( new Shape().setGeometry( Geometry.createRectangle() )
@@ -49,9 +49,12 @@ Enemy.prototype.update = function( elapsedTime ) {
     return;
   }
 
-  length = this.getMaxAcceleration() / Math.sqrt( length );
-  dx *= length;
-  dy *= length;
+  length = Math.sqrt( length );
+  if ( length > this.getMaxAcceleration() ) {
+    length = this.getMaxAcceleration() / length;
+    dx *= length;
+    dy *= length;
+  }
 
   this.setAcceleration( dx, dy );
 
@@ -62,11 +65,14 @@ Enemy.prototype.update = function( elapsedTime ) {
     return;
   }
 
-  speed = this.getMaxSpeed() / Math.sqrt( speed );
-  velocity.x *= speed;
-  velocity.y *= speed;
+  speed = Math.sqrt( speed );
+  if ( speed > this.getMaxSpeed() ) {
+    speed = this.getMaxSpeed() / speed;
+    velocity.x *= speed;
+    velocity.y *= speed;
 
-  this.setVelocity( velocity );
+    this.setVelocity( velocity );
+  }
 };
 
 Enemy.prototype.getTarget = function() {
