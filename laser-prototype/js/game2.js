@@ -79,6 +79,10 @@ var Game = function() {
 
   this._player = new Player();
   this._entities = [];
+  
+  this._camera = new Camera();
+  // Setup camera.
+  this._camera.setViewport( 0, 0, 960, 720, this.WIDTH, this.HEIGHT );
 
   this.EPSILON = 1e-5;
 };
@@ -106,19 +110,25 @@ Game.prototype.update = function() {
 Game.prototype.draw = function() {
   this._canvas.style.backgroundColor = this.getBackgroundColor().toHexString();
 
-  this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
+  var ctx = this.getCtx();
+  ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
-  this._ctx.save();
+  ctx.save();
   // Origin is at bottom left corner in OpenGL.
-  this._ctx.translate( 0, this.HEIGHT );
-  this._ctx.scale( 1, -1 );
+  ctx.translate( 0, this.HEIGHT );
+  ctx.scale( 1, -1 );
+  
+  // Translate to camera position.
+  var camera = this.getCamera();
+  ctx.translate( camera.getX() - 0.5 * camera.getWidth(), camera.getY() - 0.5 * camera.getHeight );
+  ctx.scale( camera.getWidth() / this.WIDTH, camera.getHeight() / this.HEIGHT );  
 
   var entities = this.getEntities();
   for ( var i = 0, n = entities.length; i < n; i++ ) {
-    entities[i].draw( this._ctx );
+    entities[i].draw( ctx );
   }
 
-  this._ctx.restore();
+  ctx.restore();
 };
 
 Game.prototype.hit = function( x, y ) {
@@ -130,6 +140,14 @@ Game.prototype.hit = function( x, y ) {
   }
 
   return null;
+};
+
+Game.prototype.getCtx = function() {
+  return this._ctx;
+};
+
+Game.prototype.getCamera = function() {
+  return this._camera;
 };
 
 Game.prototype.getEntities = function() {
