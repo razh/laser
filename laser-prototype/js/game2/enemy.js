@@ -14,7 +14,7 @@ var EnemyFactory = (function() {
                                .setWidth( 20 )
                                .setHeight( 20 )
                                .setMaxSpeed( 400.0 )
-                               .setMaxAcceleration( 100.0 );
+                               .setMaxAcceleration( Math.random() * 250.0 + 500.0 );
 
       fighter.addShape( new Shape().setGeometry( Geometry.createRectangle() )
                                    .setColor( new Color( 127, 0, 0, 1.0 ) ) );
@@ -50,12 +50,9 @@ Enemy.prototype.update = function( elapsedTime ) {
     return;
   }
 
-  length = Math.sqrt( length );
-  if ( length > this.getMaxAcceleration() ) {
-    length = this.getMaxAcceleration() / length;
-    dx *= length;
-    dy *= length;
-  }
+  length = this.getMaxAcceleration() / Math.sqrt( length );
+  dx *= length;
+  dy *= length;
 
   this.setAcceleration( dx, dy );
 
