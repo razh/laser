@@ -1,11 +1,11 @@
 var Camera = function() {
-  Object2D.call( this );
+  Entity.call( this );
 
   this._widthRatio = 4;
   this._heightRatio = 3;
 };
 
-Camera.prototype = new Object2D();
+Camera.prototype = new Entity();
 Camera.prototype.constructor = Camera;
 
 Camera.prototype.getWidthRatio = function() {
@@ -23,5 +23,81 @@ Camera.prototype.getHeightRatio = function() {
 
 Camera.prototype.setHeightRatio = function( heightRatio ) {
   this._heightRatio = heightRatio;
+  return this;
+};
+
+Camera.prototype.getAspectRatio = function() {
+  return {
+    width: this.getWidthRatio(),
+    height: this.getHeightRatio()
+  };
+};
+
+/**
+ * Not entirely accurate, as it's height / width rather than the inverse.
+ */
+Camera.prototype.getAspectRatioAsFloat = function() {
+  return this.getHeightRatio() / this.getWidthRatio();
+};
+
+Camera.prototype.setAspectRatio = function() {
+  var width, height;
+  if ( arguments.length === 1 ) {
+    width = arguments[0].width;
+    height = arguments[0].height;
+  } else if ( arguments.length === 2 ) {
+    width = arguments[0];
+    height = arguments[1];
+  }
+  
+  this.setWidthRatio( width );
+  this.setHeightRatio( height );
+  
+  var divisor = height;
+  var modulo, gcd;
+  while ( divisor !== 0 ) {
+    modulo = width % divisor;
+    width = gcd;
+    gcd = modulo;
+  }
+  
+  this.setAspectRatio( this.getWidthRatio() / gcd, this.getHeightRatio() / gcd );
+  
+  return this;
+};
+
+/**
+ * Pass in screen width and height, as well as desired width and height.
+ */
+Camera.prototype.setViewport = function( x, y, width, height, screenWidth, screenHeight ) {
+  var screenTransform,
+      viewportTransform,
+      deviceWidth,
+      deviceHeight,
+      lengthen;
+
+  // Resize to fit screen viewport.
+  if ( screenHeight / screenWidth < height / width ) {
+    screenTransform = screenHeight / height;
+    viewportTransform = height / screenHeight;
+    deviceWidth = width * screenTransform;
+    lengthen = ( screenWidth - deviceWidth ) * viewportTransform;
+    
+    this.setWidth( width + lengthen );
+    this.setHeight( height );
+  } else {
+    screenTransform = screenWidth / width;
+    viewportTransform = width / screenWidth;
+    deviceHeight = height * screenTransform;
+    lengthen = ( screenHeight - deviceHeight ) * viewportTransform;
+    
+    this.setHeight( height + lengthen );
+    this.setWidth( width );
+  }
+  
+  this.setPosition( x + 0.5 * this.getWidth(),
+                    y + 0.5 * this.getHeight() );
+  this.setAspectRatio( this.getWidth(), this.getheight() );
+  
   return this;
 };
