@@ -50,18 +50,17 @@ Camera.prototype.setAspectRatio = function() {
     height = arguments[1];
   }
   
-  this.setWidthRatio( width );
-  this.setHeightRatio( height );
-  
-  var divisor = height;
-  var modulo, gcd;
+  var dividend = width,
+      divisor = height,
+      modulo, gcd;
   while ( divisor !== 0 ) {
-    modulo = width % divisor;
-    width = gcd;
+    modulo = dividend % divisor;
+    dividend = gcd;
     gcd = modulo;
   }
   
-  this.setAspectRatio( this.getWidthRatio() / gcd, this.getHeightRatio() / gcd );
+  this.setWidthRatio( width / gcd );
+  this.setHeightRatio( height / gcd );
   
   return this;
 };
