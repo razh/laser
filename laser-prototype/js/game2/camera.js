@@ -3,6 +3,9 @@ var Camera = function() {
 
   this._widthRatio = 4;
   this._heightRatio = 3;
+
+  this._viewportWidth = 960;
+  this._viewportHeight = 720;
 };
 
 Camera.prototype = new Entity();
@@ -49,20 +52,27 @@ Camera.prototype.setAspectRatio = function() {
     width = arguments[0];
     height = arguments[1];
   }
-  
-  var dividend = width,
-      divisor = height,
-      modulo, gcd;
-  while ( divisor !== 0 ) {
-    modulo = dividend % divisor;
-    dividend = gcd;
-    gcd = modulo;
-  }
-  
-  this.setWidthRatio( width / gcd );
-  this.setHeightRatio( height / gcd );
-  
+
+  this.setWidthRatio( width );
+  this.setHeightRatio( height );
+
   return this;
+};
+
+Camera.prototype.getViewportWidth = function() {
+  return this._viewportWidth;
+};
+
+Camera.prototype.setViewportWidth = function( viewportWidth ) {
+  this._viewportWidth = viewportWidth;
+};
+
+Camera.prototyp.getViewportHeight = function() {
+  return this._viewportHeight;
+};
+
+Camera.prototype.setViewportHeight = function( viewportHeight ) {
+  this._viewportHeight = viewportHeight;
 };
 
 /**
@@ -81,7 +91,7 @@ Camera.prototype.setViewport = function( x, y, width, height, screenWidth, scree
     viewportTransform = height / screenHeight;
     deviceWidth = width * screenTransform;
     lengthen = ( screenWidth - deviceWidth ) * viewportTransform;
-    
+
     this.setWidth( width + lengthen );
     this.setHeight( height );
   } else {
@@ -89,14 +99,19 @@ Camera.prototype.setViewport = function( x, y, width, height, screenWidth, scree
     viewportTransform = width / screenWidth;
     deviceHeight = height * screenTransform;
     lengthen = ( screenHeight - deviceHeight ) * viewportTransform;
-    
+
     this.setHeight( height + lengthen );
     this.setWidth( width );
   }
-  
-  this.setPosition( x + 0.5 * this.getWidth(),
-                    y + 0.5 * this.getHeight() );
-  this.setAspectRatio( this.getWidth(), this.getheight() );
-  
+
+  this.setPosition( x, y );
+  this.setAspectRatio( this.getWidth(), this.getHeight() );
+
   return this;
+};
+
+// This is wrong.
+Camera.prototype.unproject = function( x, y ) {
+  x -= this.getViewportWidth();
+  y -= this.getViewportHeight();
 };

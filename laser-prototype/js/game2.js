@@ -79,7 +79,7 @@ var Game = function() {
 
   this._player = new Player();
   this._entities = [];
-  
+
   this._camera = new Camera();
   // Setup camera.
   this._camera.setViewport( 0, 0, 960, 720, this.WIDTH, this.HEIGHT );
@@ -101,6 +101,8 @@ Game.prototype.update = function() {
     elapsedTime = 1e3;
   }
 
+  _game._camera.translate(0.001, 0);
+
   var entities = this.getEntities();
   for ( var i = 0, n = entities.length; i < n; i++ ) {
     entities[i].update( elapsedTime );
@@ -117,11 +119,11 @@ Game.prototype.draw = function() {
   // Origin is at bottom left corner in OpenGL.
   ctx.translate( 0, this.HEIGHT );
   ctx.scale( 1, -1 );
-  
+
   // Translate to camera position.
   var camera = this.getCamera();
-  ctx.translate( camera.getX() - 0.5 * camera.getWidth(), camera.getY() - 0.5 * camera.getHeight );
-  ctx.scale( camera.getWidth() / this.WIDTH, camera.getHeight() / this.HEIGHT );  
+  ctx.translate( camera.getX(), camera.getY() );
+  ctx.scale( camera.getWidth() / this.WIDTH, camera.getHeight() / this.HEIGHT );
 
   var entities = this.getEntities();
   for ( var i = 0, n = entities.length; i < n; i++ ) {

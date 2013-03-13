@@ -23,7 +23,7 @@ PhysicsEntity.prototype.update = function( elapsedTime ) {
 
   // Convert from milliseconds to seconds.
   elapsedTime *= 1e-3;
-  console.log( elapsedTime )
+
   this.accelerate( this.getAccelerationX() * elapsedTime,
                    this.getAccelerationY() * elapsedTime );
   this.translate( this.getVelocityX() * elapsedTime,
