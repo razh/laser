@@ -51,14 +51,13 @@ Player.prototype.setOffset = function() {
   }
 };
 
-
 var PlayerEntity = function() {
-  Entity.call( this );
+  Emitter.call( this );
 
   this._player = null;
 };
 
-PlayerEntity.prototype = new Entity();
+PlayerEntity.prototype = new Emitter();
 PlayerEntity.prototype.constructor = PlayerEntity;
 
 PlayerEntity.prototype.getPlayer = function() {

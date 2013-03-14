@@ -20,7 +20,7 @@ var _game;
 function init() {
   _game = new Game();
 
-  var emitter = new Emitter();
+  var emitter = _game._emitter;
   _game.addEntity( emitter );
 
   var tempFighter;
@@ -38,7 +38,7 @@ function init() {
   _game._canvas.addEventListener( 'mouseup', onMouseUp, null );
 
   document.addEventListener( 'keydown', onKeyDown, null );
-  document.addEventListener( 'keydown', onKeyUp, null );
+  document.addEventListener( 'keyup', onKeyUp, null );
 
   loop();
 }
@@ -77,6 +77,7 @@ var Game = function() {
 
   this._player = new Player();
   this._entities = [];
+  this._emitter = new Emitter();
 
   this._camera = new Camera();
   // Setup camera.
@@ -84,7 +85,7 @@ var Game = function() {
   this._cameraController = new CameraController( this, this._camera );
 
   this.input = {
-    keys: []
+    keys: {}
   };
 
   this.EPSILON = 1e-5;
@@ -150,7 +151,14 @@ Game.prototype.hit = function( x, y ) {
 };
 
 Game.prototype.processInput = function( elapsedTime ) {
+  var angularAcceleration = 200 * Math.PI / 180 * elapsedTime;
 
+  if ( this.input.keys[ '37' ] ) {
+    this._emitter.setAngularAcceleration( this._emitter.getAngularAcceleration() + angularAcceleration );
+  }
+  if ( this.input.keys[ '39' ] ) {
+    this._emitter.setAngularAcceleration( this._emitter.getAngularAcceleration() - angularAcceleration );
+  }
 };
 
 Game.prototype.getCtx = function() {

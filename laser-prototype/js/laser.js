@@ -288,8 +288,11 @@ var Emitter = function() {
   this.addShape( new Shape().setGeometry( Geometry.createRectangle() )
                             .setColor( 0, 0, 0, 0.25 ) );
 
-  this.setWidth( 100 );
-  this.setHeight( 100 );
+  this.setWidth( 75 );
+  this.setHeight( 75 );
+
+  this.setMaxAngularAcceleration( 0.5 * Math.PI );
+  this.setMaxAngularVelocity( Math.PI );
 
   this._laser = new Laser();
   this._laser.setParent( this );
