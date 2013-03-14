@@ -291,8 +291,8 @@ var Emitter = function() {
   this.setWidth( 75 );
   this.setHeight( 75 );
 
-  this.setMaxAngularAcceleration( 0.5 * Math.PI );
-  this.setMaxAngularVelocity( Math.PI );
+  this.setMaxAngularAcceleration( 3 * Math.PI );
+  this.setMaxAngularVelocity( 3 * Math.PI );
 
   this._laser = new Laser();
   this._laser.setParent( this );

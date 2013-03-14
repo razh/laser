@@ -151,13 +151,27 @@ Game.prototype.hit = function( x, y ) {
 };
 
 Game.prototype.processInput = function( elapsedTime ) {
-  var angularAcceleration = 200 * Math.PI / 180 * elapsedTime;
+  var angularAcceleration = 360 * Math.PI / 180 * elapsedTime;
 
-  if ( this.input.keys[ '37' ] ) {
+  var turningLeft = this.input.keys[ '37' ],
+      turningRight = this.input.keys[ '39' ];
+
+  if ( turningLeft ) {
     this._emitter.setAngularAcceleration( this._emitter.getAngularAcceleration() + angularAcceleration );
   }
-  if ( this.input.keys[ '39' ] ) {
+  if ( turningRight ) {
     this._emitter.setAngularAcceleration( this._emitter.getAngularAcceleration() - angularAcceleration );
+  }
+
+  if ( !turningLeft && !turningRight ) {
+    this._emitter.setAngularAcceleration(0);
+
+    var angularVelocity = 0.75 * this._emitter.getAngularVelocity();
+    if ( Math.abs( angularVelocity ) < 1e-3 ) {
+      angularVelocity = 0;
+    }
+
+    this._emitter.setAngularVelocity( angularVelocity );
   }
 };
 
