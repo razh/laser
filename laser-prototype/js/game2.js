@@ -21,8 +21,7 @@ function init() {
   _game = new Game();
 
   var emitter = new Emitter();
-  var fighter = EnemyFactory.createFighter();
-  fighter.setTarget( emitter );
+  _game.addEntity( emitter );
 
   var tempFighter;
   for ( var i = 0; i < 60; i++ ) {
@@ -33,14 +32,13 @@ function init() {
     _game.addEntity( tempFighter );
   }
 
-  _game.addEntity( fighter );
-  _game.addEntity( emitter );
 
   _game._canvas.addEventListener( 'mousedown', onMouseDown, null );
   _game._canvas.addEventListener( 'mousemove', onMouseMove, null );
   _game._canvas.addEventListener( 'mouseup', onMouseUp, null );
 
   document.addEventListener( 'keydown', onKeyDown, null );
+  document.addEventListener( 'keydown', onKeyUp, null );
 
   loop();
 }
@@ -85,6 +83,10 @@ var Game = function() {
   this._camera.setViewport( 0, 0, 960, 720, this.WIDTH, this.HEIGHT );
   this._cameraController = new CameraController( this, this._camera );
 
+  this.input = {
+    keys: []
+  };
+
   this.EPSILON = 1e-5;
 };
 
@@ -102,6 +104,7 @@ Game.prototype.update = function() {
     elapsedTime = 1e3;
   }
 
+  this.processInput( elapsedTime );
   this._cameraController.update( elapsedTime );
 
   var entities = this.getEntities();
@@ -144,6 +147,10 @@ Game.prototype.hit = function( x, y ) {
   }
 
   return null;
+};
+
+Game.prototype.processInput = function( elapsedTime ) {
+
 };
 
 Game.prototype.getCtx = function() {

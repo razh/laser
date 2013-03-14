@@ -283,7 +283,7 @@ Laser.prototype.project = function( entities ) {
 
 // Laser emitter.
 var Emitter = function() {
-  Entity.call( this );
+  PhysicsEntity.call( this );
 
   this.addShape( new Shape().setGeometry( Geometry.createRectangle() )
                             .setColor( 0, 0, 0, 0.25 ) );
@@ -297,11 +297,11 @@ var Emitter = function() {
   this.points = [];
 };
 
-Emitter.prototype = new Entity();
+Emitter.prototype = new PhysicsEntity();
 Emitter.prototype.constructor = Emitter;
 
 Emitter.prototype.update = function( elapsedTime ) {
-  Entity.prototype.update.call( this, elapsedTime );
+  PhysicsEntity.prototype.update.call( this, elapsedTime );
 
   this.points = [];
   var entities = _game.getEntities();
@@ -320,7 +320,7 @@ Emitter.prototype.update = function( elapsedTime ) {
 };
 
 Emitter.prototype.draw = function( ctx ) {
-  Entity.prototype.draw.call( this, ctx );
+  PhysicsEntity.prototype.draw.call( this, ctx );
 
   this.getLaser().draw( ctx );
 

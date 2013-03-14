@@ -13,6 +13,12 @@ var PhysicsEntity = function() {
 
   this._maxSpeed = 0;
   this._maxAcceleration = 0;
+
+  this._angularVelocity = 0;
+  this._angularAcceleration = 0;
+
+  this._maxAngularVelocity = 0;
+  this._maxAngularAcceleration = 0;
 };
 
 PhysicsEntity.prototype = new Entity();
@@ -24,10 +30,15 @@ PhysicsEntity.prototype.update = function( elapsedTime ) {
   // Convert from milliseconds to seconds.
   elapsedTime *= 1e-3;
 
+  // Handle translation.
   this.accelerate( this.getAccelerationX() * elapsedTime,
                    this.getAccelerationY() * elapsedTime );
   this.translate( this.getVelocityX() * elapsedTime,
                   this.getVelocityY() * elapsedTime );
+
+  // Handle rotation.
+  this.angularAccelerate( this.getAngularAcceleration() * elapsedTime );
+  this.rotate( this.getAngularVelocity() * elapsedTime );
 };
 
 // Velocity.
@@ -139,5 +150,66 @@ PhysicsEntity.prototype.getMaxAcceleration = function() {
 
 PhysicsEntity.prototype.setMaxAcceleration = function( maxAcceleration ) {
   this._maxAcceleration = maxAcceleration;
+  return this;
+};
+
+// Angular velocity.
+PhysicsEntity.prototype.getAngularVelocity = function() {
+  return this._angularVelocity;
+};
+
+PhysicsEntity.prototype.setAngularVelocity = function( angularVelocity ) {
+  var maxAngularVelocity = this.getMaxAngularVelocity();
+
+  if ( angularVelocity > maxAngularVelocity ) {
+    angularVelocity = maxAngularVelocity;
+  } else if ( angularVelocity < -maxAngularVelocity ) {
+    angularVelocity = -maxAngularVelocity;
+  }
+
+  this._angularVelocity = angularVelocity;
+  return this;
+};
+
+// Angular acceleration.
+PhysicsEntity.prototype.getAngularAcceleration = function() {
+  return this._angularAcceleration;
+};
+
+PhysicsEntity.prototype.setAngularAcceleration = function( angularAcceleration ) {
+  var maxAngularAcceleration = this.getMaxAngularVelocity();
+
+  if ( angularAcceleration > maxAngularAcceleration ) {
+    angularAcceleration = maxAngularAcceleration;
+  } else if ( angularAcceleration < -maxAngularAcceleration ) {
+    angularAcceleration = -maxAngularAcceleration;
+  }
+
+  this._angularAcceleration = angularAcceleration;
+  return this;
+};
+
+PhysicsEntity.prototype.angularAccelerate = function( accelerate ) {
+  this.setAngularVelocity( this.getAngularVelocity() + accelerate );
+  return this;
+};
+
+// Max angular velocity.
+PhysicsEntity.prototype.getMaxAngularVelocity = function() {
+  return this._maxAngularVelocity;
+};
+
+PhysicsEntity.prototype.setMaxAngularVelocity = function( maxAngularVelocity ) {
+  this._maxAngularVelocity = maxAngularVelocity;
+  return this;
+};
+
+// Max angular acceleration.
+PhysicsEntity.prototype.getMaxAngularAcceleration = function() {
+  return this._maxAngularAcceleration;
+};
+
+PhysicsEntity.prototype.setMaxAngularAcceleration = function( maxAngularAcceleration ) {
+  this._maxAngularAcceleration = maxAngularAcceleration;
   return this;
 };

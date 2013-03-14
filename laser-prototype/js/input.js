@@ -1,5 +1,3 @@
-var Keys = {};
-
 function onMouseDown( event ) {
   var input = transformCoords( event.pageX, event.pageY );
 
@@ -30,26 +28,28 @@ function onMouseUp( event ) {
 }
 
 function onKeyDown( event ) {
+  _game.input.keys[ event.which ] = true;
+
   switch ( event.which ) {
     // Q.
     case 81:
       quit();
       break;
 
-    // LEFT.
-    case 37:
-    // RIGHT.
-    case 39:
-      var player = _game.getPlayer();
-      var angle = Math.PI / 180 * 10;
-      if ( player.hasSelected() ) {
-        if ( event.which === 37 ) {
-          player.getSelected().rotate( angle );
-        } else {
-          player.getSelected().rotate( -angle );
-        }
-      }
-      break;
+    // // LEFT.
+    // case 37:
+    // // RIGHT.
+    // case 39:
+    //   var player = _game.getPlayer();
+    //   var angle = Math.PI / 180 * 10;
+    //   if ( player.hasSelected() ) {
+    //     if ( event.which === 37 ) {
+    //       player.getSelected().rotate( angle );
+    //     } else {
+    //       player.getSelected().rotate( -angle );
+    //     }
+    //   }
+    //   break;
 
     // SPACE.
     case 32:
@@ -60,6 +60,10 @@ function onKeyDown( event ) {
       console.log( event.which );
       break;
   }
+}
+
+function onKeyUp( event ) {
+  _game.input.keys[ event.which ] = false;
 }
 
 function transformCoords( x, y ) {
