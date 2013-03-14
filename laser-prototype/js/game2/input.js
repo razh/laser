@@ -29,7 +29,6 @@ function onMouseUp( event ) {
 
 function onKeyDown( event ) {
   _game.input.keys[ event.which.toString() ] = true;
-  console.log(_game.input.keys);
 
   switch ( event.which ) {
     // Q.

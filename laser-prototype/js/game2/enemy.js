@@ -14,7 +14,9 @@ var EnemyFactory = (function() {
                                .setWidth( 20 )
                                .setHeight( 20 )
                                .setMaxSpeed( 400.0 )
-                               .setMaxAcceleration( Math.random() * 250.0 + 500.0 );
+                               .setMaxAcceleration( Math.random() * 250.0 + 500.0 )
+                               .setHealth( 10 )
+                               .setMaxHealth( 10 );
 
       fighter.addShape( new Shape().setGeometry( Geometry.createRectangle() )
                                    .setColor( new Color( 127, 0, 0, 1.0 ) ) );
@@ -26,16 +28,16 @@ var EnemyFactory = (function() {
 
 
 var Enemy = function() {
-  PhysicsEntity.call( this );
+  LivingEntity.call( this );
 
   this._target = null;
 };
 
-Enemy.prototype = new PhysicsEntity();
+Enemy.prototype = new LivingEntity();
 Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.update = function( elapsedTime ) {
-  PhysicsEntity.prototype.update.call( this, elapsedTime );
+  LivingEntity.prototype.update.call( this, elapsedTime );
 
   var target = this.getTarget();
   if ( target === null ) {

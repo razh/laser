@@ -32,7 +32,6 @@ function init() {
     _game.addEntity( tempFighter );
   }
 
-
   _game._canvas.addEventListener( 'mousedown', onMouseDown, null );
   _game._canvas.addEventListener( 'mousemove', onMouseMove, null );
   _game._canvas.addEventListener( 'mouseup', onMouseUp, null );
