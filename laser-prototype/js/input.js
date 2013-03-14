@@ -1,3 +1,5 @@
+var Keys = {};
+
 function onMouseDown( event ) {
   var input = transformCoords( event.pageX, event.pageY );
 

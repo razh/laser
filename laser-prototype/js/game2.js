@@ -83,6 +83,7 @@ var Game = function() {
   this._camera = new Camera();
   // Setup camera.
   this._camera.setViewport( 0, 0, 960, 720, this.WIDTH, this.HEIGHT );
+  this._cameraController = new CameraController( this, this._camera );
 
   this.EPSILON = 1e-5;
 };
@@ -101,7 +102,7 @@ Game.prototype.update = function() {
     elapsedTime = 1e3;
   }
 
-  _game._camera.translate(0.001, 0);
+  this._cameraController.update( elapsedTime );
 
   var entities = this.getEntities();
   for ( var i = 0, n = entities.length; i < n; i++ ) {
@@ -120,10 +121,11 @@ Game.prototype.draw = function() {
   ctx.translate( 0, this.HEIGHT );
   ctx.scale( 1, -1 );
 
+  this.getCamera().draw( ctx );
   // Translate to camera position.
-  var camera = this.getCamera();
-  ctx.translate( camera.getX(), camera.getY() );
-  ctx.scale( camera.getWidth() / this.WIDTH, camera.getHeight() / this.HEIGHT );
+  // var camera = this.getCamera();
+  // ctx.translate( camera.getX(), camera.getY() );
+  // ctx.scale( camera.getWidth() / this.WIDTH, camera.getHeight() / this.HEIGHT );
 
   var entities = this.getEntities();
   for ( var i = 0, n = entities.length; i < n; i++ ) {

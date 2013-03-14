@@ -11,7 +11,7 @@ var CameraController = function( game, camera ) {
 
 CameraController.prototype.update = function() {
   var camera = this.getCamera();
-  
+
   var entities = this.getGame().getEntities();
   // Determine bounding box for the entities.
   var xmin = Number.MAX_VALUE,
@@ -22,7 +22,7 @@ CameraController.prototype.update = function() {
   for ( var i = 0, n = entities.length; i < n; i++ ) {
     x = entities[i].getX();
     y = entities[i].getY();
-    
+
     if ( x < xmin ) {
       xmin = x;
     }
@@ -36,21 +36,21 @@ CameraController.prototype.update = function() {
       ymax = y;
     }
   }
-  
+
   var dx = xmax - xmin,
       dy = ymax - ymin;
-  
+
   var center = {
     x: xmin + 0.5 * dx,
     y: ymin + 0.5 * dy
   };
-  
+
   if ( dy / dx < camera.getAspectRatioAsFloat() ) {
-    
+
   }
-  
+
   var padding = this.getPadding();
-  camera.setViewport( xmin, ymin, dx + 2 * padding, dy + 2 * padding, this.getGame().WIDTH, this.getGame().HEIGHT );
+  camera.setViewport( xmin - padding, ymin - padding, dx + 2 * padding, dy + 2 * padding, this.getGame().WIDTH, this.getGame().HEIGHT );
 };
 
 CameraController.prototype.getGame = function() {
@@ -73,6 +73,6 @@ CameraController.prototype.getPadding = function() {
   return this._padding;
 };
 
-CameraControll.prototype.setPadding = function( padding ) {
-  this._padding = padding;  
+CameraController.prototype.setPadding = function( padding ) {
+  this._padding = padding;
 };

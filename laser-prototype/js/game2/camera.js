@@ -11,6 +11,46 @@ var Camera = function() {
 Camera.prototype = new Entity();
 Camera.prototype.constructor = Camera;
 
+Camera.prototype.draw = function( ctx ) {
+  ctx.fillStyle = 'rgba( 127, 0, 0, 0.5 )';
+  ctx.fillRect( this.getX(), this.getY(), this.getWidth(), this.getHeight() );
+};
+
+/**
+ * Pass in screen width and height, as well as desired width and height.
+ */
+Camera.prototype.setViewport = function( x, y, width, height, screenWidth, screenHeight ) {
+  var screenTransform,
+      viewportTransform,
+      deviceWidth,
+      deviceHeight,
+      lengthen;
+
+  // Resize to fit screen viewport.
+  if ( screenHeight / screenWidth < height / width ) {
+    screenTransform = screenHeight / height;
+    viewportTransform = height / screenHeight;
+    deviceWidth = width * screenTransform;
+    lengthen = ( screenWidth - deviceWidth ) * viewportTransform;
+
+    this.setWidth( width + lengthen );
+    this.setHeight( height );
+  } else {
+    screenTransform = screenWidth / width;
+    viewportTransform = width / screenWidth;
+    deviceHeight = height * screenTransform;
+    lengthen = ( screenHeight - deviceHeight ) * viewportTransform;
+
+    this.setHeight( height + lengthen );
+    this.setWidth( width );
+  }
+
+  this.setPosition( x, y );
+  this.setAspectRatio( this.getWidth(), this.getHeight() );
+
+  return this;
+};
+
 Camera.prototype.getWidthRatio = function() {
   return this._widthRatio;
 };
@@ -67,7 +107,7 @@ Camera.prototype.setViewportWidth = function( viewportWidth ) {
   this._viewportWidth = viewportWidth;
 };
 
-Camera.prototyp.getViewportHeight = function() {
+Camera.prototype.getViewportHeight = function() {
   return this._viewportHeight;
 };
 
@@ -75,43 +115,8 @@ Camera.prototype.setViewportHeight = function( viewportHeight ) {
   this._viewportHeight = viewportHeight;
 };
 
-/**
- * Pass in screen width and height, as well as desired width and height.
- */
-Camera.prototype.setViewport = function( x, y, width, height, screenWidth, screenHeight ) {
-  var screenTransform,
-      viewportTransform,
-      deviceWidth,
-      deviceHeight,
-      lengthen;
-
-  // Resize to fit screen viewport.
-  if ( screenHeight / screenWidth < height / width ) {
-    screenTransform = screenHeight / height;
-    viewportTransform = height / screenHeight;
-    deviceWidth = width * screenTransform;
-    lengthen = ( screenWidth - deviceWidth ) * viewportTransform;
-
-    this.setWidth( width + lengthen );
-    this.setHeight( height );
-  } else {
-    screenTransform = screenWidth / width;
-    viewportTransform = width / screenWidth;
-    deviceHeight = height * screenTransform;
-    lengthen = ( screenHeight - deviceHeight ) * viewportTransform;
-
-    this.setHeight( height + lengthen );
-    this.setWidth( width );
-  }
-
-  this.setPosition( x, y );
-  this.setAspectRatio( this.getWidth(), this.getHeight() );
-
-  return this;
-};
-
 // This is wrong.
 Camera.prototype.unproject = function( x, y ) {
-  x -= this.getViewportWidth();
-  y -= this.getViewportHeight();
+  x -= this.getX();
+  y -= this.getY();
 };
