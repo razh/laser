@@ -20,16 +20,16 @@ var _game;
 function init() {
   _game = new Game();
 
-  var emitter = _game._emitter;
-  emitter.setPosition( 0.5 * _game.WIDTH, 0.5 * _game.HEIGHT );
-  _game.addEntity( emitter );
+  var playerEntity = _game._playerEntity;
+  playerEntity.setPosition( 0.5 * _game.WIDTH, 0.5 * _game.HEIGHT );
+  _game.addEntity( playerEntity );
 
   var tempFighter;
   for ( var i = 0; i < 20; i++ ) {
     tempFighter = EnemyFactory.createFighter();
     tempFighter.setPosition( Math.random() * _game.WIDTH,
                              Math.random() * _game.HEIGHT );
-    tempFighter.setTarget( emitter );
+    tempFighter.setTarget( playerEntity );
     _game.addEntity( tempFighter );
   }
 
@@ -77,7 +77,8 @@ var Game = function() {
 
   this._player = new Player();
   this._entities = [];
-  this._emitter = new Emitter();
+  this._playerEntity = new PlayerEntity();
+
 
   this._camera = new Camera();
   // Setup camera.
@@ -115,7 +116,7 @@ Game.prototype.update = function() {
     var fighter = EnemyFactory.createFighter();
     fighter.setPosition( Math.random() * _game.WIDTH,
                          Math.random() * _game.HEIGHT );
-    fighter.setTarget( this._emitter );
+    fighter.setTarget( this._playerEntity );
     _game.addEntity( fighter );
   }
 
@@ -188,21 +189,21 @@ Game.prototype.processInput = function( elapsedTime ) {
       turningRight = this.input.keys[ '39' ];
 
   if ( turningLeft ) {
-    this._emitter.setAngularAcceleration( this._emitter.getAngularAcceleration() + angularAcceleration );
+    this._playerEntity.setAngularAcceleration( this._playerEntity.getAngularAcceleration() + angularAcceleration );
   }
   if ( turningRight ) {
-    this._emitter.setAngularAcceleration( this._emitter.getAngularAcceleration() - angularAcceleration );
+    this._playerEntity.setAngularAcceleration( this._playerEntity.getAngularAcceleration() - angularAcceleration );
   }
 
   if ( !turningLeft && !turningRight ) {
-    this._emitter.setAngularAcceleration(0);
+    this._playerEntity.setAngularAcceleration(0);
 
-    var angularVelocity = 0.75 * this._emitter.getAngularVelocity();
+    var angularVelocity = 0.75 * this._playerEntity.getAngularVelocity();
     if ( Math.abs( angularVelocity ) < 1e-3 ) {
       angularVelocity = 0;
     }
 
-    this._emitter.setAngularVelocity( angularVelocity );
+    this._playerEntity.setAngularVelocity( angularVelocity );
   }
 };
 

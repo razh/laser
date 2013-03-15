@@ -1,101 +1,8 @@
 var Laser = function() {
-  // Ray origins.
-  this._origins = [];
-  // Ray directions.
-  this._directions = [];
-
   this._parent = null;
 
   this._lineWidth = 5;
   this._color = new Color( 255, 0, 0, 0.25 );
-
-  this._reflectionLimit = 16;
-};
-
-Laser.prototype.clear = function() {
-  this._origins = [];
-  this._directions = [];
-
-  this.addOrigin( this.getParent().getPosition() );
-
-  var rotation = this.getParent().getRotation();
-  this.addDirection({
-    x: Math.cos( rotation ),
-    y: Math.sin( rotation )
-  });
-};
-
-Laser.prototype.draw = function( ctx ) {
-  var origins = this.getOrigins();
-  var directions = this.getDirections();
-
-  if ( origins.length <= 0 || directions.length <= 0 ) {
-    return;
-  }
-
-  // ctx.beginPath();
-  var lastPoint = origins[0];
-  ctx.moveTo( lastPoint.x, lastPoint.y );
-
-  for ( var i = 1; i < origins.length; i++ ) {
-    lastPoint = origins[i];
-    ctx.lineTo( lastPoint.x, lastPoint.y );
-  }
-
-  ctx.lineTo( lastPoint.x + 1000 * directions[ directions.length - 1 ].x,
-              lastPoint.y + 1000 * directions[ directions.length - 1 ].y );
-
-  ctx.strokeStyle = this.getColor().toString();
-  ctx.lineWidth = this.getLineWidth();
-
-  ctx.stroke();
-};
-
-Laser.prototype.getOrigins = function() {
-  return this._origins;
-};
-
-Laser.prototype.addOrigin = function( origin ) {
-  this._origins.push( origin );
-};
-
-Laser.prototype.getDirections = function() {
-  return this._directions;
-};
-
-Laser.prototype.addDirection = function( direction ) {
-  this._directions.push( direction );
-};
-
-Laser.prototype.addRay = function() {
-  // For arguments: ({origin: [], direction: []}).
-  if ( arguments.length === 1 ) {
-    this.addOrigin( arguments[0].origin );
-    this.addDirection( arguments[0].direction );
-  }
-  // For arguments: ( origin, direction ).
-  else if ( arguments.length === 2 ) {
-    this.addOrigin( arguments[0] );
-    this.addDirection( arguments[1] );
-  }
-  // For arguments: ( rx, ry, dx, dy ).
-  else if ( arguments.length === 4 ) {
-    this.addOrigin({
-      x: arguments[0],
-      y: arguments[1]
-    });
-    this.addDirection({
-      x: arguments[2],
-      y: arguments[3]
-    });
-  }
-};
-
-Laser.prototype.getLastRay = function() {
-  return {
-    origin: this.getOrigins()[ this.getOrigins().length - 1 ],
-    direction: this.getDirections()[ this.getDirections().length - 1 ]
-  };
 };
 
 Laser.prototype.getParent = function() {
@@ -122,15 +29,192 @@ Laser.prototype.setColor = function( color ) {
   this.getColor().set( color );
 };
 
-Laser.prototype.getReflectionLimit = function() {
-  return this._reflectionLimit;
-};
+Laser.prototype.draw = function( ctx ) {
+  var parent = this.getParent();
+  var position = parent.getPosition();
+  var rotation = parent.getRotation();
 
-Laser.prototype.setReflectionLimit = function( reflectionLimit ) {
-  this._reflectionLimit = reflectionLimit;
+  ctx.moveTo( position.x, position.y );
+  ctx.lineTo( position.x + 1000 * Math.cos( rotation ),
+              position.y + 1000 * Math.sin( rotation ) );
+
+  ctx.strokeStyle = this.getColor().toString();
+  ctx.lineWidth = this.getLineWidth();
+
+  ctx.stroke();
 };
 
 Laser.prototype.project = function( entities ) {
+  var parent = this.getParent();
+  var rotation = parent.getRotation();
+  var ray = {
+    origin: parent.getPosition(),
+    direction: {
+      x: Math.cos( rotation ),
+      y: Math.sin( rotation )
+    }
+  };
+  var rayOrigin, rayDirection;
+
+  var intersection;
+  var entity, shapes, shape;
+  var i, j, il, jl;
+  for ( i = 0, il = entities.length; i < il; i++ ) {
+    entity = entities[i];
+    if ( entity === parent ) {
+      continue;
+    }
+
+    // Reset to original ray.
+    rayOrigin = ray.origin;
+    rayDirection = ray.direction;
+
+    // Transform to entities coordinates.
+    rayDirection = entity.worldToLocalCoordinates( rayOrigin.x + rayDirection.x,
+                                                    rayOrigin.y + rayDirection.y );
+    rayOrigin = entity.worldToLocalCoordinates( rayOrigin.x, rayOrigin.y );
+
+    rayDirection.x -= rayOrigin.x;
+    rayDirection.y -= rayOrigin.y;
+
+    shapes = entity.getShapes();
+    for ( j = 0, jl = shapes.length; j < jl; j++ ) {
+      shape = shapes[j];
+
+      intersection = shape.intersectsRay( rayOrigin.x, rayOrigin.y,
+                                          rayDirection.x, rayDirection.y );
+
+      if ( intersection === null || intersection < 0 ) {
+        continue;
+      }
+
+      if ( entity instanceof Enemy ) {
+        entity.setTakingFire( true );
+      }
+
+      shape.setColor( 0, 127, 0, 1.0 );
+    }
+
+    if ( entity instanceof Enemy ) {
+      if ( entity.isTakingFire() ) {
+        entity.takeFire(1);
+      }
+    }
+  }
+};
+
+/**
+ * ReflectLaser - A laser that reflects and bounces off things.
+ */
+var ReflectLaser = function() {
+  Laser.call( this );
+
+  // Ray origins.
+  this._origins = [];
+  // Ray directions.
+  this._directions = [];
+
+  this._reflectionLimit = 16;
+};
+
+ReflectLaser.prototype = new Laser();
+ReflectLaser.prototype.constructor = ReflectLaser;
+
+ReflectLaser.prototype.clear = function() {
+  this._origins = [];
+  this._directions = [];
+
+  this.addOrigin( this.getParent().getPosition() );
+
+  var rotation = this.getParent().getRotation();
+  this.addDirection({
+    x: Math.cos( rotation ),
+    y: Math.sin( rotation )
+  });
+};
+
+ReflectLaser.prototype.draw = function( ctx ) {
+  var origins = this.getOrigins();
+  var directions = this.getDirections();
+
+  if ( origins.length <= 0 || directions.length <= 0 ) {
+    return;
+  }
+
+  // ctx.beginPath();
+  var lastPoint = origins[0];
+  ctx.moveTo( lastPoint.x, lastPoint.y );
+
+  for ( var i = 1; i < origins.length; i++ ) {
+    lastPoint = origins[i];
+    ctx.lineTo( lastPoint.x, lastPoint.y );
+  }
+
+  ctx.lineTo( lastPoint.x + 1000 * directions[ directions.length - 1 ].x,
+              lastPoint.y + 1000 * directions[ directions.length - 1 ].y );
+
+  ctx.strokeStyle = this.getColor().toString();
+  ctx.lineWidth = this.getLineWidth();
+
+  ctx.stroke();
+};
+
+ReflectLaser.prototype.getOrigins = function() {
+  return this._origins;
+};
+
+ReflectLaser.prototype.addOrigin = function( origin ) {
+  this._origins.push( origin );
+};
+
+ReflectLaser.prototype.getDirections = function() {
+  return this._directions;
+};
+
+ReflectLaser.prototype.addDirection = function( direction ) {
+  this._directions.push( direction );
+};
+
+ReflectLaser.prototype.addRay = function() {
+  // For arguments: ({origin: [], direction: []}).
+  if ( arguments.length === 1 ) {
+    this.addOrigin( arguments[0].origin );
+    this.addDirection( arguments[0].direction );
+  }
+  // For arguments: ( origin, direction ).
+  else if ( arguments.length === 2 ) {
+    this.addOrigin( arguments[0] );
+    this.addDirection( arguments[1] );
+  }
+  // For arguments: ( rx, ry, dx, dy ).
+  else if ( arguments.length === 4 ) {
+    this.addOrigin({
+      x: arguments[0],
+      y: arguments[1]
+    });
+    this.addDirection({
+      x: arguments[2],
+      y: arguments[3]
+    });
+  }
+};
+
+ReflectLaser.prototype.getLastRay = function() {
+  return {
+    origin: this.getOrigins()[ this.getOrigins().length - 1 ],
+    direction: this.getDirections()[ this.getDirections().length - 1 ]
+  };
+};
+
+ReflectLaser.prototype.getReflectionLimit = function() {
+  return this._reflectionLimit;
+};
+
+ReflectLaser.prototype.setReflectionLimit = function( reflectionLimit ) {
+  this._reflectionLimit = reflectionLimit;
+};
+
+ReflectLaser.prototype.project = function( entities ) {
   this.clear();
 
   var reflectionLimit = this.getReflectionLimit();
@@ -275,18 +359,13 @@ Laser.prototype.project = function( entities ) {
 
     this.getParent().points.push( point );
 
-    // Damage if enemy.
-    if ( entity instanceof Enemy ) {
-      entity.damage(1);
-    }
-
     reflectionCount++;
   }
 
   return;
 };
 
-// Laser emitter.
+// ReflectLaser emitter.
 var Emitter = function() {
   PhysicsEntity.call( this );
 
@@ -299,7 +378,7 @@ var Emitter = function() {
   this.setMaxAngularAcceleration( 6 * Math.PI );
   this.setMaxAngularVelocity( 3 * Math.PI );
 
-  this._laser = new Laser();
+  this._laser = new ReflectLaser();
   this._laser.setParent( this );
 
   this.points = [];

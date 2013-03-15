@@ -21,7 +21,7 @@ var Shape = function() {
     dx: 0,
     dy: 0
   };
-  this.debugNormal = [];
+  this.debugNormals = [];
 };
 
 Shape.prototype = new Object2D();
