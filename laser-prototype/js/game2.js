@@ -184,15 +184,18 @@ Game.prototype.hit = function( x, y ) {
 
 Game.prototype.processInput = function( elapsedTime ) {
   var angularAcceleration = 6 * Math.PI * elapsedTime;
+  var dAngularVelocity = 10 * Math.PI / 180 * elapsedTime;
 
   var turningLeft = this.input.keys[ '37' ],
       turningRight = this.input.keys[ '39' ];
 
   if ( turningLeft ) {
-    this._playerEntity.setAngularAcceleration( this._playerEntity.getAngularAcceleration() + angularAcceleration );
+    // this._playerEntity.setAngularAcceleration( this._playerEntity.getAngularAcceleration() + angularAcceleration );
+    this._playerEntity.setAngularVelocity( dAngularVelocity );
   }
   if ( turningRight ) {
-    this._playerEntity.setAngularAcceleration( this._playerEntity.getAngularAcceleration() - angularAcceleration );
+    // this._playerEntity.setAngularAcceleration( this._playerEntity.getAngularAcceleration() - angularAcceleration );
+    this._playerEntity.setAngularVelocity( -dAngularVelocity );
   }
 
   if ( !turningLeft && !turningRight ) {

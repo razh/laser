@@ -13,9 +13,9 @@ var EnemyFactory = (function() {
       var fighter = new Enemy().setPosition( 100, 100 )
                                .setWidth( 20 )
                                .setHeight( 20 )
-                               .setMaxSpeed( Math.random() * 300 + 300 )
+                               .setMaxSpeed( Math.random() * 5 + 10 )
                                .setMaxAcceleration( Math.random() * 500.0 + 500.0 )
-                               .setHealth( 60 )
+                               .setHealth( 6 )
                                .setMaxHealth( 60 );
 
       fighter.addShape( new Shape().setGeometry( Geometry.createRectangle() )
