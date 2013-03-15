@@ -1,5 +1,6 @@
 package com.razh.laser.input;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.razh.laser.Player;
@@ -33,45 +34,18 @@ public class GameInputProcessor extends BasicInputProcessor {
 			return false;
 		}
 
-		Vector2 point = getStage().screenToStageCoordinates(new Vector2(screenX, screenY));
-
-		Actor hit = getStage().hit(point.x, point.y, true);
-		if (hit != null) {
-			mOffset.set(point).sub(hit.getX(), hit.getY());
-
-			getPlayer().setSelected(hit);
-			hit.setPosition(point.x - mOffset.x, point.y - mOffset.y);
-		}
+		boolean anticlockwise = screenX < 0.5f * Gdx.graphics.getWidth() ? true : false;
 
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		Player player = getPlayer();
-		if (player == null) {
-			return false;
-		}
-
-		if (player.hasSelected()) {
-			player.setSelected(null);
-		}
-
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		if (getStage() == null || getPlayer() == null) {
-			return false;
-		}
-
-		Vector2 point = getStage().screenToStageCoordinates(new Vector2(screenX, screenY));
-
-		if (getPlayer().hasSelected()) {
-			getPlayer().getSelected().setPosition(point.x - mOffset.x, point.y - mOffset.y);
-		}
-
 		return false;
 	}
 
