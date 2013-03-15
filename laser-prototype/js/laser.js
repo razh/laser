@@ -6,7 +6,7 @@ var Laser = function() {
 
   this._parent = null;
 
-  this._lineWidth = 3;
+  this._lineWidth = 5;
   this._color = new Color( 255, 0, 0, 0.25 );
 
   this._reflectionLimit = 16;
@@ -275,6 +275,11 @@ Laser.prototype.project = function( entities ) {
 
     this.getParent().points.push( point );
 
+    // Damage if enemy.
+    if ( entity instanceof Enemy ) {
+      entity.damage(1);
+    }
+
     reflectionCount++;
   }
 
@@ -291,7 +296,7 @@ var Emitter = function() {
   this.setWidth( 75 );
   this.setHeight( 75 );
 
-  this.setMaxAngularAcceleration( 3 * Math.PI );
+  this.setMaxAngularAcceleration( 6 * Math.PI );
   this.setMaxAngularVelocity( 3 * Math.PI );
 
   this._laser = new Laser();

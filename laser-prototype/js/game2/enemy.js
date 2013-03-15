@@ -13,10 +13,10 @@ var EnemyFactory = (function() {
       var fighter = new Enemy().setPosition( 100, 100 )
                                .setWidth( 20 )
                                .setHeight( 20 )
-                               .setMaxSpeed( 400.0 )
-                               .setMaxAcceleration( Math.random() * 250.0 + 500.0 )
-                               .setHealth( 10 )
-                               .setMaxHealth( 10 );
+                               .setMaxSpeed( Math.random() * 300 + 300 )
+                               .setMaxAcceleration( Math.random() * 500.0 + 500.0 )
+                               .setHealth( 60 )
+                               .setMaxHealth( 60 );
 
       fighter.addShape( new Shape().setGeometry( Geometry.createRectangle() )
                                    .setColor( new Color( 127, 0, 0, 1.0 ) ) );
@@ -31,6 +31,7 @@ var Enemy = function() {
   LivingEntity.call( this );
 
   this._target = null;
+  this._takingFire = false;
 };
 
 Enemy.prototype = new LivingEntity();
@@ -73,6 +74,8 @@ Enemy.prototype.update = function( elapsedTime ) {
 
     this.setVelocity( velocity );
   }
+
+  this.setRotation( Math.atan2( velocity.y, velocity.x ) );
 };
 
 Enemy.prototype.getTarget = function() {
@@ -81,4 +84,22 @@ Enemy.prototype.getTarget = function() {
 
 Enemy.prototype.setTarget = function( target ) {
   this._target = target;
+};
+
+// Probably unnecessary.
+Enemy.prototype.takeFire = function( damage ) {
+  if ( !this.isTakingFire() ) {
+    return;
+  }
+
+  this.damage( damage );
+  this.setTakingFire( false );
+};
+
+Enemy.prototype.isTakingFire = function() {
+  return this._takingFire;
+};
+
+Enemy.prototype.setTakingFire = function( takingFire ) {
+  this._takingFire = !!takingFire;
 };

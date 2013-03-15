@@ -41,6 +41,10 @@ LivingEntity.prototype.heal = function( heal ) {
   return this.addHealth( heal );
 };
 
+LivingEntity.prototype.isDead = function() {
+  return this._health <= 0;
+};
+
 // Max health.
 LivingEntity.prototype.getMaxHealth = function() {
   return this._maxHealth;

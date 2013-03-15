@@ -21,10 +21,11 @@ function init() {
   _game = new Game();
 
   var emitter = _game._emitter;
+  emitter.setPosition( 0.5 * _game.WIDTH, 0.5 * _game.HEIGHT );
   _game.addEntity( emitter );
 
   var tempFighter;
-  for ( var i = 0; i < 60; i++ ) {
+  for ( var i = 0; i < 20; i++ ) {
     tempFighter = EnemyFactory.createFighter();
     tempFighter.setPosition( Math.random() * _game.WIDTH,
                              Math.random() * _game.HEIGHT );
@@ -87,6 +88,8 @@ var Game = function() {
     keys: {}
   };
 
+  this._frameCount = 0;
+
   this.EPSILON = 1e-5;
 };
 
@@ -107,9 +110,38 @@ Game.prototype.update = function() {
   this.processInput( elapsedTime );
   this._cameraController.update( elapsedTime );
 
+  // Add entity.
+  if ( this._frameCount % 30 === 0 ) {
+    var fighter = EnemyFactory.createFighter();
+    fighter.setPosition( Math.random() * _game.WIDTH,
+                         Math.random() * _game.HEIGHT );
+    fighter.setTarget( this._emitter );
+    _game.addEntity( fighter );
+  }
+
+  this._frameCount++;
+  if ( this._frameCount > 1e6 ) {
+    this._frameCount = 0;
+  }
+
+  var deadEntities = [];
   var entities = this.getEntities();
-  for ( var i = 0, n = entities.length; i < n; i++ ) {
-    entities[i].update( elapsedTime );
+  var entity;
+  var i, n;
+  for ( i = 0, n = entities.length; i < n; i++ ) {
+    entity = entities[i];
+
+    // Update and delete.
+    entity.update( elapsedTime );
+    if ( entity instanceof Enemy ) {
+      if ( entity.isDead() ) {
+        deadEntities.push( entity );
+      }
+    }
+  }
+
+  for ( i = 0, n = deadEntities.length; i < n; i++ ) {
+    this.removeEntity( deadEntities[i] );
   }
 };
 
@@ -150,7 +182,7 @@ Game.prototype.hit = function( x, y ) {
 };
 
 Game.prototype.processInput = function( elapsedTime ) {
-  var angularAcceleration = 360 * Math.PI / 180 * elapsedTime;
+  var angularAcceleration = 6 * Math.PI * elapsedTime;
 
   var turningLeft = this.input.keys[ '37' ],
       turningRight = this.input.keys[ '39' ];
@@ -188,6 +220,14 @@ Game.prototype.getEntities = function() {
 
 Game.prototype.addEntity = function( entity ) {
   this.getEntities().push( entity );
+};
+
+Game.prototype.removeEntity = function( entity ) {
+  var entities = this.getEntities();
+  var index = entities.indexOf( entity );
+  if ( index !== -1 ) {
+    entities.splice( index, 1 );
+  }
 };
 
 Game.prototype.getPlayer = function() {
