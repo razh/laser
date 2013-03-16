@@ -170,6 +170,63 @@ public class Intersection {
 		return ray.getEndPoint(parameter);
 	}
 
+	public static Vector2 rayAABB(final Ray2D ray, final float x0, final float y0, final float x1, final float y1) {
+		float parameter = rayAABBParameter(ray, x0, y0, x1, y1);
+		if (parameter != Float.NaN || parameter < 0) {
+			return null;
+		}
+
+		return ray.getEndPoint(parameter);
+	}
+
+	/**
+	 * Returns the parameter of the nearest intersection point of the ray and
+	 * the axis-aligned bounding box given by [(x0, y0), (x1, y1)].
+	 * @param ray
+	 * @param x0 x-coordinate of first point in AABB.
+	 * @param y0 y-coordinate of first point in AABB.
+	 * @param x1 x-coordinate of second point in AABB.
+	 * @param y1 y-coordinate of second point point in AABB.
+	 * @return float Parameter of intersection point along ray, Float.NaN if no intersection.
+	 */
+	public static float rayAABBParameter(final Ray2D ray, final float x0, final float y0, final float x1, final float y1) {
+		// Project the ray on to each line segment( assumng (x0, y0 ) is min,
+		// though it does't matter).
+		float[] parameters = new float[4];
+		// Left.
+		parameters[0] = Intersection.raySegmentParameter(ray, x0, y0, x0, y1);
+		// Right.
+		parameters[1] = Intersection.raySegmentParameter(ray, x1, y0, x1, y1);
+		// Top.
+		parameters[2] = Intersection.raySegmentParameter(ray, x0, y1, x1, y1);
+		// Bottom.
+		parameters[3] = Intersection.raySegmentParameter(ray, x0, y0, x1, y0);
+
+		// Determine minimum positive parameter of intersection points.
+		float min = -1.0f;
+		// Default value (if all four intersections are Float.NaN, return Float.NaN).
+		float t;
+		for (int i = 0, n = parameters.length; i < n; i++) {
+			t = parameters[i];
+			if (t == Float.NaN || t < 0) {
+				continue;
+			}
+
+			// If min is negative, the value has not been initialized.
+			// We want t's >= 0 and less than min.
+			if (min < 0 || t < min) {
+				min = t;
+			}
+		}
+
+		t = min;
+		if (t < 0) {
+			return Float.NaN;
+		}
+
+		return t;
+	}
+
 	/**
 	 * Returns the parameter of the nearest intersection point of the ray with
 	 * the circle given by (x - cx)^2 + (y - cy)^2 <= r.
