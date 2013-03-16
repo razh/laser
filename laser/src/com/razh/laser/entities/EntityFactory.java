@@ -31,7 +31,7 @@ public class EntityFactory {
 
 	public static Entity createCircleThing() {
 		MeshActor actor = new MeshActor();
-		actor.setMesh(Geometry.createCircle(64));
+		actor.setMesh(Geometry.createCircle(8));
 		actor.setMode(GL20.GL_TRIANGLE_FAN);
 
 //		actor.setGeometry(Geometry.createRingHull(1.0f, 0.8f, 0, 180 * MathUtils.degreesToRadians, 32, true));
@@ -47,5 +47,10 @@ public class EntityFactory {
 		actor.setEntity(entity);
 
 		return entity;
+	}
+
+	public static Entity createCircleSprite() {
+		// ShaderGroups?
+		return null;
 	}
 }
