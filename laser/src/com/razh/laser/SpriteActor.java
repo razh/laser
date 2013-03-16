@@ -14,6 +14,10 @@ public class SpriteActor extends EntityActor {
 
 	@Override
 	public void draw(SpriteBatch spriteBatch, float parentAlpha) {
+		mSprite.setRotation(getRotation());
+		mSprite.setSize(getWidth(), getHeight());
+		mSprite.setPosition(getX(), getY());
+		mSprite.setColor(getColor());
 		mSprite.draw(spriteBatch, parentAlpha);
 	}
 
