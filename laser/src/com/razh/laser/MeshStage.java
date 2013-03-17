@@ -68,8 +68,8 @@ public class MeshStage extends Stage {
 
 	@Override
 	public void draw() {
+		super.draw();
 		Camera camera = getCamera();
-		camera.update();
 
 		if (LaserGame.DEBUG) {
 			SnapshotArray<Actor> children = mTestGroup.getChildren();
@@ -104,16 +104,16 @@ public class MeshStage extends Stage {
 
 	@Override
 	public Actor hit(float stageX, float stageY, boolean touchable) {
-		return getRoot().hit(stageX, stageY, touchable);
+		return getMeshRoot().hit(stageX, stageY, touchable);
 	}
 
-	@Override
-	public void addActor(Actor actor) {
+	public void addMeshActor(Actor actor) {
 		mRoot.addActor(actor);
 	}
 
 	@Override
 	public void act(float delta) {
+		super.act(delta);
 		mRoot.act(delta);
 		mColorActor.act(delta);
 	}
@@ -126,8 +126,7 @@ public class MeshStage extends Stage {
 		mShaderProgram = shaderProgram;
 	}
 
-	@Override
-	public MeshGroup getRoot() {
+	public MeshGroup getMeshRoot() {
 		return mRoot;
 	}
 

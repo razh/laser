@@ -4,8 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class Shader {
+	public static ShaderProgram createSimpleMeshShader() {
+		final String vertexName = "shaders/simple-mesh.vert";
+		final String fragmentName = "shaders/simple.frag";
+
+		return compileShader(Gdx.files.internal(vertexName).readString(),
+		                     Gdx.files.internal(fragmentName).readString());
+	}
+
 	public static ShaderProgram createSimpleShader() {
-		final String vertexName = "shaders/simple.vert";
+		final String vertexName = "shaders/spritebatch.vert";
 		final String fragmentName = "shaders/simple.frag";
 
 		return compileShader(Gdx.files.internal(vertexName).readString(),

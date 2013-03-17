@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.razh.laser.images.DistanceField;
 import com.razh.laser.screens.BasicScreen;
 import com.razh.laser.screens.GameScreen;
+import com.razh.laser.sprites.CircleSpriteActor;
 
 public class LaserGame extends Game {
 

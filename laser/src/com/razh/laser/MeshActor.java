@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.razh.laser.Geometry.GeometryData;
-import com.razh.laser.entities.Entity;
 
 public class MeshActor extends EntityActor {
 	private Mesh mMesh;

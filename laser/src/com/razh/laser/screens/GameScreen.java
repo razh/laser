@@ -6,13 +6,18 @@ import com.badlogic.gdx.graphics.GL20;
 import com.razh.laser.LaserGame;
 import com.razh.laser.MeshStage;
 import com.razh.laser.Shader;
+import com.razh.laser.SpriteGroup;
 import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
 import com.razh.laser.input.GameInputProcessor;
+import com.razh.laser.sprites.CircleSpriteActor;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class GameScreen extends BasicScreen {
+
+	private SpriteGroup circleSpriteGroup;
+	private CircleSpriteActor circleSprite;
 
 	public GameScreen(LaserGame game) {
 		super(game);
@@ -20,7 +25,7 @@ public class GameScreen extends BasicScreen {
 		setStage(new MeshStage());
 
 		Entity entity = EntityFactory.createEmitter();
-		getStage().addActor(entity.getActor());
+		getMeshStage().addMeshActor(entity.getActor());
 		entity.getActor().addAction(
 			forever(
 				rotateBy(360.0f, 1.0f)
@@ -28,15 +33,26 @@ public class GameScreen extends BasicScreen {
 		);
 
 		Entity entity2 = EntityFactory.createEmitter();
-		getStage().addActor(entity2.getActor());
+		getMeshStage().addMeshActor(entity2.getActor());
 
 		for (int i = 0; i < 20; i++) {
 			Entity entity3 = EntityFactory.createCircleThing();
-			getStage().addActor(entity3.getActor());
+			getMeshStage().addMeshActor(entity3.getActor());
 		}
 
-		getMeshStage().setShaderProgram(Shader.createSimpleShader());
+		getMeshStage().setShaderProgram(Shader.createSimpleMeshShader());
 		getMeshStage().setColor(Color.DARK_GRAY);
+
+		circleSpriteGroup = new SpriteGroup();
+		circleSpriteGroup.setShaderProgram(Shader.createSimpleShader());
+		System.out.println(circleSpriteGroup.getShaderProgram().hasUniform("color"));
+		circleSprite = new CircleSpriteActor();
+		circleSprite.setColor(0.5f, 0.0f, 0.0f, 1.0f);
+		circleSprite.setWidth(1000.0f);
+		circleSprite.setHeight(1000.0f);
+		circleSprite.setPosition(200f, 200f);
+		circleSpriteGroup.addActor(circleSprite);
+		getStage().addActor(circleSpriteGroup);
 
 		GameInputProcessor gameInputProcessor = new GameInputProcessor();
 		gameInputProcessor.setStage(getStage());
