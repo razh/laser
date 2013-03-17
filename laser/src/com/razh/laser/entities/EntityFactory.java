@@ -38,7 +38,7 @@ public class EntityFactory {
 		actor.setColor(Color.LIGHT_GRAY);
 //		actor.setPosition((float) (Gdx.graphics.getWidth() * Math.random()),
 //		                  (float) (Gdx.graphics.getHeight() * Math.random()));
-		actor.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		actor.setPosition(Gdx.graphics.getWidth() * 0.2f, Gdx.graphics.getHeight() * 0.1f);
 		actor.setWidth(128);
 		actor.setHeight(128);
 

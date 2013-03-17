@@ -7,14 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class ProceduralSpriteActor extends EntityActor {
-	private static Sprite mSprite;
+	private Sprite mSprite;
 
 	public ProceduralSpriteActor() {
 		super();
-
-		if (mSprite == null) {
-			createSprite();
-		}
+		createSprite();
 	}
 
 	private void createSprite() {

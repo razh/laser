@@ -12,7 +12,7 @@ public class Shader {
 		                     Gdx.files.internal(fragmentName).readString());
 	}
 
-	public static ShaderProgram createSimpleShader() {
+	public static ShaderProgram createRectangleShader() {
 		final String vertexName = "shaders/spritebatch.vert";
 		final String fragmentName = "shaders/simple.frag";
 
