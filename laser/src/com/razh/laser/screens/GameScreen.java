@@ -3,10 +3,12 @@ package com.razh.laser.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Interpolation;
 import com.razh.laser.LaserGame;
 import com.razh.laser.MeshStage;
 import com.razh.laser.Shader;
-import com.razh.laser.SpriteGroup;
+import com.razh.laser.ProceduralSpriteGroup;
 import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
 import com.razh.laser.input.GameInputProcessor;
@@ -16,7 +18,8 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class GameScreen extends BasicScreen {
 
-	private SpriteGroup circleSpriteGroup;
+	private ShaderProgram circleShader;
+	private ProceduralSpriteGroup circleSpriteGroup;
 	private CircleSpriteActor circleSprite;
 
 	public GameScreen(LaserGame game) {
@@ -43,14 +46,26 @@ public class GameScreen extends BasicScreen {
 		getMeshStage().setShaderProgram(Shader.createSimpleMeshShader());
 		getMeshStage().setColor(Color.DARK_GRAY);
 
-		circleSpriteGroup = new SpriteGroup();
-		circleSpriteGroup.setShaderProgram(Shader.createSimpleShader());
+		circleSpriteGroup = new ProceduralSpriteGroup();
+		circleShader = Shader.createCircleShader();
+		circleSpriteGroup.setShaderProgram(circleShader);
 		System.out.println(circleSpriteGroup.getShaderProgram().hasUniform("color"));
 		circleSprite = new CircleSpriteActor();
 		circleSprite.setColor(0.5f, 0.0f, 0.0f, 1.0f);
-		circleSprite.setWidth(1000.0f);
-		circleSprite.setHeight(1000.0f);
+		circleSprite.setWidth(200.0f);
+		circleSprite.setHeight(200.0f);
 		circleSprite.setPosition(200f, 200f);
+		circleSprite.addAction(
+			forever(
+				parallel(
+					sequence(
+						color(new Color(0.75f, 0.0f, 0.0f, 1.0f), 2.0f),
+						color(new Color(0.25f, 0.0f, 0.0f, 1.0f), 2.0f)
+					),
+					sizeBy(100f, 100f, 4.0f, Interpolation.linear)
+				)
+			)
+		);
 		circleSpriteGroup.addActor(circleSprite);
 		getStage().addActor(circleSpriteGroup);
 
@@ -72,9 +87,7 @@ public class GameScreen extends BasicScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
-		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
 		getStage().draw();
-		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
 	}
 
 	@Override

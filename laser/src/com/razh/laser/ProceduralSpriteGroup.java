@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.SnapshotArray;
 
-public class SpriteGroup extends Group {
+public class ProceduralSpriteGroup extends Group {
 	private ShaderProgram mShaderProgram;
 
 	@Override
@@ -30,8 +30,8 @@ public class SpriteGroup extends Group {
 				continue;
 			}
 
-			if (child instanceof SpriteActor) {
-				((SpriteActor) child).draw(spriteBatch, parentAlpha, mShaderProgram);
+			if (child instanceof ProceduralSpriteActor) {
+				((ProceduralSpriteActor) child).draw(spriteBatch, parentAlpha, mShaderProgram);
 			}
 		}
 

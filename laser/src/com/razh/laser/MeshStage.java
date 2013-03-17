@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.SnapshotArray;
 
@@ -25,12 +27,12 @@ public class MeshStage extends Stage {
 
 	public MeshStage(float width, float height, boolean stretch) {
 		super(width, height, stretch);
-		if (width != LaserGame.WIDTH || height != LaserGame.HEIGHT) {
-			setViewport(LaserGame.WIDTH, LaserGame.HEIGHT, true);
-			getCamera().position.set(0.5f * LaserGame.WIDTH,
-			                         0.5f * LaserGame.HEIGHT,
-			                         0.0f);
-		}
+//		if (width != LaserGame.WIDTH || height != LaserGame.HEIGHT) {
+//			setViewport(LaserGame.WIDTH, LaserGame.HEIGHT, true);
+//			getCamera().position.set(0.5f * LaserGame.WIDTH,
+//			                         0.5f * LaserGame.HEIGHT,
+//			                         0.0f);
+//		}
 
 		mRoot = new MeshGroup();
 		mRoot.setStage(this);
@@ -71,6 +73,8 @@ public class MeshStage extends Stage {
 		super.draw();
 		Camera camera = getCamera();
 
+		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
+
 		if (LaserGame.DEBUG) {
 			SnapshotArray<Actor> children = mTestGroup.getChildren();
 			Actor[] actors = children.begin();
@@ -100,6 +104,8 @@ public class MeshStage extends Stage {
 
 			mShaderProgram.end();
 		}
+
+		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
 	}
 
 	@Override
