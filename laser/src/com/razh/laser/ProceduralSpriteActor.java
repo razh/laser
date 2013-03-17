@@ -7,30 +7,22 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class ProceduralSpriteActor extends EntityActor {
-	private Sprite mSprite;
+	private static Sprite mSprite;
 
 	public ProceduralSpriteActor() {
 		super();
-		createSprite();
+
+		if (mSprite == null) {
+			createSprite();
+		}
 	}
 
 	private void createSprite() {
 		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		Texture texture = new Texture(pixmap);
 		mSprite = new Sprite(texture);
-	}
-
-	@Override
-	public void act(float delta) {
-		super.act(delta);
-
-		float width = getWidth();
-		float height = getHeight();
-
-		mSprite.setRotation(getRotation());
-		mSprite.setSize(width, height);
-		mSprite.setPosition(getX() - 0.5f * width, getY() - 0.5f * height);
-		mSprite.setColor(getColor());
+		texture.dispose();
+		pixmap.dispose();
 	}
 
 	@Override
@@ -39,6 +31,14 @@ public class ProceduralSpriteActor extends EntityActor {
 	}
 
 	public void draw(SpriteBatch spriteBatch, float parentAlpha, ShaderProgram shaderProgram) {
+		float width = getWidth();
+		float height = getHeight();
+
+		mSprite.setRotation(getRotation());
+		mSprite.setSize(width, height);
+		mSprite.setPosition(getX() - 0.5f * width, getY() - 0.5f * height);
+		mSprite.setColor(getColor());
+
 		if (shaderProgram != null) {
 			setUniforms(shaderProgram);
 		}
