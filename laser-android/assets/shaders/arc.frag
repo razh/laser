@@ -19,24 +19,24 @@ void main() {
   float distance_squared = x * x + y * y;
 
   float stroke_width = 2.56 / size;
-  float outer_stroke = (outerRadius - stroke_width) * (outerRadius - stroke_width);
+
+  float outer_stroke = outerRadius * outerRadius;
   float inner_stroke = (innerRadius - stroke_width) * (innerRadius - stroke_width);
+
+  float outer = (outerRadius - stroke_width) * (outerRadius - stroke_width);
+  float inner = innerRadius * innerRadius;
 
   /**
    * Layer order:
    *
-   *   inner_stroke | inner | outer_stroke | outer
-   *
+   *   inner_stroke | inner | outer | outer_stroke
    */
-
-  float outer = outerRadius * outerRadius;
-  float inner = innerRadius * innerRadius;
 
   if (inner_stroke > distance_squared) {
     discard;
   }
 
-  if (distance_squared > outer) {
+  if (distance_squared > outer_stroke) {
     discard;
   }
 
@@ -51,8 +51,8 @@ void main() {
   }
 
   // Outer.
-  if (distance_squared > outer_stroke) {
-    gl_FragColor.a = mix(color.a, 0.0, smoothstep(outer_stroke, outer, distance_squared));
+  if (distance_squared > outer) {
+    gl_FragColor.a = mix(color.a, 0.0, smoothstep(outer, outer_stroke, distance_squared));
   }
 
   // Left terminal.

@@ -207,6 +207,7 @@ public class LaserGame extends Game {
 		sprite.setSize(sprite.getWidth() * 1.0001f, sprite.getHeight() * 1.0001f);
 //		laserSprite.rotate(0.5f);
 		laserSprite3.rotate(0.1f);
+//		ringSprite.setSize(ringSprite.getWidth() * 1.001f, ringSprite.getHeight() * 1.001f);
 //		arcSprite.rotate(0.1f);
 //		dashedRingSprite.rotate(2.0f);
 		time += 0.1f;
