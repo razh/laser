@@ -42,12 +42,12 @@ void main() {
 
   // Inner.
   if (distance_squared < inner) {
-    gl_FragColor.a = mix(0.0, color.a, smoothstep(inner_stroke, inner, distance_squared));
+    gl_FragColor.a = mix(0.0, gl_FragColor.a, smoothstep(inner_stroke, inner, distance_squared));
   }
 
   // Outer.
   if (distance_squared > outer_stroke) {
-    gl_FragColor.a = mix(color.a, 0.0, smoothstep(outer_stroke, outer, distance_squared));
+    gl_FragColor.a = mix(gl_FragColor.a, 0.0, smoothstep(outer_stroke, outer, distance_squared));
   }
 
   // Segment left.

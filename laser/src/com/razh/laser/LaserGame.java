@@ -40,14 +40,18 @@ public class LaserGame extends Game {
 	private Pixmap distanceFieldPixmap;
 	private Texture texture;
 	private TextureRegion region;
+
 	private Sprite sprite;
 	private Sprite ringSprite;
 	private Sprite arcSprite;
 	private Sprite dashedRingSprite;
+	private Sprite dashedLineSprite;
+
 	private ShaderProgram circleShader;
 	private ShaderProgram ringShader;
 	private ShaderProgram arcShader;
 	private ShaderProgram dashedRingShader;
+	private ShaderProgram dashedLineShader;
 
 	private Texture laserTexture;
 	private TextureRegion laserRegion;
@@ -131,11 +135,16 @@ public class LaserGame extends Game {
 		dashedRingSprite.setPosition(Gdx.graphics.getWidth() * 0.3f, Gdx.graphics.getHeight() * 0.5f);
 		dashedRingSprite.setOrigin(0.5f * dashedRingSprite.getWidth(), 0.5f * dashedRingSprite.getHeight());
 
+		dashedLineSprite = new Sprite(region);
+		dashedLineSprite.setSize(1024.0f, 16.0f);
+		dashedLineSprite.setPosition(Gdx.graphics.getWidth() * 0.1f, Gdx.graphics.getHeight() * 0.4f);
+
 //		distanceFieldShader = Shader.createDistanceFieldShader();
 		circleShader = Shader.createCircleShader();
 		ringShader = Shader.createRingShader();
 		arcShader = Shader.createArcShader();
 		dashedRingShader = Shader.createDashedRingShader();
+		dashedLineShader = Shader.createDashedLineShader();
 
 		Pixmap laserPixmap = new Pixmap(1, 1, Format.RGBA8888);
 		laserPixmap.setColor(Color.WHITE);
@@ -251,6 +260,15 @@ public class LaserGame extends Game {
 		dashedRingShader.setUniformf("segmentAngle", 36.0f);
 		dashedRingShader.setUniformf("segmentSpacing", segmentSpacing);
 		dashedRingSprite.draw(mSpriteBatch);
+
+		mSpriteBatch.setShader(dashedLineShader);
+		dashedLineShader.setUniformf("color", Color.WHITE);
+		dashedLineShader.setUniformf("width", dashedLineSprite.getWidth());
+		dashedLineShader.setUniformf("height", dashedLineSprite.getHeight());
+		dashedLineShader.setUniformf("segmentLength", 64.0f);
+		dashedLineShader.setUniformf("segmentSpacing", 8.0f);
+		dashedLineSprite.draw(mSpriteBatch);
+		dashedLineSprite.rotate(0.2f);
 
 		segmentSpacing -= 0.05f;
 		if (segmentSpacing < 0.0f) {
