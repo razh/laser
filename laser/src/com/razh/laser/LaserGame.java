@@ -43,9 +43,11 @@ public class LaserGame extends Game {
 	private Sprite sprite;
 	private Sprite ringSprite;
 	private Sprite arcSprite;
+	private Sprite dashedRingSprite;
 	private ShaderProgram circleShader;
 	private ShaderProgram ringShader;
 	private ShaderProgram arcShader;
+	private ShaderProgram dashedRingShader;
 
 	private Texture laserTexture;
 	private TextureRegion laserRegion;
@@ -124,10 +126,16 @@ public class LaserGame extends Game {
 		arcSprite.setSize(256.0f, 256.0f);
 		arcSprite.setPosition(Gdx.graphics.getWidth() * 0.7f, Gdx.graphics.getHeight() * 0.2f);
 
+		dashedRingSprite = new Sprite(region);
+		dashedRingSprite.setSize(256.0f, 256.0f);
+		dashedRingSprite.setPosition(Gdx.graphics.getWidth() * 0.3f, Gdx.graphics.getHeight() * 0.5f);
+		dashedRingSprite.setOrigin(0.5f * dashedRingSprite.getWidth(), 0.5f * dashedRingSprite.getHeight());
+
 //		distanceFieldShader = Shader.createDistanceFieldShader();
 		circleShader = Shader.createCircleShader();
 		ringShader = Shader.createRingShader();
 		arcShader = Shader.createArcShader();
+		dashedRingShader = Shader.createDashedRingShader();
 
 		Pixmap laserPixmap = new Pixmap(1, 1, Format.RGBA8888);
 		laserPixmap.setColor(Color.WHITE);
@@ -181,14 +189,20 @@ public class LaserGame extends Game {
 	}
 
 	public float time = 0.0f;
+	public float leftAngle = 0.0f;
 	@Override
 	public void render() {
 		super.render();
 //		sprite.rotate(0.5f);
-		sprite.setSize(sprite.getWidth() * 1.001f, sprite.getHeight() * 1.001f);
+		sprite.setSize(sprite.getWidth() * 1.0001f, sprite.getHeight() * 1.0001f);
 //		laserSprite.rotate(0.5f);
 		laserSprite3.rotate(0.1f);
+//		arcSprite.rotate(0.1f);
+//		dashedRingSprite.rotate(2.0f);
 		time += 0.1f;
+		leftAngle += 1.0f;
+		if ( leftAngle > 180)
+			leftAngle = 0;
 
 		mSpriteBatch.begin();
 		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -217,8 +231,8 @@ public class LaserGame extends Game {
 		arcShader.setUniformf("size", arcSprite.getWidth());
 		arcShader.setUniformf("outerRadius", 0.5f);
 		arcShader.setUniformf("innerRadius", 0.4f);
-		arcShader.setUniformf("startAngle", 0 * MathUtils.degreesToRadians);
-		arcShader.setUniformf("endAngle", 90 * MathUtils.degreesToRadians);
+		arcShader.setUniformf("leftAngle", 90 * MathUtils.degreesToRadians);
+		arcShader.setUniformf("rightAngle", 90 * MathUtils.degreesToRadians);
 		arcSprite.draw(mSpriteBatch);
 
 		mSpriteBatch.setShader(laserShader);
@@ -227,6 +241,13 @@ public class LaserGame extends Game {
 		laserSprite.draw(mSpriteBatch);
 		laserSprite2.draw(mSpriteBatch);
 		laserSprite3.draw(mSpriteBatch);
+
+		mSpriteBatch.setShader(dashedRingShader);
+		dashedRingShader.setUniformf("color", Color.WHITE);
+		dashedRingShader.setUniformf("size", ringSprite.getWidth());
+		dashedRingShader.setUniformf("outerRadius", 0.5f);
+		dashedRingShader.setUniformf("innerRadius", 0.4f);
+		dashedRingSprite.draw(mSpriteBatch);
 
 		mSpriteBatch.setShader(laserGlowShader);
 		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
