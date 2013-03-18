@@ -8,7 +8,8 @@ uniform vec4 color;
 uniform float outerRadius;
 uniform float innerRadius;
 
-uniform int segmentAngle;
+uniform float segmentAngle;
+uniform float segmentSpacing;
 
 varying vec2 v_texCoord;
 
@@ -34,20 +35,29 @@ void main() {
 
   float angle = atan(y, x);
   // 180 / PI ~= 57.2958.
-  float sector = mod(angle * 57.2958, 36.0);
-  // if (sector == 0.0 || sector == 15.0) {
-  //   discard;
-  // }
+  float sector = mod(angle * 57.2958, segmentAngle);
+  float stroke_angle = (2.0 * stroke_width) * 57.2958;
 
   gl_FragColor = color;
+
+  // Inner.
   if (distance_squared < inner) {
     gl_FragColor.a = mix(0.0, color.a, smoothstep(inner_stroke, inner, distance_squared));
   }
 
+  // Outer.
   if (distance_squared > outer_stroke) {
     gl_FragColor.a = mix(color.a, 0.0, smoothstep(outer_stroke, outer, distance_squared));
   }
 
-  gl_FragColor.a = mix(0.0, gl_FragColor.a, smoothstep(5.0, 7.0, sector));
-  gl_FragColor.a = mix(gl_FragColor.a, 0.0, smoothstep(29.0, 30.0, sector));
+  // Segment left.
+  if (sector < segmentSpacing) {
+    gl_FragColor.a = mix(0.0, gl_FragColor.a, smoothstep(segmentSpacing - stroke_angle, segmentSpacing, sector));
+  }
+
+  // Segment right.
+  float segment_right = segmentAngle - segmentSpacing;
+  if (sector > segment_right) {
+    gl_FragColor.a = mix(gl_FragColor.a, 0.0, smoothstep(segment_right, segment_right + stroke_angle, sector));
+  }
 }

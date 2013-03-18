@@ -190,6 +190,7 @@ public class LaserGame extends Game {
 
 	public float time = 0.0f;
 	public float leftAngle = 0.0f;
+	public float segmentSpacing = 8.0f;
 	@Override
 	public void render() {
 		super.render();
@@ -231,8 +232,8 @@ public class LaserGame extends Game {
 		arcShader.setUniformf("size", arcSprite.getWidth());
 		arcShader.setUniformf("outerRadius", 0.5f);
 		arcShader.setUniformf("innerRadius", 0.4f);
-		arcShader.setUniformf("leftAngle", 90 * MathUtils.degreesToRadians);
-		arcShader.setUniformf("rightAngle", 90 * MathUtils.degreesToRadians);
+		arcShader.setUniformf("leftAngle", 45 * MathUtils.degreesToRadians);
+		arcShader.setUniformf("rightAngle", 45 * MathUtils.degreesToRadians);
 		arcSprite.draw(mSpriteBatch);
 
 		mSpriteBatch.setShader(laserShader);
@@ -244,10 +245,17 @@ public class LaserGame extends Game {
 
 		mSpriteBatch.setShader(dashedRingShader);
 		dashedRingShader.setUniformf("color", Color.WHITE);
-		dashedRingShader.setUniformf("size", ringSprite.getWidth());
+		dashedRingShader.setUniformf("size", dashedRingSprite.getWidth());
 		dashedRingShader.setUniformf("outerRadius", 0.5f);
 		dashedRingShader.setUniformf("innerRadius", 0.4f);
+		dashedRingShader.setUniformf("segmentAngle", 36.0f);
+		dashedRingShader.setUniformf("segmentSpacing", segmentSpacing);
 		dashedRingSprite.draw(mSpriteBatch);
+
+		segmentSpacing -= 0.05f;
+		if (segmentSpacing < 0.0f) {
+			segmentSpacing = 16.0f;
+		}
 
 		mSpriteBatch.setShader(laserGlowShader);
 		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
