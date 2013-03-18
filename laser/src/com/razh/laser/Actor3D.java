@@ -1,4 +1,8 @@
-package com.razh.tiling;
+package com.razh.laser;
+
+import com.badlogic.gdx.math.Quaternion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class Actor3D extends EntityActor {
 
@@ -36,6 +40,7 @@ public class Actor3D extends EntityActor {
 		return mPosition.set(getX(), getY(), getZ());
 	}
 
+	@Override
 	public void setPosition(float x, float y) {
 		super.setPosition(x, y);
 	}
@@ -51,37 +56,37 @@ public class Actor3D extends EntityActor {
 	}
 
 	public void setRotationX(float angle) {
-		mRotation.set(X_AXIS, angle);
+		mRotation.set(Vector3.X, angle);
 	}
 
 	public void setRotationY(float angle) {
-		mRotation.set(Y_AXIS, angle);
+		mRotation.set(Vector3.Y, angle);
 	}
 
 	public void setRotationZ(float angle) {
-		mRotation.set(Z_AXIS, angle);
+		mRotation.set(Vector3.Z, angle);
 	}
 
 	public void rotateX(float angle) {
-		mRotator.set(X_AXIS, angle);
-		mRotation.mul(rotator);
+		mRotator.set(Vector3.X, angle);
+		mRotation.mul(mRotator);
 	}
 
 	public void rotateY(float angle) {
-		mRotator.set(Y_AXIS, angle);
-		mRotation.mul(rotator);
+		mRotator.set(Vector3.Y, angle);
+		mRotation.mul(mRotator);
 	}
 
 	public void rotateZ(float angle) {
-		mRotator.set(Z_AXIS, angle);
-		mRotation.mul(rotator);
+		mRotator.set(Vector3.Z, angle);
+		mRotation.mul(mRotator);
 	}
 
-	public void setRotation(Vector3 axis, float angle) {
+	public void setRotationQuaternion(Vector3 axis, float angle) {
 		mRotation.set(axis, angle);
 	}
 
-	public Quaternion getRotation() {
+	public Quaternion getRotationQuaternion() {
 		return mRotation;
 	}
 }
