@@ -11,6 +11,20 @@ public class Shader {
 		return compileShader(Gdx.files.internal(vertexName).readString(),
 		                     Gdx.files.internal(fragmentName).readString());
 	}
+	
+	public static ShaderProgram createProceduralSpriteShader(String fragmentName) {
+		final String vertexName = "shaders/spritebatch.vert";
+		
+		return compileShader(Gdx.files.internal(vertexName).readString(),
+		                     Gdx.files.internal(fragmentName).readString(),
+	}
+	
+	public static ShaderProgram createProceduralDecalShader(String fragmentName) {
+		final String vertexName = "shaders/decalbatch.vert";
+		
+		return compileShader(Gdx.files.internal(vertexName).readString(),
+		                     Gdx.files.internal(fragmentName).readString(),
+	}
 
 	public static ShaderProgram createRectangleShader() {
 		final String vertexName = "shaders/spritebatch.vert";
@@ -50,7 +64,14 @@ public class Shader {
 
 		return compileShader(Gdx.files.internal(vertexName).readString(),
 		                     Gdx.files.internal(fragmentName).readString());
+	}
+	
+	public static ShaderProgram createDashedLineShader() {
+		final String vertexName = "shaders/spritebatch.vert";
+		final String fragmentName = "shaders/dashed-line.frag";
 
+		return compileShader(Gdx.files.internal(vertexName).readString(),
+		                     Gdx.files.internal(fragmentName).readString());
 	}
 
 	public static ShaderProgram createArcShader() {
