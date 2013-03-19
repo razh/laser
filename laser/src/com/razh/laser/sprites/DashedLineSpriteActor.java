@@ -60,6 +60,7 @@ public class DashedLineSpriteActor extends ProceduralSpriteActor {
 
 		@Override
 		protected void begin() {
+			super.begin();
 			if (!(actor instanceof DashedLineSpriteActor)) {
 				throw new IllegalArgumentException("Attempted to attach DashedLineAction to non-DashedLineSpriteActor.");
 			}

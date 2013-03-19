@@ -61,6 +61,7 @@ public class ArcSpriteActor extends RingSpriteActor {
 
 		@Override
 		protected void begin() {
+			super.begin();
 			if (!(actor instanceof ArcSpriteActor)) {
 				throw new IllegalArgumentException("Attempted to attach ArcAction to non-ArcSpriteActor.");
 			}
