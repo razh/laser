@@ -62,7 +62,16 @@ public class GameScreen extends BasicScreen {
 						color(new Color(0.75f, 0.0f, 0.0f, 1.0f), 2.0f),
 						color(new Color(0.25f, 0.0f, 0.0f, 1.0f), 2.0f)
 					),
-					sizeBy(100f, 100f, 4.0f, Interpolation.linear)
+					sequence(
+						repeat(
+							2,
+							sizeBy(100f, 100f, 4.0f, Interpolation.linear)
+						),
+						repeat(
+							2,
+							sizeBy(-100f, -100f, 4.0f, Interpolation.linear)
+						)
+					)
 				)
 			)
 		);

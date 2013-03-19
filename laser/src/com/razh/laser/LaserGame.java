@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.razh.laser.images.DistanceField;
@@ -61,6 +62,10 @@ public class LaserGame extends Game {
 	private Sprite laserGlowSprite;
 	private ShaderProgram laserShader;
 	private ShaderProgram laserGlowShader;
+
+	private FrameBuffer frameBuffer;
+	private TextureRegion fboRegion;
+	private boolean testFBO = true;
 
 	private float spread = 16;
 	private float scale = 1;
@@ -174,6 +179,11 @@ public class LaserGame extends Game {
 
 		laserPixmap.dispose();
 
+		frameBuffer = new FrameBuffer(Format.RGBA8888, 256, 256, true);
+		fboRegion = new TextureRegion(frameBuffer.getColorBufferTexture());
+		fboRegion.getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		fboRegion.flip(false, true);
+
 		laserShader = Shader.createLaserBeamShader();
 		laserGlowShader = Shader.createLaserGlowShader();
 
@@ -200,11 +210,34 @@ public class LaserGame extends Game {
 	public float time = 0.0f;
 	public float leftAngle = 0.0f;
 	public float segmentSpacing = 8.0f;
+	public float[] array = {
+		0.1f, 0.1f,
+		0.2f, 0.3f,
+		0.4f, 0.5f,
+		0.1f, 0.4f,
+		0.6f, 0.8f,
+		0.9f, 0.1f,
+		0.7f, 0.5f,
+		0.0f, 0.2f,
+		0.3f, 0.2f,
+		0.1f, 0.9f,
+		0.5f, 0.4f,
+		0.8f, 0.2f,
+		0.2f, 0.8f,
+		0.6f, 0.2f,
+		0.4f, 0.8f,
+		0.3f, 0.9f,
+		0.9f, 0.8f,
+		0.5f, 0.9f,
+		0.2f, 0.0f,
+		0.8f, 0.7f
+	};
+
 	@Override
 	public void render() {
 		super.render();
 //		sprite.rotate(0.5f);
-		sprite.setSize(sprite.getWidth() * 1.0001f, sprite.getHeight() * 1.0001f);
+//		sprite.setSize(sprite.getWidth() * 1.0001f, sprite.getHeight() * 1.0001f);
 //		laserSprite.rotate(0.5f);
 		laserSprite3.rotate(0.1f);
 //		ringSprite.setSize(ringSprite.getWidth() * 1.001f, ringSprite.getHeight() * 1.001f);
@@ -253,6 +286,17 @@ public class LaserGame extends Game {
 		laserSprite2.draw(mSpriteBatch);
 		laserSprite3.draw(mSpriteBatch);
 
+		if (testFBO) {
+			mSpriteBatch.end();
+
+			frameBuffer.begin();
+			Gdx.gl20.glViewport(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
+			Gdx.gl20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+			mSpriteBatch.begin();
+		}
+
 		mSpriteBatch.setShader(dashedRingShader);
 		dashedRingShader.setUniformf("color", Color.WHITE);
 		dashedRingShader.setUniformf("size", dashedRingSprite.getWidth());
@@ -260,7 +304,31 @@ public class LaserGame extends Game {
 		dashedRingShader.setUniformf("innerRadius", 0.4f);
 		dashedRingShader.setUniformf("segmentAngle", 36.0f);
 		dashedRingShader.setUniformf("segmentSpacing", segmentSpacing);
-		dashedRingSprite.draw(mSpriteBatch);
+		if (testFBO) {
+			dashedRingSprite.setPosition(0.0f, 0.0f);
+			mSpriteBatch.draw(dashedRingSprite, 0, 0);
+			mSpriteBatch.end();
+
+			frameBuffer.end();
+			Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		} else {
+			dashedRingSprite.draw(mSpriteBatch);
+		}
+
+		if (testFBO) {
+			mSpriteBatch.begin();
+			mSpriteBatch.setShader(null);
+		}
+
+		for (int i = 0; i < 20; i++) {
+			if (testFBO) {
+				mSpriteBatch.draw(fboRegion, Gdx.graphics.getWidth() * array[2 * i], Gdx.graphics.getHeight() * array[2 * i + 1]);
+			} else {
+				dashedRingSprite.setPosition(Gdx.graphics.getWidth() * array[2 * i], Gdx.graphics.getHeight() * array[2 * i + 1]);
+				dashedRingSprite.draw(mSpriteBatch);
+			}
+		}
+		dashedRingSprite.setPosition(Gdx.graphics.getWidth() * 0.3f, Gdx.graphics.getHeight() * 0.5f);
 
 		mSpriteBatch.setShader(dashedLineShader);
 		dashedLineShader.setUniformf("color", Color.WHITE);
