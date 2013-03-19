@@ -39,10 +39,8 @@ public class GameScreen extends BasicScreen {
 		Entity entity2 = EntityFactory.createEmitter();
 		getMeshStage().addMeshActor(entity2.getActor());
 
-		for (int i = 0; i < 20; i++) {
-			Entity entity3 = EntityFactory.createCircleThing();
-			getMeshStage().addMeshActor(entity3.getActor());
-		}
+		Entity entity3 = EntityFactory.createCircleThing();
+		getMeshStage().addMeshActor(entity3.getActor());
 
 		getMeshStage().setShaderProgram(Shader.createSimpleMeshShader());
 		getMeshStage().setColor(Color.DARK_GRAY);

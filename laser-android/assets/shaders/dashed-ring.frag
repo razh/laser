@@ -32,7 +32,6 @@ void main() {
    *   inner_stroke | inner | outer | outer_stroke
    */
 
-
   if (inner_stroke > distance_squared) {
     discard;
   }

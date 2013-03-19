@@ -11,7 +11,6 @@ public class MainActivity extends AndroidApplication {
         super.onCreate(savedInstanceState);
 
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-        cfg.numSamples = 4;
         cfg.useGL20 = true;
 
         initialize(new LaserGame(), cfg);

@@ -101,20 +101,20 @@ public class MeshStage extends Stage {
 			children.end();
 		}
 
-//
-//		if (mShaderProgram != null) {
-//			mShaderProgram.begin();
-//
-//			mShaderProgram.setUniformMatrix("projectionMatrix", camera.projection);
-//			mShaderProgram.setUniformMatrix("viewMatrix", camera.view);
-//
-//			mRoot.draw(mShaderProgram);
-//			if (LaserGame.DEBUG) {
-//				mTestGroup.draw(mShaderProgram);
-//			}
-//
-//			mShaderProgram.end();
-//		}
+
+		if (mShaderProgram != null) {
+			mShaderProgram.begin();
+
+			mShaderProgram.setUniformMatrix("projectionMatrix", camera.projection);
+			mShaderProgram.setUniformMatrix("viewMatrix", camera.view);
+
+			mRoot.draw(mShaderProgram);
+			if (LaserGame.DEBUG) {
+				mTestGroup.draw(mShaderProgram);
+			}
+
+			mShaderProgram.end();
+		}
 
 		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
 	}
