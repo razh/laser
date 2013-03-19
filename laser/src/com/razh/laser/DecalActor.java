@@ -38,6 +38,10 @@ public class DecalActor extends Actor3D {
 	public void draw(DecalBatch decalBatch, ShaderProgram shaderProgram) {
 	}
 
+	public void setUniforms(ShaderProgram shaderProgram) {
+		shaderProgram.setUniformf("color", getColor());
+	}
+
 	public Decal getDecal() {
 		return mDecal;
 	}
