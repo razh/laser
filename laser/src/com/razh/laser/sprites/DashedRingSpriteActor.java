@@ -1,6 +1,9 @@
 package com.razh.laser.sprites;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
+
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 
@@ -136,5 +139,78 @@ public class DashedRingSpriteActor extends RingSpriteActor {
 		public void setSegmentSpacing(float segmentSpacing) {
 			mEnd = segmentSpacing;
 		}
+	}
+
+	/**
+	 * Static convenience methods for actions.
+	 */
+	/**
+	 * Static convenience methods for actions.
+	 */
+	static public SegmentAngleByAction segmentAngleBy(float amount) {
+		return segmentAngleBy(amount, 0, null);
+	}
+
+	static public SegmentAngleByAction segmentAngleBy(float amount, float duration) {
+		return segmentAngleBy(amount, duration, null);
+	}
+
+	static public SegmentAngleByAction segmentAngleBy(float amount, float duration, Interpolation interpolation) {
+		SegmentAngleByAction action = action(SegmentAngleByAction.class);
+		action.setAmount(amount);
+		action.setDuration(duration);
+		action.setInterpolation(interpolation);
+		return action;
+	}
+
+
+	static public SegmentAngleToAction segmentAngleTo(float segmentAngle) {
+		return segmentAngleTo(segmentAngle, 0, null);
+	}
+
+	static public SegmentAngleToAction segmentAngleTo(float segmentAngle, float duration) {
+		return segmentAngleTo(segmentAngle, duration, null);
+	}
+
+	static public SegmentAngleToAction segmentAngleTo(float segmentAngle, float duration, Interpolation interpolation) {
+		SegmentAngleToAction action = action(SegmentAngleToAction.class);
+		action.setSegmentAngle(segmentAngle);
+		action.setDuration(duration);
+		action.setInterpolation(interpolation);
+		return action;
+	}
+
+
+	static public SegmentSpacingByAction segmentSpacingBy(float amount) {
+		return segmentSpacingBy(amount, 0, null);
+	}
+
+	static public SegmentSpacingByAction segmentSpacingBy(float amount, float duration) {
+		return segmentSpacingBy(amount, duration, null);
+	}
+
+	static public SegmentSpacingByAction segmentSpacingBy(float amount, float duration, Interpolation interpolation) {
+		SegmentSpacingByAction action = action(SegmentSpacingByAction.class);
+		action.setAmount(amount);
+		action.setDuration(duration);
+		action.setInterpolation(interpolation);
+		return action;
+	}
+
+
+	static public SegmentSpacingToAction segmentSpacingTo(float segmentSpacing) {
+		return segmentSpacingTo(segmentSpacing, 0, null);
+	}
+
+	static public SegmentSpacingToAction segmentSpacingTo(float segmentSpacing, float duration) {
+		return segmentSpacingTo(segmentSpacing, duration, null);
+	}
+
+	static public SegmentSpacingToAction segmentSpacingTo(float segmentSpacing, float duration, Interpolation interpolation) {
+		SegmentSpacingToAction action = action(SegmentSpacingToAction.class);
+		action.setSegmentSpacing(segmentSpacing);
+		action.setDuration(duration);
+		action.setInterpolation(interpolation);
+		return action;
 	}
 }

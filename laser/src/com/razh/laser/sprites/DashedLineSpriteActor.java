@@ -1,12 +1,12 @@
 package com.razh.laser.sprites;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
+
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.razh.laser.ProceduralSpriteActor;
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
 
 public class DashedLineSpriteActor extends ProceduralSpriteActor {
 
