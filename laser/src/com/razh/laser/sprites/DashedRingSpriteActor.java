@@ -3,8 +3,6 @@ package com.razh.laser.sprites;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
-import com.razh.laser.sprites.RingSpriteActor.RingByAction;
-import com.razh.laser.sprites.RingSpriteActor.RingToAction;
 
 public class DashedRingSpriteActor extends RingSpriteActor {
 
