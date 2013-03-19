@@ -38,16 +38,21 @@ public class DashedLineSpriteActor extends ProceduralSpriteActor {
 	 */
 	public abstract static class DashedLineToAction extends TemporalAction {
 
+		protected DashedLineSpriteActor mActor;
+
 		@Override
 		protected void begin() {
 			if (!(actor instanceof DashedLineSpriteActor)) {
 				throw new IllegalArgumentException("Attempted to attach DashedLineAction to non-DashedLineSpriteActor.");
 			}
+
+			mActor = (DashedLineSpriteActor) actor;
 		}
 	}
 
 	public abstract static class DashedLineByAction extends RelativeTemporalAction {
 
+		protected DashedLineSpriteActor mActor;
 		private float mAmount;
 
 		@Override
@@ -55,6 +60,8 @@ public class DashedLineSpriteActor extends ProceduralSpriteActor {
 			if (!(actor instanceof DashedLineSpriteActor)) {
 				throw new IllegalArgumentException("Attempted to attach DashedLineAction to non-DashedLineSpriteActor.");
 			}
+
+			mActor = (DashedLineSpriteActor) actor;
 		}
 
 		public float getAmount() {
@@ -70,8 +77,7 @@ public class DashedLineSpriteActor extends ProceduralSpriteActor {
 
 		@Override
 		protected void updateRelative(float percentDelta) {
-			DashedLineSpriteActor dashedLine = (DashedLineSpriteActor) actor;
-			dashedLine.setSegmentLength(dashedLine.getSegmentLength() + getAmount() * percentDelta);
+			mActor.setSegmentLength(mActor.getSegmentLength() + getAmount() * percentDelta);
 		}
 	}
 
@@ -82,12 +88,12 @@ public class DashedLineSpriteActor extends ProceduralSpriteActor {
 		@Override
 		protected void begin() {
 			super.begin();
-			mStart = ((DashedLineSpriteActor) actor).getSegmentLength();
+			mStart = mActor.getSegmentLength();
 		}
 
 		@Override
 		protected void update(float percent) {
-			((DashedLineSpriteActor) actor).setSegmentLength(mStart + (mEnd - mStart) * percent);
+			mActor.setSegmentLength(mStart + (mEnd - mStart) * percent);
 		}
 
 		public float getSegmentLength() {
@@ -103,8 +109,7 @@ public class DashedLineSpriteActor extends ProceduralSpriteActor {
 
 		@Override
 		protected void updateRelative(float percentDelta) {
-			DashedLineSpriteActor dashedLine = (DashedLineSpriteActor) actor;
-			dashedLine.setSegmentSpacing(dashedLine.getSegmentSpacing() + getAmount() * percentDelta);
+			mActor.setSegmentSpacing(mActor.getSegmentSpacing() + getAmount() * percentDelta);
 		}
 	}
 
@@ -115,12 +120,12 @@ public class DashedLineSpriteActor extends ProceduralSpriteActor {
 		@Override
 		protected void begin() {
 			super.begin();
-			mStart = ((DashedLineSpriteActor) actor).getSegmentSpacing();
+			mStart = mActor.getSegmentSpacing();
 		}
 
 		@Override
 		protected void update(float percent) {
-			((DashedLineSpriteActor) actor).setSegmentSpacing(mStart + (mEnd - mStart) * percent);
+			mActor.setSegmentSpacing(mStart + (mEnd - mStart) * percent);
 		}
 
 		public float getSegmentSpacing() {

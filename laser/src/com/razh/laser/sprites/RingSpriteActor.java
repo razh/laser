@@ -39,16 +39,21 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 	 */
 	public abstract static class RingToAction extends TemporalAction {
 
+		protected RingSpriteActor mActor;
+
 		@Override
 		protected void begin() {
 			if (!(actor instanceof RingSpriteActor)) {
 				throw new IllegalArgumentException("Attempted to attach RingAction to non-RingSpriteActor.");
 			}
+
+			mActor = (RingSpriteActor) actor;
 		}
 	}
 
 	public abstract static class RingByAction extends RelativeTemporalAction {
 
+		protected RingSpriteActor mActor;
 		private float mAmount;
 
 		@Override
@@ -57,6 +62,8 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 			if (!(actor instanceof RingSpriteActor)) {
 				throw new IllegalArgumentException("Attempted to attach RingAction to non-RingSpriteActor.");
 			}
+
+			mActor = (RingSpriteActor) actor;
 		}
 
 		public float getAmount() {
@@ -72,8 +79,7 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 
 		@Override
 		protected void updateRelative(float percentDelta) {
-			RingSpriteActor ring = (RingSpriteActor) actor;
-			ring.setOuterRadius(ring.getOuterRadius() + getAmount() * percentDelta);
+			mActor.setOuterRadius(mActor.getOuterRadius() + getAmount() * percentDelta);
 		}
 	}
 
@@ -84,12 +90,12 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 		@Override
 		protected void begin() {
 			super.begin();
-			mStart = ((RingSpriteActor) actor).getOuterRadius();
+			mStart = mActor.getOuterRadius();
 		}
 
 		@Override
 		protected void update(float percent) {
-			((RingSpriteActor) actor).setOuterRadius(mStart + (mEnd - mStart) * percent);
+			mActor.setOuterRadius(mStart + (mEnd - mStart) * percent);
 		}
 
 		public float getOuterRadius() {
@@ -105,8 +111,7 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 
 		@Override
 		protected void updateRelative(float percentDelta) {
-			RingSpriteActor ring = (RingSpriteActor) actor;
-			ring.setInnerRadius(ring.getInnerRadius() + getAmount() * percentDelta);
+			mActor.setInnerRadius(mActor.getInnerRadius() + getAmount() * percentDelta);
 		}
 
 	}
@@ -118,12 +123,12 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 		@Override
 		protected void begin() {
 			super.begin();
-			mStart = ((RingSpriteActor) actor).getInnerRadius();
+			mStart = mActor.getInnerRadius();
 		}
 
 		@Override
 		protected void update(float percent) {
-			((RingSpriteActor) actor).setInnerRadius(mStart + (mEnd - mStart) * percent);
+			mActor.setInnerRadius(mStart + (mEnd - mStart) * percent);
 		}
 
 		public float getInnerRadius() {
