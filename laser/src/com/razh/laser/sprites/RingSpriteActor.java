@@ -73,8 +73,7 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 		@Override
 		protected void updateRelative(float percentDelta) {
 			RingSpriteActor ring = (RingSpriteActor) actor;
-			float outerRadius = ring.getOuterRadius();
-			ring.setOuterRadius(outerRadius + outerRadius * getAmount() * percentDelta);
+			ring.setOuterRadius(ring.getOuterRadius() + getAmount() * percentDelta);
 		}
 	}
 
@@ -107,8 +106,7 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 		@Override
 		protected void updateRelative(float percentDelta) {
 			RingSpriteActor ring = (RingSpriteActor) actor;
-			float innerRadius = ring.getInnerRadius();
-			ring.setInnerRadius(innerRadius + innerRadius * getAmount() * percentDelta);
+			ring.setInnerRadius(ring.getInnerRadius() + getAmount() * percentDelta);
 		}
 
 	}
