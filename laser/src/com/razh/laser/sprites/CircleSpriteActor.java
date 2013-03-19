@@ -8,6 +8,6 @@ public class CircleSpriteActor extends ProceduralSpriteActor {
 	@Override
 	public void setUniforms(ShaderProgram shaderProgram) {
 		super.setUniforms(shaderProgram);
-		shaderProgram.setUniformf("size", Math.max(getWidth(), getHeight()));
+		shaderProgram.setUniformf("size", getWidth());
 	}
 }
