@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.razh.laser.images.DistanceField;
 import com.razh.laser.screens.BasicScreen;
 import com.razh.laser.screens.GameScreen;
@@ -290,7 +291,7 @@ public class LaserGame extends Game {
 			mSpriteBatch.end();
 
 			frameBuffer.begin();
-			Gdx.gl20.glViewport(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
+			Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			Gdx.gl20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 			Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -298,6 +299,7 @@ public class LaserGame extends Game {
 		}
 
 		mSpriteBatch.setShader(dashedRingShader);
+
 		dashedRingShader.setUniformf("color", Color.WHITE);
 		dashedRingShader.setUniformf("size", dashedRingSprite.getWidth());
 		dashedRingShader.setUniformf("outerRadius", 0.5f);
@@ -306,11 +308,10 @@ public class LaserGame extends Game {
 		dashedRingShader.setUniformf("segmentSpacing", segmentSpacing);
 		if (testFBO) {
 			dashedRingSprite.setPosition(0.0f, 0.0f);
-			mSpriteBatch.draw(dashedRingSprite, 0, 0);
+			dashedRingSprite.draw(mSpriteBatch);
 			mSpriteBatch.end();
 
 			frameBuffer.end();
-			Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		} else {
 			dashedRingSprite.draw(mSpriteBatch);
 		}
