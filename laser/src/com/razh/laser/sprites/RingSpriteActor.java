@@ -1,6 +1,9 @@
 package com.razh.laser.sprites;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
+
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
@@ -138,5 +141,76 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 		public void setInnerRadius(float innerRadius) {
 			mEnd = innerRadius;
 		}
+	}
+
+
+	/**
+	 * Static convenience methods for actions.
+	 */
+	static public OuterRadiusByAction outerRadiusBy(float amount) {
+		return outerRadiusBy(amount, 0, null);
+	}
+
+	static public OuterRadiusByAction outerRadiusBy(float amount, float duration) {
+		return outerRadiusBy(amount, duration, null);
+	}
+
+	static public OuterRadiusByAction outerRadiusBy(float amount, float duration, Interpolation interpolation) {
+		OuterRadiusByAction action = action(OuterRadiusByAction.class);
+		action.setAmount(amount);
+		action.setDuration(duration);
+		action.setInterpolation(interpolation);
+		return action;
+	}
+
+
+	static public OuterRadiusToAction outerRadiusTo(float outerRadius) {
+		return outerRadiusTo(outerRadius, 0, null);
+	}
+
+	static public OuterRadiusToAction outerRadiusTo(float outerRadius, float duration) {
+		return outerRadiusTo(outerRadius, duration, null);
+	}
+
+	static public OuterRadiusToAction outerRadiusTo(float outerRadius, float duration, Interpolation interpolation) {
+		OuterRadiusToAction action = action(OuterRadiusToAction.class);
+		action.setOuterRadius(outerRadius);
+		action.setDuration(duration);
+		action.setInterpolation(interpolation);
+		return action;
+	}
+
+
+	static public InnerRadiusByAction innerRadiusBy(float amount) {
+		return innerRadiusBy(amount, 0, null);
+	}
+
+	static public InnerRadiusByAction innerRadiusBy(float amount, float duration) {
+		return innerRadiusBy(amount, duration, null);
+	}
+
+	static public InnerRadiusByAction innerRadiusBy(float amount, float duration, Interpolation interpolation) {
+		InnerRadiusByAction action = action(InnerRadiusByAction.class);
+		action.setAmount(amount);
+		action.setDuration(duration);
+		action.setInterpolation(interpolation);
+		return action;
+	}
+
+
+	static public InnerRadiusToAction innerRadiusTo(float innerRadius) {
+		return innerRadiusTo(innerRadius, 0, null);
+	}
+
+	static public InnerRadiusToAction innerRadiusTo(float innerRadius, float duration) {
+		return innerRadiusTo(innerRadius, duration, null);
+	}
+
+	static public InnerRadiusToAction innerRadiusTo(float innerRadius, float duration, Interpolation interpolation) {
+		InnerRadiusToAction action = action(InnerRadiusToAction.class);
+		action.setInnerRadius(innerRadius);
+		action.setDuration(duration);
+		action.setInterpolation(interpolation);
+		return action;
 	}
 }
