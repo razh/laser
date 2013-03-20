@@ -2,6 +2,7 @@ package com.razh.laser.sprites;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.razh.laser.ShaderStage;
 
 public class SpriteContainer extends Actor {
 
@@ -12,8 +13,7 @@ public class SpriteContainer extends Actor {
 	 * its original parent group.
 	 * @param actor
 	 */
-	public void addActor(Actor actor) {
-		actor.remove();
+	public void addComponent(Actor actor) {
 		components.add(actor);
 	}
 
@@ -25,6 +25,12 @@ public class SpriteContainer extends Actor {
 	}
 
 	public void addTo(ShaderStage stage) {
+		Actor[] actors = components.begin();
 
+		for (int i = 0, n = components.size; i < n; i++) {
+			stage.addActor(actors[i]);
+		}
+
+		components.end();
 	}
 }

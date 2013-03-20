@@ -2,8 +2,30 @@ package com.razh.laser;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.razh.laser.sprites.ArcSpriteActor;
+import com.razh.laser.sprites.CircleSpriteActor;
+import com.razh.laser.sprites.DashedLineSpriteActor;
+import com.razh.laser.sprites.DashedRingSpriteActor;
+import com.razh.laser.sprites.RingSpriteActor;
 
 public class Shader {
+
+	public static ShaderProgram getShaderForType(Class<?> type) {
+		if (type == ArcSpriteActor.class) {
+			return createArcShader();
+		} else if (type == CircleSpriteActor.class) {
+			return createCircleShader();
+		} else if (type == DashedLineSpriteActor.class) {
+			return createDashedLineShader();
+		} else if (type == DashedRingSpriteActor.class) {
+			return createDashedRingShader();
+		} else if (type == RingSpriteActor.class) {
+			return createRingShader();
+		} else {
+			return null;
+		}
+	}
+
 	public static ShaderProgram createSimpleMeshShader() {
 		final String vertexName = "shaders/simple-mesh.vert";
 		final String fragmentName = "shaders/simple.frag";
