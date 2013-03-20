@@ -34,9 +34,13 @@ public class ProceduralSpriteActor extends EntityActor {
 		float width = getWidth();
 		float height = getHeight();
 
+		float halfWidth = 0.5f * width;
+		float halfHeight = 0.5f * height;
+
 		mSprite.setRotation(getRotation());
 		mSprite.setSize(width, height);
-		mSprite.setPosition(getX() - 0.5f * width, getY() - 0.5f * height);
+		mSprite.setOrigin(halfWidth, halfHeight);
+		mSprite.setPosition(getX() - halfWidth, getY() - halfHeight);
 		mSprite.setColor(getColor());
 
 		if (shaderProgram != null) {
