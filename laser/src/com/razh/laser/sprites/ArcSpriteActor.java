@@ -5,6 +5,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 
@@ -39,17 +40,21 @@ public class ArcSpriteActor extends RingSpriteActor {
 	/**
 	 * Actions.
 	 */
+	public static ArcSpriteActor convertToArcSpriteActor(Actor actor) {
+		if (!(actor instanceof ArcSpriteActor)) {
+			throw new IllegalArgumentException("Attempted to attach ArcAction to non-ArcSpriteActor.");
+		}
+
+		return (ArcSpriteActor) actor;
+	}
+
 	public abstract static class ArcToAction extends TemporalAction {
 
 		protected ArcSpriteActor mActor;
 
 		@Override
 		protected void begin() {
-			if (!(actor instanceof ArcSpriteActor)) {
-				throw new IllegalArgumentException("Attempted to attach ArcAction to non-ArcSpriteActor.");
-			}
-
-			mActor = (ArcSpriteActor) actor;
+			mActor = convertToArcSpriteActor(actor);
 		}
 	}
 
@@ -62,11 +67,7 @@ public class ArcSpriteActor extends RingSpriteActor {
 		@Override
 		protected void begin() {
 			super.begin();
-			if (!(actor instanceof ArcSpriteActor)) {
-				throw new IllegalArgumentException("Attempted to attach ArcAction to non-ArcSpriteActor.");
-			}
-
-			mActor = (ArcSpriteActor) actor;
+			mActor = convertToArcSpriteActor(actor);
 		}
 
 		public float getAmount() {

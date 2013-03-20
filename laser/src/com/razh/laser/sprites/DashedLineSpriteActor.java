@@ -4,6 +4,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.razh.laser.ProceduralSpriteActor;
@@ -39,17 +40,21 @@ public class DashedLineSpriteActor extends ProceduralSpriteActor {
 	/**
 	 * Actions.
 	 */
+	public static DashedLineSpriteActor convertToDashedLineSpriteActor(Actor actor) {
+		if (!(actor instanceof DashedLineSpriteActor)) {
+			throw new IllegalArgumentException("Attempted to attach DashedLineAction to non-DashedLineSpriteActor.");
+		}
+
+		return (DashedLineSpriteActor) actor;
+	}
+
 	public abstract static class DashedLineToAction extends TemporalAction {
 
 		protected DashedLineSpriteActor mActor;
 
 		@Override
 		protected void begin() {
-			if (!(actor instanceof DashedLineSpriteActor)) {
-				throw new IllegalArgumentException("Attempted to attach DashedLineAction to non-DashedLineSpriteActor.");
-			}
-
-			mActor = (DashedLineSpriteActor) actor;
+			mActor = convertToDashedLineSpriteActor(actor);
 		}
 	}
 
@@ -61,11 +66,7 @@ public class DashedLineSpriteActor extends ProceduralSpriteActor {
 		@Override
 		protected void begin() {
 			super.begin();
-			if (!(actor instanceof DashedLineSpriteActor)) {
-				throw new IllegalArgumentException("Attempted to attach DashedLineAction to non-DashedLineSpriteActor.");
-			}
-
-			mActor = (DashedLineSpriteActor) actor;
+			mActor = convertToDashedLineSpriteActor(actor);
 		}
 
 		public float getAmount() {

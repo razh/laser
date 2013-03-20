@@ -4,11 +4,10 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.razh.laser.ProceduralSpriteActor;
-import com.razh.laser.sprites.RingSpriteActor.OuterRadiusByAction;
-import com.razh.laser.sprites.RingSpriteActor.OuterRadiusToAction;
 
 public class CircleSpriteActor extends ProceduralSpriteActor {
 
@@ -30,17 +29,21 @@ public class CircleSpriteActor extends ProceduralSpriteActor {
 	/**
 	 * Actions
 	 */
+	public static CircleSpriteActor convertToCircleSpriteActor(Actor actor) {
+		if (!(actor instanceof CircleSpriteActor)) {
+			throw new IllegalArgumentException("Attempted to attach CircleAction to non-CircleSpriteActor.");
+		}
+
+		return (CircleSpriteActor) actor;
+	}
+
 	public abstract static class CircleToAction extends TemporalAction {
 
 		protected CircleSpriteActor mActor;
 
 		@Override
 		protected void begin() {
-			if (!(actor instanceof CircleSpriteActor)) {
-				throw new IllegalArgumentException("Attempted to attach CircleAction to non-CircleSpriteActor.");
-			}
-
-			mActor = (CircleSpriteActor) actor;
+			mActor = convertToCircleSpriteActor(actor);
 		}
 	}
 
@@ -52,11 +55,7 @@ public class CircleSpriteActor extends ProceduralSpriteActor {
 		@Override
 		protected void begin() {
 			super.begin();
-			if (!(actor instanceof CircleSpriteActor)) {
-				throw new IllegalArgumentException("Attempted to attach CircleAction to non-CircleSpriteActor.");
-			}
-
-			mActor = (CircleSpriteActor) actor;
+			mActor = convertToCircleSpriteActor(actor);
 		}
 
 		public float getAmount() {
@@ -121,7 +120,7 @@ public class CircleSpriteActor extends ProceduralSpriteActor {
 	}
 
 
-	static public RadiusToAction outerRadiusTo(float radius) {
+	static public RadiusToAction radiusTo(float radius) {
 		return radiusTo(radius, 0, null);
 	}
 

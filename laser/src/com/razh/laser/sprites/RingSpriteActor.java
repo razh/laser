@@ -5,6 +5,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.razh.laser.ProceduralSpriteActor;
@@ -40,17 +41,21 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 	/**
 	 * Actions.
 	 */
+	public static RingSpriteActor convertToRingSpriteActor(Actor actor) {
+		if (!(actor instanceof RingSpriteActor)) {
+			throw new IllegalArgumentException("Attempted to attach RingAction to non-RingSpriteActor.");
+		}
+
+		return (RingSpriteActor) actor;
+	}
+
 	public abstract static class RingToAction extends TemporalAction {
 
 		protected RingSpriteActor mActor;
 
 		@Override
 		protected void begin() {
-			if (!(actor instanceof RingSpriteActor)) {
-				throw new IllegalArgumentException("Attempted to attach RingAction to non-RingSpriteActor.");
-			}
-
-			mActor = (RingSpriteActor) actor;
+			mActor = convertToRingSpriteActor(actor);
 		}
 	}
 
@@ -62,11 +67,7 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 		@Override
 		protected void begin() {
 			super.begin();
-			if (!(actor instanceof RingSpriteActor)) {
-				throw new IllegalArgumentException("Attempted to attach RingAction to non-RingSpriteActor.");
-			}
-
-			mActor = (RingSpriteActor) actor;
+			mActor = convertToRingSpriteActor(actor);
 		}
 
 		public float getAmount() {

@@ -3,6 +3,13 @@ package com.razh.laser;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateByAction;
+import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 
 public class Actor3D extends EntityActor {
 
@@ -89,4 +96,84 @@ public class Actor3D extends EntityActor {
 	public Quaternion getRotationQuaternion() {
 		return mRotation;
 	}
+
+	/**
+	 * Actions.
+	 */
+	public static Actor3D convertToActor3D(Actor actor) {
+		if (!(actor instanceof Actor3D)) {
+			throw new IllegalArgumentException("Attempted to attach Actor3DAction to non-Actor3D.");
+		}
+
+		return (Actor3D) actor;
+	}
+
+	public static class MoveBy3DAction extends MoveByAction {
+
+		protected Actor3D mActor;
+		private float mAmountZ;
+
+		@Override
+		protected void begin() {
+			super.begin();
+			mActor = convertToActor3D(actor);
+		}
+
+		@Override
+		protected void updateRelative(float percentDelta) {
+			mActor.translate(getAmountX() * percentDelta,
+			                 getAmountY() * percentDelta,
+			                 getAmountZ() * percentDelta);
+		}
+
+		public void setAmount(float x, float y, float z) {
+			super.setAmount(x, y);
+		}
+
+		public float getAmountZ() {
+			return mAmountZ;
+		}
+
+		public void setAmountZ(float z) {
+			mAmountZ = z;
+		}
+	}
+
+	public static class MoveTo3DAction extends MoveToAction {
+
+		protected Actor3D mActor;
+
+		private float mStartZ;
+		private float mEndZ;
+
+		@Override
+		protected void begin() {
+			super.begin();
+			mActor = convertToActor3D(actor);
+			mStartZ = mActor.getZ();
+		}
+
+		@Override
+		protected void update(float percent) {
+			super.update(percent);
+			mActor.setZ(mStartZ + (mEndZ - mStartZ) * percent);
+		}
+
+		public void setPosition(float x, float y, float z) {
+			super.setPosition(x, y);
+			mEndZ = z;
+		}
+
+		public float getZ() {
+			return mEndZ;
+		}
+
+		public void setZ(float z) {
+			mEndZ = z;
+		}
+	}
+
+	/**
+	 * Static convenience methods for actions.
+	 */
 }

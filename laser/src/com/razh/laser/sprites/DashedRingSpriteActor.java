@@ -4,6 +4,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.RelativeTemporalAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 
@@ -38,17 +39,21 @@ public class DashedRingSpriteActor extends RingSpriteActor {
 	/**
 	 * Actions.
 	 */
+	public static DashedRingSpriteActor convertToDashedRingSpriteActor(Actor actor) {
+		if (!(actor instanceof DashedRingSpriteActor)) {
+			throw new IllegalArgumentException("Attempted to attach DashedRingAction to non-DashedRingSpriteActor.");
+		}
+
+		return (DashedRingSpriteActor) actor;
+	}
+
 	public abstract static class DashedRingToAction extends TemporalAction {
 
 		protected DashedRingSpriteActor mActor;
 
 		@Override
 		protected void begin() {
-			if (!(actor instanceof DashedRingSpriteActor)) {
-				throw new IllegalArgumentException("Attempted to attach DashedRingAction to non-DashedRingSpriteActor.");
-			}
-
-			mActor = (DashedRingSpriteActor) actor;
+			mActor = convertToDashedRingSpriteActor(actor);
 		}
 	}
 
@@ -60,11 +65,7 @@ public class DashedRingSpriteActor extends RingSpriteActor {
 		@Override
 		protected void begin() {
 			super.begin();
-			if (!(actor instanceof DashedRingSpriteActor)) {
-				throw new IllegalArgumentException("Attempted to attach DashedRingAction to non-DashedRingSpriteActor.");
-			}
-
-			mActor = (DashedRingSpriteActor) actor;
+			mActor = convertToDashedRingSpriteActor(actor);
 		}
 
 		public float getAmount() {
