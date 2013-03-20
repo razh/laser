@@ -1,5 +1,8 @@
 package com.razh.laser.screens;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import static com.razh.laser.sprites.DashedRingSpriteActor.*;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,8 +17,7 @@ import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
 import com.razh.laser.input.GameInputProcessor;
 import com.razh.laser.sprites.CircleSpriteActor;
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import com.razh.laser.sprites.DashedRingSpriteActor;
 
 public class GameScreen extends BasicScreen {
 
@@ -114,6 +116,32 @@ public class GameScreen extends BasicScreen {
 		rectSpriteGroup.addActor(bottomRightActor);
 
 		getStage().addActor(rectSpriteGroup);
+
+		ProceduralSpriteGroup dashedRingSpriteGroup = new ProceduralSpriteGroup();
+		dashedRingSpriteGroup.setShaderProgram(Shader.createDashedRingShader());
+
+		DashedRingSpriteActor dashedRing = new DashedRingSpriteActor();
+		dashedRing.setColor(0.0f, 1.0f, 1.0f, 1.0f);
+		dashedRing.setWidth(200.0f);
+		dashedRing.setHeight(200.0f);
+		dashedRing.setOrigin(-0.5f * dashedRing.getWidth(), -0.5f * dashedRing.getHeight());
+		dashedRing.setPosition(-0.5f * halfWidth, -0.5f * halfHeight);
+		dashedRing.setOuterRadius(0.5f);
+		dashedRing.setInnerRadius(0.4f);
+		dashedRing.setSegmentAngle(120.0f);
+		dashedRing.setSegmentSpacing(10.0f);
+		dashedRing.addAction(
+			sequence(
+//				segmentAngleTo(36.0f, 4.0f),
+//				segmentAngleTo(120.0f, 4.0f),
+				forever(
+					rotateBy(20.0f, 1.0f)
+				)
+			)
+		);
+		dashedRingSpriteGroup.addActor(dashedRing);
+
+		getStage().addActor(dashedRingSpriteGroup);
 
 		GameInputProcessor gameInputProcessor = new GameInputProcessor();
 		gameInputProcessor.setStage(getStage());

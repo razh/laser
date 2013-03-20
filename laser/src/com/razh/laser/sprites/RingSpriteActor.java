@@ -18,6 +18,7 @@ public class RingSpriteActor extends ProceduralSpriteActor {
 	@Override
 	public void setUniforms(ShaderProgram shaderProgram) {
 		super.setUniforms(shaderProgram);
+		shaderProgram.setUniformf("size", getWidth());
 		shaderProgram.setUniformf("outerRadius", getOuterRadius());
 		shaderProgram.setUniformf("innerRadius", getInnerRadius());
 	}
