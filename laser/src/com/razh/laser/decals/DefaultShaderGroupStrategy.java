@@ -21,6 +21,10 @@ public class DefaultShaderGroupStrategy extends ShaderGroupStrategy {
 		return 0;
 	}
 
+	public int decideGroup(DecalActor decalActor) {
+		return 0;
+	}
+
 	@Override
 	public void beforeGroup(int group, Array<Decal> contents) {
 		return;

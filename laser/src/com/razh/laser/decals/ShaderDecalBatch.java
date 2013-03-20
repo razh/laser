@@ -3,7 +3,6 @@ package com.razh.laser.decals;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.decals.DecalMaterial;
-import com.badlogic.gdx.graphics.g3d.decals.DefaultGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
@@ -53,7 +52,7 @@ public class ShaderDecalBatch extends DecalBatch {
 				}
 
 				decalActor.getDecal().getMaterial().set();
-
+				decalActor.setUniforms(shader);
 			}
 		}
 	}
