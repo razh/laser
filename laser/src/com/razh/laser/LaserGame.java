@@ -74,6 +74,7 @@ public class LaserGame extends Game {
 	private Map<String, BasicScreen> mScreens;
 
 	public static boolean DEBUG = false;
+	public static boolean USE_TEST_DATA = false;
 
 	@Override
 	public void create() {
@@ -237,123 +238,126 @@ public class LaserGame extends Game {
 	@Override
 	public void render() {
 		super.render();
-//		sprite.rotate(0.5f);
-//		sprite.setSize(sprite.getWidth() * 1.0001f, sprite.getHeight() * 1.0001f);
-//		laserSprite.rotate(0.5f);
-		laserSprite3.rotate(0.1f);
-//		ringSprite.setSize(ringSprite.getWidth() * 1.001f, ringSprite.getHeight() * 1.001f);
-//		arcSprite.rotate(0.1f);
-//		dashedRingSprite.rotate(2.0f);
-		time += 0.1f;
-		leftAngle += 1.0f;
-		if ( leftAngle > 180)
-			leftAngle = 0;
 
-		mSpriteBatch.begin();
-		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-//		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_COLOR);
-		mFont.draw(mSpriteBatch,
-		           Integer.toString(Gdx.graphics.getFramesPerSecond()),
-		           Gdx.graphics.getWidth() * 0.1f,
-		           Gdx.graphics.getHeight() * 0.9f);
-		mSpriteBatch.setShader(circleShader);
-		circleShader.setUniformf("size", sprite.getWidth());
-		circleShader.setUniformf("color", Color.WHITE);
-//		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-//		distanceFieldShader.setUniformf("spread", spread);
-//		distanceFieldShader.setUniformf("scale", sprite.getWidth() / 256f);
-		sprite.draw(mSpriteBatch);
-
-		mSpriteBatch.setShader(ringShader);
-		ringShader.setUniformf("color", Color.WHITE);
-		ringShader.setUniformf("size", ringSprite.getWidth());
-		ringShader.setUniformf("outerRadius", 0.5f);
-		ringShader.setUniformf("innerRadius", 0.4f);
-		ringSprite.draw(mSpriteBatch);
-
-		mSpriteBatch.setShader(arcShader);
-		arcShader.setUniformf("color", Color.WHITE);
-		arcShader.setUniformf("size", arcSprite.getWidth());
-		arcShader.setUniformf("outerRadius", 0.5f);
-		arcShader.setUniformf("innerRadius", 0.4f);
-		arcShader.setUniformf("leftAngle", 45 * MathUtils.degreesToRadians);
-		arcShader.setUniformf("rightAngle", 45 * MathUtils.degreesToRadians);
-		arcSprite.draw(mSpriteBatch);
-
-		mSpriteBatch.setShader(laserShader);
-		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-		laserShader.setUniformf("time", time);
-		laserSprite.draw(mSpriteBatch);
-		laserSprite2.draw(mSpriteBatch);
-		laserSprite3.draw(mSpriteBatch);
-
-		if (testFBO) {
-			mSpriteBatch.end();
-
-			frameBuffer.begin();
-			Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			Gdx.gl20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-			Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		if (USE_TEST_DATA) {
+	//		sprite.rotate(0.5f);
+	//		sprite.setSize(sprite.getWidth() * 1.0001f, sprite.getHeight() * 1.0001f);
+	//		laserSprite.rotate(0.5f);
+			laserSprite3.rotate(0.1f);
+	//		ringSprite.setSize(ringSprite.getWidth() * 1.001f, ringSprite.getHeight() * 1.001f);
+	//		arcSprite.rotate(0.1f);
+	//		dashedRingSprite.rotate(2.0f);
+			time += 0.1f;
+			leftAngle += 1.0f;
+			if ( leftAngle > 180)
+				leftAngle = 0;
 
 			mSpriteBatch.begin();
-		}
+			mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+	//		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_COLOR);
+			mFont.draw(mSpriteBatch,
+			           Integer.toString(Gdx.graphics.getFramesPerSecond()),
+			           Gdx.graphics.getWidth() * 0.1f,
+			           Gdx.graphics.getHeight() * 0.9f);
+			mSpriteBatch.setShader(circleShader);
+			circleShader.setUniformf("size", sprite.getWidth());
+			circleShader.setUniformf("color", Color.WHITE);
+	//		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+	//		distanceFieldShader.setUniformf("spread", spread);
+	//		distanceFieldShader.setUniformf("scale", sprite.getWidth() / 256f);
+			sprite.draw(mSpriteBatch);
 
-		mSpriteBatch.setShader(dashedRingShader);
+			mSpriteBatch.setShader(ringShader);
+			ringShader.setUniformf("color", Color.WHITE);
+			ringShader.setUniformf("size", ringSprite.getWidth());
+			ringShader.setUniformf("outerRadius", 0.5f);
+			ringShader.setUniformf("innerRadius", 0.4f);
+			ringSprite.draw(mSpriteBatch);
 
-		dashedRingShader.setUniformf("color", Color.WHITE);
-		dashedRingShader.setUniformf("size", dashedRingSprite.getWidth());
-		dashedRingShader.setUniformf("outerRadius", 0.5f);
-		dashedRingShader.setUniformf("innerRadius", 0.4f);
-		dashedRingShader.setUniformf("segmentAngle", 36.0f);
-		dashedRingShader.setUniformf("segmentSpacing", segmentSpacing);
-		if (testFBO) {
-			dashedRingSprite.setPosition(0.0f, 0.0f);
-			dashedRingSprite.draw(mSpriteBatch);
-			mSpriteBatch.end();
+			mSpriteBatch.setShader(arcShader);
+			arcShader.setUniformf("color", Color.WHITE);
+			arcShader.setUniformf("size", arcSprite.getWidth());
+			arcShader.setUniformf("outerRadius", 0.5f);
+			arcShader.setUniformf("innerRadius", 0.4f);
+			arcShader.setUniformf("leftAngle", 45 * MathUtils.degreesToRadians);
+			arcShader.setUniformf("rightAngle", 45 * MathUtils.degreesToRadians);
+			arcSprite.draw(mSpriteBatch);
 
-			frameBuffer.end();
-		} else {
-			dashedRingSprite.draw(mSpriteBatch);
-		}
+			mSpriteBatch.setShader(laserShader);
+			mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+			laserShader.setUniformf("time", time);
+			laserSprite.draw(mSpriteBatch);
+			laserSprite2.draw(mSpriteBatch);
+			laserSprite3.draw(mSpriteBatch);
 
-		if (testFBO) {
-			mSpriteBatch.begin();
-			mSpriteBatch.setShader(null);
-		}
-
-		for (int i = 0; i < 20; i++) {
 			if (testFBO) {
-				mSpriteBatch.draw(fboRegion, Gdx.graphics.getWidth() * array[2 * i], Gdx.graphics.getHeight() * array[2 * i + 1]);
+				mSpriteBatch.end();
+
+				frameBuffer.begin();
+				Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+				Gdx.gl20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+				mSpriteBatch.begin();
+			}
+
+			mSpriteBatch.setShader(dashedRingShader);
+
+			dashedRingShader.setUniformf("color", Color.WHITE);
+			dashedRingShader.setUniformf("size", dashedRingSprite.getWidth());
+			dashedRingShader.setUniformf("outerRadius", 0.5f);
+			dashedRingShader.setUniformf("innerRadius", 0.4f);
+			dashedRingShader.setUniformf("segmentAngle", 36.0f);
+			dashedRingShader.setUniformf("segmentSpacing", segmentSpacing);
+			if (testFBO) {
+				dashedRingSprite.setPosition(0.0f, 0.0f);
+				dashedRingSprite.draw(mSpriteBatch);
+				mSpriteBatch.end();
+
+				frameBuffer.end();
 			} else {
-				dashedRingSprite.setPosition(Gdx.graphics.getWidth() * array[2 * i], Gdx.graphics.getHeight() * array[2 * i + 1]);
 				dashedRingSprite.draw(mSpriteBatch);
 			}
+
+			if (testFBO) {
+				mSpriteBatch.begin();
+				mSpriteBatch.setShader(null);
+			}
+
+			for (int i = 0; i < 20; i++) {
+				if (testFBO) {
+					mSpriteBatch.draw(fboRegion, Gdx.graphics.getWidth() * array[2 * i], Gdx.graphics.getHeight() * array[2 * i + 1]);
+				} else {
+					dashedRingSprite.setPosition(Gdx.graphics.getWidth() * array[2 * i], Gdx.graphics.getHeight() * array[2 * i + 1]);
+					dashedRingSprite.draw(mSpriteBatch);
+				}
+			}
+			dashedRingSprite.setPosition(Gdx.graphics.getWidth() * 0.3f, Gdx.graphics.getHeight() * 0.5f);
+
+			mSpriteBatch.setShader(dashedLineShader);
+			dashedLineShader.setUniformf("color", Color.WHITE);
+			dashedLineShader.setUniformf("width", dashedLineSprite.getWidth());
+			dashedLineShader.setUniformf("height", dashedLineSprite.getHeight());
+			dashedLineShader.setUniformf("segmentLength", 64.0f);
+			dashedLineShader.setUniformf("segmentSpacing", 8.0f);
+			dashedLineSprite.draw(mSpriteBatch);
+			dashedLineSprite.rotate(0.2f);
+
+			segmentSpacing -= 0.05f;
+			if (segmentSpacing < 0.0f) {
+				segmentSpacing = 16.0f;
+			}
+
+			mSpriteBatch.setShader(laserGlowShader);
+			mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+			laserGlowShader.setUniformf("time", time);
+			laserGlowSprite.draw(mSpriteBatch);
+
+			mSpriteBatch.setShader(null);
+			mSpriteBatch.end();
+
+			Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		}
-		dashedRingSprite.setPosition(Gdx.graphics.getWidth() * 0.3f, Gdx.graphics.getHeight() * 0.5f);
-
-		mSpriteBatch.setShader(dashedLineShader);
-		dashedLineShader.setUniformf("color", Color.WHITE);
-		dashedLineShader.setUniformf("width", dashedLineSprite.getWidth());
-		dashedLineShader.setUniformf("height", dashedLineSprite.getHeight());
-		dashedLineShader.setUniformf("segmentLength", 64.0f);
-		dashedLineShader.setUniformf("segmentSpacing", 8.0f);
-		dashedLineSprite.draw(mSpriteBatch);
-		dashedLineSprite.rotate(0.2f);
-
-		segmentSpacing -= 0.05f;
-		if (segmentSpacing < 0.0f) {
-			segmentSpacing = 16.0f;
-		}
-
-		mSpriteBatch.setShader(laserGlowShader);
-		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-		laserGlowShader.setUniformf("time", time);
-		laserGlowSprite.draw(mSpriteBatch);
-
-		mSpriteBatch.setShader(null);
-		mSpriteBatch.end();
-
-		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		mFPSLogger.log();
 	}

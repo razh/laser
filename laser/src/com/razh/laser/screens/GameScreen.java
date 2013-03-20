@@ -135,7 +135,7 @@ public class GameScreen extends BasicScreen {
 //				segmentAngleTo(36.0f, 4.0f),
 //				segmentAngleTo(120.0f, 4.0f),
 				forever(
-					rotateBy(20.0f, 1.0f)
+					rotateBy(60.0f, 1.0f)
 				)
 			)
 		);
