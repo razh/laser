@@ -3,6 +3,7 @@ precision mediump float;
 #endif
 
 #define RADIANS_TO_DEGREES 0.01745
+#define EPSILON 0.001
 
 uniform float size;
 uniform vec4 color;
@@ -61,12 +62,12 @@ void main() {
   }
 
   // Left terminal.
-  if (angle < 0.0 && angle > -left_angle) {
+  if (angle < EPSILON && angle > -left_angle) {
     gl_FragColor.a = mix(gl_FragColor.a, 0.0, smoothstep(-left_angle, -left_angle + stroke_angle, angle));
   }
 
   // Right terminal.
-  if (angle > 0.0 && angle < right_angle) {
+  if (angle > EPSILON && angle < right_angle) {
     gl_FragColor.a = mix(gl_FragColor.a, 0.0, smoothstep(right_angle, right_angle - stroke_angle, angle));
   }
 }
