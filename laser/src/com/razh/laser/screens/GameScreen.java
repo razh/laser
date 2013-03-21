@@ -132,10 +132,11 @@ public class GameScreen extends BasicScreen {
 		dashedRing.setSegmentSpacing(10.0f);
 		dashedRing.addAction(
 			sequence(
-//				segmentAngleTo(36.0f, 4.0f),
-//				segmentAngleTo(120.0f, 4.0f),
+				segmentAngleTo(36.0f, 2.0f),
+				segmentAngleTo(120.0f, 2.0f),
+				segmentSpacingTo(22.5f, 1.0f),
 				forever(
-					rotateBy(60.0f, 1.0f)
+					rotateBy(-180.0f, 1.0f)
 				)
 			)
 		);
