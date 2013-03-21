@@ -5,23 +5,25 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.razh.laser.EntityActor;
 
 public class ProceduralSpriteActor extends SpriteActor {
-	private static Sprite mSprite;
+
+	private static Sprite sSprite;
 
 	public ProceduralSpriteActor() {
 		super();
 
-		if (mSprite == null) {
+		if (sSprite == null) {
 			createSprite();
 		}
+
+		setSprite(sSprite);
 	}
 
 	private void createSprite() {
 		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		Texture texture = new Texture(pixmap);
-		mSprite = new Sprite(texture);
+		sSprite = new Sprite(texture);
 		texture.dispose();
 		pixmap.dispose();
 	}
@@ -32,35 +34,16 @@ public class ProceduralSpriteActor extends SpriteActor {
 	}
 
 	public void draw(SpriteBatch spriteBatch, float parentAlpha, ShaderProgram shaderProgram) {
-		float width = getWidth();
-		float height = getHeight();
-
-		float halfWidth = 0.5f * width;
-		float halfHeight = 0.5f * height;
-
-		mSprite.setRotation(getRotation());
-		mSprite.setScale(getScaleX(), getScaleY());
-		mSprite.setSize(width, height);
-		mSprite.setOrigin(halfWidth, halfHeight);
-		mSprite.setPosition(getX() - halfWidth, getY() - halfHeight);
-		mSprite.setColor(getColor());
+		updateSprite();
 
 		if (shaderProgram != null) {
 			setUniforms(shaderProgram);
 		}
 
-		mSprite.draw(spriteBatch, parentAlpha);
-	}
-
-	public Sprite getSprite() {
-		return mSprite;
-	}
-
-	public void setSprite(Sprite sprite) {
-		mSprite.set(sprite);
+		sSprite.draw(spriteBatch, parentAlpha);
 	}
 
 	public void setUniforms(ShaderProgram shaderProgram) {
-		shaderProgram.setUniformf("color", mSprite.getColor());
+		shaderProgram.setUniformf("color", sSprite.getColor());
 	}
 }

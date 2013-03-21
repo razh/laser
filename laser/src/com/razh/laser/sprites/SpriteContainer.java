@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.laser.EntityActor;
-import com.razh.laser.ShaderStage;
 
 public class SpriteContainer extends EntityActor {
 
