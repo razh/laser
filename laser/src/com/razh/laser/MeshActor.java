@@ -108,16 +108,16 @@ public class MeshActor extends EntityActor {
 
 	public Vector2 worldToLocalCoordinates(Vector2 worldCoords) {
 		return worldCoords.cpy()
-		                  .sub(getX(), getY())
+		                  .sub(getX() + getOriginX(), getY() + getOriginY())
 		                  .rotate(-getRotation())
-		                  .div(getWidth(), getHeight());
+		                  .div(getWidth() * getScaleX(), getHeight() * getScaleY());
 	}
 
 	public Vector2 localToWorldCoordinates(Vector2 localCoords) {
 		return localCoords.cpy()
-		                  .mul(getWidth(), getHeight())
+		                  .mul(getWidth() * getScaleX(), getHeight() * getScaleY())
 		                  .rotate(getRotation())
-		                  .add(getX(), getY());
+		                  .add(getX() + getOriginX(), getY() + getOriginY());
 	}
 
 	public Mesh getMesh() {
@@ -153,17 +153,17 @@ public class MeshActor extends EntityActor {
 	}
 
 	public void setupModelMatrix() {
-		getModelMatrix().idt()
-		                .translate(getX(), getY(), 0.0f)
-		                .rotate(Vector3.Z, getRotation())
-		                .scale(getWidth(), getHeight(), 1.0f);
+		mModelMatrix.idt()
+		            .translate(getX() + getOriginX(), getY() + getOriginY(), 0.0f)
+		            .rotate(Vector3.Z, getRotation())
+		            .scale(getWidth() * getScaleX(), getHeight() * getScaleY(), 1.0f);
 	}
 
 	public Matrix3 getTransformMatrix() {
 		return mTransformMatrix.idt()
-		                       .translate(-getX(), -getY())
+		                       .translate(-(getX() + getOriginX()), -(getY() + getOriginY()))
 		                       .rotate(-getRotation())
-		                       .scale(1.0f / getWidth(), 1.0f / getHeight());
+		                       .scale(1.0f / (getWidth() * getScaleX()), 1.0f / (getHeight() * getScaleY()));
 	}
 
 	public float[] getVertices() {

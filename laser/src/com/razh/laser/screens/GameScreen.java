@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
+import com.razh.laser.Geometry;
 import com.razh.laser.LaserGame;
+import com.razh.laser.MeshActor;
 import com.razh.laser.MeshStage;
 import com.razh.laser.Shader;
 import com.razh.laser.entities.Entity;
@@ -33,7 +35,7 @@ public class GameScreen extends BasicScreen {
 		setStage(new MeshStage());
 
 		Entity entity = EntityFactory.createEmitter();
-		getMeshStage().addMeshActor(entity.getActor());
+		getMeshStage().addActor(entity.getActor());
 		entity.getActor().addAction(
 			forever(
 				rotateBy(360.0f, 1.0f)
@@ -41,10 +43,10 @@ public class GameScreen extends BasicScreen {
 		);
 
 		Entity entity2 = EntityFactory.createEmitter();
-		getMeshStage().addMeshActor(entity2.getActor());
+		getMeshStage().addActor(entity2.getActor());
 
 		Entity entity3 = EntityFactory.createCircleThing();
-		getMeshStage().addMeshActor(entity3.getActor());
+		getMeshStage().addActor(entity3.getActor());
 
 		getMeshStage().setShaderProgram(Shader.createSimpleMeshShader());
 		getMeshStage().setColor(Color.DARK_GRAY);
@@ -137,7 +139,13 @@ public class GameScreen extends BasicScreen {
 				segmentAngleTo(120.0f, 2.0f),
 				segmentSpacingTo(22.5f, 1.0f),
 				forever(
-					rotateBy(-180.0f, 1.0f)
+					parallel(
+						rotateBy(-180.0f, 1.0f),
+						sequence(
+							scaleTo(2.0f, 2.0f, 2.0f),
+							scaleTo(1.0f, 1.0f, 2.0f)
+						)
+					)
 				)
 			)
 		);
@@ -159,9 +167,18 @@ public class GameScreen extends BasicScreen {
 		circle.setColor(0.8f, 0.0f, 0.0f, 1.0f);
 		circle.setRadius(100.0f);
 
+		MeshActor mesh = new MeshActor();
+		mesh.setMesh(Geometry.createCircle(6));
+		mesh.setMode(GL20.GL_TRIANGLE_FAN);
+		mesh.setColor(0.5f, 0.0f, 0.0f, 1.0f);
+		mesh.setOrigin(-200.0f, 200.0f);
+		mesh.setWidth(20.0f);
+		mesh.setHeight(20.0f);
+
 		SpriteContainer container = new SpriteContainer();
 		container.addComponent(arcSprite);
 		container.addComponent(circle);
+		container.addComponent(mesh);
 
 		getMeshStage().addSpriteContainer(container);
 		container.addAction(
@@ -174,6 +191,10 @@ public class GameScreen extends BasicScreen {
 						moveBy(700.0f, 0.0f, 5.0f),
 						moveBy(-700.0f, 0.0f, 5.0f)
 					)
+				),
+				sequence(
+					scaleTo(2, 2, 5.0f),
+					scaleTo(1.0f, 1.0f, 5.0f)
 				)
 			)
 		);

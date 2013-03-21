@@ -13,7 +13,7 @@ public class CircleSpriteActor extends ProceduralSpriteActor {
 	@Override
 	public void setUniforms(ShaderProgram shaderProgram) {
 		super.setUniforms(shaderProgram);
-		shaderProgram.setUniformf("radius", getRadius());
+		shaderProgram.setUniformf("radius", getRadius() * getScale());
 	}
 
 	public float getRadius() {
@@ -23,6 +23,10 @@ public class CircleSpriteActor extends ProceduralSpriteActor {
 	public void setRadius(float radius) {
 		setWidth(radius);
 		setHeight(radius);
+	}
+
+	public float getScale() {
+		return getScaleX();
 	}
 
 	/**

@@ -109,7 +109,16 @@ public class MeshStage extends ShaderStage {
 		return getMeshRoot().hit(stageX, stageY, touchable);
 	}
 
-	public void addMeshActor(Actor actor) {
+	@Override
+	public void addActor(Actor actor) {
+		if (actor instanceof MeshActor) {
+			addMeshActor((MeshActor) actor);
+		} else {
+			super.addActor(actor);
+		}
+	}
+
+	public void addMeshActor(MeshActor actor) {
 		mRoot.addActor(actor);
 	}
 
