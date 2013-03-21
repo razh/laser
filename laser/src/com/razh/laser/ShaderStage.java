@@ -38,16 +38,22 @@ public class ShaderStage extends Stage {
 			group.addActor(actor);
 		} else {
 			// Otherwise, create a new group.
-			group = addProceduralSpriteGroup(actor.getClass());
-			group.addActor(actor);
+			addProceduralSpriteGroup(actor.getClass()).addActor(actor);
 		}
 	}
 
+	/**
+	 * Create ProceduralSpriteGroup for type. Returns it for chaining.
+	 * @param type
+	 * @return ProceduralSpriteGroup
+	 */
 	public ProceduralSpriteGroup addProceduralSpriteGroup(Class<?> type) {
 		ProceduralSpriteGroup group = new ProceduralSpriteGroup();
 		group.setShaderProgram(Shader.getShaderForType(type));
+
 		mGroups.put(type, group);
 		addActor(group);
+
 		return group;
 	}
 
@@ -67,5 +73,6 @@ public class ShaderStage extends Stage {
 		}
 
 		components.end();
+		addActor(container);
 	}
 }

@@ -8,24 +8,21 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class ProceduralSpriteActor extends SpriteActor {
 
-	private static Sprite sSprite;
-
 	public ProceduralSpriteActor() {
 		super();
 
-		if (sSprite == null) {
-			createSprite();
-		}
-
-		setSprite(sSprite);
+		setSprite(createSprite());
 	}
 
-	private void createSprite() {
+	private Sprite createSprite() {
 		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
 		Texture texture = new Texture(pixmap);
-		sSprite = new Sprite(texture);
+		Sprite sprite = new Sprite(texture);
+
 		texture.dispose();
 		pixmap.dispose();
+
+		return sprite;
 	}
 
 	@Override
@@ -40,10 +37,10 @@ public class ProceduralSpriteActor extends SpriteActor {
 			setUniforms(shaderProgram);
 		}
 
-		sSprite.draw(spriteBatch, parentAlpha);
+		getSprite().draw(spriteBatch, parentAlpha);
 	}
 
 	public void setUniforms(ShaderProgram shaderProgram) {
-		shaderProgram.setUniformf("color", sSprite.getColor());
+		shaderProgram.setUniformf("color", getSprite().getColor());
 	}
 }

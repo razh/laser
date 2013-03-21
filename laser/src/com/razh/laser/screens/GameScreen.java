@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
 import com.razh.laser.LaserGame;
 import com.razh.laser.MeshStage;
 import com.razh.laser.Shader;
@@ -20,6 +19,7 @@ import com.razh.laser.sprites.CircleSpriteActor;
 import com.razh.laser.sprites.DashedRingSpriteActor;
 import com.razh.laser.sprites.ProceduralSpriteActor;
 import com.razh.laser.sprites.ProceduralSpriteGroup;
+import com.razh.laser.sprites.SpriteContainer;
 
 public class GameScreen extends BasicScreen {
 
@@ -155,7 +155,28 @@ public class GameScreen extends BasicScreen {
 		arcSprite.setRightAngle(45.0f);
 		arcSprite.setPosition(-0.25f * halfWidth, 0.0f * halfHeight);
 
-		getMeshStage().addProceduralSpriteActor(arcSprite);
+		CircleSpriteActor circle = new CircleSpriteActor();
+		circleSprite.setColor(0.8f, 0.0f, 0.0f, 1.0f);
+		circleSprite.setRadius(100.0f);
+
+		SpriteContainer container = new SpriteContainer();
+		container.addComponent(arcSprite);
+		container.addComponent(circleSprite);
+
+		getMeshStage().addSpriteContainer(container);
+		container.addAction(
+			parallel(
+				forever(
+					rotateBy(-1800.0f, 10.0f)
+				),
+				forever(
+					sequence(
+						moveBy(700.0f, 0.0f, 5.0f),
+						moveBy(-700.0f, 0.0f, 5.0f)
+					)
+				)
+			)
+		);
 
 		GameInputProcessor gameInputProcessor = new GameInputProcessor();
 		gameInputProcessor.setStage(getStage());
