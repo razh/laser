@@ -2,6 +2,8 @@
 precision mediump float;
 #endif
 
+#define DEGREES_TO_RADIANS 57.29578
+
 uniform float size;
 uniform vec4 color;
 
@@ -42,8 +44,8 @@ void main() {
 
   float angle = atan(y, x);
   // 180 / PI ~= 57.2958.
-  float sector = mod(angle * 57.2958, segmentAngle);
-  float stroke_angle = (2.0 * stroke_width) * 57.2958;
+  float sector = mod(angle * DEGREES_TO_RADIANS, segmentAngle);
+  float stroke_angle = (2.0 * stroke_width) * DEGREES_TO_RADIANS;
 
   gl_FragColor = color;
 

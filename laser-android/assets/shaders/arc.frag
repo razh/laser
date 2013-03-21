@@ -2,6 +2,8 @@
 precision mediump float;
 #endif
 
+#define RADIANS_TO_DEGREES 0.01745
+
 uniform float size;
 uniform vec4 color;
 
@@ -43,6 +45,9 @@ void main() {
   float angle = atan(y, x);
   float stroke_angle = 2.0 * stroke_width;
 
+  float left_angle = leftAngle * RADIANS_TO_DEGREES;
+  float right_angle = rightAngle * RADIANS_TO_DEGREES;
+
   gl_FragColor = color;
 
   // Inner.
@@ -56,12 +61,12 @@ void main() {
   }
 
   // Left terminal.
-  if (angle < 0.0 && angle > -leftAngle) {
-    gl_FragColor.a = mix(gl_FragColor.a, 0.0, smoothstep(-leftAngle, -leftAngle + stroke_angle, angle));
+  if (angle < 0.0 && angle > -left_angle) {
+    gl_FragColor.a = mix(gl_FragColor.a, 0.0, smoothstep(-left_angle, -left_angle + stroke_angle, angle));
   }
 
   // Right terminal.
-  if (angle > 0.0 && angle < rightAngle) {
-    gl_FragColor.a = mix(gl_FragColor.a, 0.0, smoothstep(rightAngle, rightAngle - stroke_angle, angle));
+  if (angle > 0.0 && angle < right_angle) {
+    gl_FragColor.a = mix(gl_FragColor.a, 0.0, smoothstep(right_angle, right_angle - stroke_angle, angle));
   }
 }

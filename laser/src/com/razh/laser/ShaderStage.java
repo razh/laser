@@ -31,15 +31,24 @@ public class ShaderStage extends Stage {
 		mGroups = new HashMap<Class<?>, ProceduralSpriteGroup>();
 	}
 
-	public void addSpriteActor(Actor actor) {
-		mGroups.get(actor.getClass()).addActor(actor);
+	public void addProceduralSpriteActor(Actor actor) {
+		ProceduralSpriteGroup group = mGroups.get(actor.getClass());
+		// Add if the group exists.
+		if (group != null) {
+			group.addActor(actor);
+		} else {
+			// Otherwise, create a new group.
+			group = addProceduralSpriteGroup(actor.getClass());
+			group.addActor(actor);
+		}
 	}
 
-	public void addSpriteGroup(Class<?> type) {
+	public ProceduralSpriteGroup addProceduralSpriteGroup(Class<?> type) {
 		ProceduralSpriteGroup group = new ProceduralSpriteGroup();
 		group.setShaderProgram(Shader.getShaderForType(type));
 		mGroups.put(type, group);
 		addActor(group);
+		return group;
 	}
 
 	public void addSpriteContainer(SpriteContainer container) {
@@ -51,7 +60,7 @@ public class ShaderStage extends Stage {
 			actor = actors[i];
 
 			if (actor instanceof ProceduralSpriteActor) {
-				addSpriteActor(actor);
+				addProceduralSpriteActor(actor);
 			} else {
 				addActor(actor);
 			}

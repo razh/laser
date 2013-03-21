@@ -8,12 +8,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.razh.laser.LaserGame;
 import com.razh.laser.MeshStage;
 import com.razh.laser.Shader;
 import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
 import com.razh.laser.input.GameInputProcessor;
+import com.razh.laser.sprites.ArcSpriteActor;
 import com.razh.laser.sprites.CircleSpriteActor;
 import com.razh.laser.sprites.DashedRingSpriteActor;
 import com.razh.laser.sprites.ProceduralSpriteActor;
@@ -124,7 +126,6 @@ public class GameScreen extends BasicScreen {
 		dashedRing.setColor(0.0f, 1.0f, 1.0f, 1.0f);
 		dashedRing.setWidth(200.0f);
 		dashedRing.setHeight(200.0f);
-		dashedRing.setOrigin(-0.5f * dashedRing.getWidth(), -0.5f * dashedRing.getHeight());
 		dashedRing.setPosition(-0.5f * halfWidth, -0.5f * halfHeight);
 		dashedRing.setOuterRadius(0.5f);
 		dashedRing.setInnerRadius(0.4f);
@@ -143,6 +144,18 @@ public class GameScreen extends BasicScreen {
 		dashedRingSpriteGroup.addActor(dashedRing);
 
 		getStage().addActor(dashedRingSpriteGroup);
+
+		ArcSpriteActor arcSprite = new ArcSpriteActor();
+		arcSprite.setColor(0.8f, 0.8f, 0.8f, 1.0f);
+		arcSprite.setWidth(300.0f);
+		arcSprite.setHeight(300.0f);
+		arcSprite.setOuterRadius(0.5f);
+		arcSprite.setInnerRadius(0.4f);
+		arcSprite.setLeftAngle(45.0f);
+		arcSprite.setRightAngle(45.0f);
+		arcSprite.setPosition(-0.25f * halfWidth, 0.0f * halfHeight);
+
+		getMeshStage().addProceduralSpriteActor(arcSprite);
 
 		GameInputProcessor gameInputProcessor = new GameInputProcessor();
 		gameInputProcessor.setStage(getStage());

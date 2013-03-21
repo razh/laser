@@ -260,7 +260,7 @@ public class LaserGame extends Game {
 			           Gdx.graphics.getWidth() * 0.1f,
 			           Gdx.graphics.getHeight() * 0.9f);
 			mSpriteBatch.setShader(circleShader);
-			circleShader.setUniformf("size", sprite.getWidth());
+			circleShader.setUniformf("radius", sprite.getWidth());
 			circleShader.setUniformf("color", Color.WHITE);
 	//		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 	//		distanceFieldShader.setUniformf("spread", spread);
@@ -279,8 +279,8 @@ public class LaserGame extends Game {
 			arcShader.setUniformf("size", arcSprite.getWidth());
 			arcShader.setUniformf("outerRadius", 0.5f);
 			arcShader.setUniformf("innerRadius", 0.4f);
-			arcShader.setUniformf("leftAngle", 45 * MathUtils.degreesToRadians);
-			arcShader.setUniformf("rightAngle", 45 * MathUtils.degreesToRadians);
+			arcShader.setUniformf("leftAngle", 45);
+			arcShader.setUniformf("rightAngle", 45);
 			arcSprite.draw(mSpriteBatch);
 
 			mSpriteBatch.setShader(laserShader);

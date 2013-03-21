@@ -26,7 +26,7 @@ public class ArcSpriteActor extends RingSpriteActor {
 	}
 
 	public void setLeftAngle(float leftAngle) {
-		mLeftAngle = MathUtils.clamp(leftAngle, 0.0f, MathUtils.PI);
+		mLeftAngle = MathUtils.clamp(leftAngle, 0.0f, 180.0f);
 	}
 
 	public float getRightAngle() {
@@ -34,7 +34,7 @@ public class ArcSpriteActor extends RingSpriteActor {
 	}
 
 	public void setRightAngle(float rightAngle) {
-		mRightAngle = MathUtils.clamp(rightAngle, 0.0f, MathUtils.PI);
+		mRightAngle = MathUtils.clamp(rightAngle, 0.0f, 180.0f);
 	}
 
 	/**

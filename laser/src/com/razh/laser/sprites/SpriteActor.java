@@ -19,7 +19,7 @@ public class SpriteActor extends EntityActor {
 	}
 
 	public void setSprite(Sprite sprite) {
-		mSprite.set(sprite);
+		mSprite = sprite;
 	}
 
 	public void updateSprite() {
