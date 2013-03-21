@@ -239,6 +239,14 @@ public class LaserGame extends Game {
 	public void render() {
 		super.render();
 
+		mSpriteBatch.begin();
+		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+//		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_COLOR);
+		mFont.draw(mSpriteBatch,
+		           Integer.toString(Gdx.graphics.getFramesPerSecond()),
+		           Gdx.graphics.getWidth() * 0.1f,
+		           Gdx.graphics.getHeight() * 0.9f);
+
 		if (USE_TEST_DATA) {
 	//		sprite.rotate(0.5f);
 	//		sprite.setSize(sprite.getWidth() * 1.0001f, sprite.getHeight() * 1.0001f);
@@ -252,13 +260,6 @@ public class LaserGame extends Game {
 			if ( leftAngle > 180)
 				leftAngle = 0;
 
-			mSpriteBatch.begin();
-			mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-	//		mSpriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_COLOR);
-			mFont.draw(mSpriteBatch,
-			           Integer.toString(Gdx.graphics.getFramesPerSecond()),
-			           Gdx.graphics.getWidth() * 0.1f,
-			           Gdx.graphics.getHeight() * 0.9f);
 			mSpriteBatch.setShader(circleShader);
 			circleShader.setUniformf("radius", sprite.getWidth());
 			circleShader.setUniformf("color", Color.WHITE);
@@ -354,10 +355,10 @@ public class LaserGame extends Game {
 			laserGlowSprite.draw(mSpriteBatch);
 
 			mSpriteBatch.setShader(null);
-			mSpriteBatch.end();
-
-			Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		}
+
+		mSpriteBatch.end();
+		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		mFPSLogger.log();
 	}

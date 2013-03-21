@@ -146,7 +146,7 @@ public class GameScreen extends BasicScreen {
 		getStage().addActor(dashedRingSpriteGroup);
 
 		ArcSpriteActor arcSprite = new ArcSpriteActor();
-		arcSprite.setColor(0.8f, 0.8f, 0.8f, 1.0f);
+		arcSprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 		arcSprite.setWidth(300.0f);
 		arcSprite.setHeight(300.0f);
 		arcSprite.setOuterRadius(0.5f);
@@ -156,12 +156,12 @@ public class GameScreen extends BasicScreen {
 		arcSprite.setPosition(-0.25f * halfWidth, 0.0f * halfHeight);
 
 		CircleSpriteActor circle = new CircleSpriteActor();
-		circleSprite.setColor(0.8f, 0.0f, 0.0f, 1.0f);
-		circleSprite.setRadius(100.0f);
+		circle.setColor(0.8f, 0.0f, 0.0f, 1.0f);
+		circle.setRadius(100.0f);
 
 		SpriteContainer container = new SpriteContainer();
 		container.addComponent(arcSprite);
-		container.addComponent(circleSprite);
+		container.addComponent(circle);
 
 		getMeshStage().addSpriteContainer(container);
 		container.addAction(
