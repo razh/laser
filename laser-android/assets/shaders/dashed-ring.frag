@@ -2,7 +2,7 @@
 precision mediump float;
 #endif
 
-#define DEGREES_TO_RADIANS 57.29578
+const float DEGREES_TO_RADIANS = 57.29578;
 
 uniform float size;
 uniform vec4 color;

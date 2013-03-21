@@ -2,8 +2,8 @@
 precision mediump float;
 #endif
 
-#define RADIANS_TO_DEGREES 0.01745
-#define EPSILON 0.001
+const float RADIANS_TO_DEGREES = 0.01745;
+const float EPSILON = 0.001;
 
 uniform float size;
 uniform vec4 color;
