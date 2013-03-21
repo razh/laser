@@ -1,5 +1,8 @@
 package com.razh.laser;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
+
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -172,4 +175,36 @@ public class Actor3D extends EntityActor {
 	/**
 	 * Static convenience methods for actions.
 	 */
+	static public MoveBy3DAction moveBy3D(float amountX, float amountY, float amountZ) {
+		return moveBy3D(amountX, amountY, amountZ, 0, null);
+	}
+
+	static public MoveBy3DAction moveBy3D(float amountX, float amountY, float amountZ, float duration) {
+		return moveBy3D(amountX, amountY, amountZ, duration, null);
+	}
+
+	static public MoveBy3DAction moveBy3D(float amountX, float amountY, float amountZ, float duration, Interpolation interpolation) {
+		MoveBy3DAction action = action(MoveBy3DAction.class);
+		action.setAmount(amountX, amountY, amountZ);
+		action.setDuration(duration);
+		action.setInterpolation(interpolation);
+		return action;
+	}
+
+
+	static public MoveTo3DAction moveTo3D(float x, float y, float z) {
+		return moveTo3D(x, y, z, 0, null);
+	}
+
+	static public MoveTo3DAction moveTo3D(float x, float y, float z, float duration) {
+		return moveTo3D(x, y, z, duration, null);
+	}
+
+	static public MoveTo3DAction moveTo3D(float x, float y, float z, float duration, Interpolation interpolation) {
+		MoveTo3DAction action = action(MoveTo3DAction.class);
+		action.setPosition(x, y, z);
+		action.setDuration(duration);
+		action.setInterpolation(interpolation);
+		return action;
+	}
 }
