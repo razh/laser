@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.laser.EntityActor;
-import com.razh.laser.ProceduralSpriteActor;
 import com.razh.laser.ShaderStage;
 
 public class SpriteContainer extends EntityActor {
@@ -19,16 +18,6 @@ public class SpriteContainer extends EntityActor {
 	 */
 	public void addComponent(Actor actor) {
 		mComponents.add(actor);
-	}
-
-	public void addTo(ShaderStage stage) {
-		Actor[] actors = mComponents.begin();
-
-		for (int i = 0, n = mComponents.size; i < n; i++) {
-			stage.addSpriteActor(actors[i]);
-		}
-
-		mComponents.end();
 	}
 
 	@Override

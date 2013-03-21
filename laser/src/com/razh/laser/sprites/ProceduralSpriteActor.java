@@ -1,12 +1,13 @@
-package com.razh.laser;
+package com.razh.laser.sprites;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.razh.laser.EntityActor;
 
-public class ProceduralSpriteActor extends EntityActor {
+public class ProceduralSpriteActor extends SpriteActor {
 	private static Sprite mSprite;
 
 	public ProceduralSpriteActor() {

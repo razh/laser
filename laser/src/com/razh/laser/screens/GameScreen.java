@@ -10,14 +10,14 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.razh.laser.LaserGame;
 import com.razh.laser.MeshStage;
-import com.razh.laser.ProceduralSpriteActor;
 import com.razh.laser.Shader;
-import com.razh.laser.ProceduralSpriteGroup;
 import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
 import com.razh.laser.input.GameInputProcessor;
 import com.razh.laser.sprites.CircleSpriteActor;
 import com.razh.laser.sprites.DashedRingSpriteActor;
+import com.razh.laser.sprites.ProceduralSpriteActor;
+import com.razh.laser.sprites.ProceduralSpriteGroup;
 
 public class GameScreen extends BasicScreen {
 

@@ -1,4 +1,4 @@
-package com.razh.laser;
+package com.razh.laser.sprites;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
