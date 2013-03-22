@@ -32,7 +32,7 @@ public class SpriteActor extends EntityActor {
 		mSprite.setRotation(getRotation());
 		mSprite.setScale(getScaleX(), getScaleY());
 		mSprite.setSize(width, height);
-		mSprite.setOrigin(halfWidth, halfHeight);
+		mSprite.setOrigin(getOriginX() + halfWidth, getOriginY() + halfHeight);
 		mSprite.setPosition(getX() - halfWidth, getY() - halfHeight);
 		mSprite.setColor(getColor());
 	}

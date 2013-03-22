@@ -50,7 +50,7 @@ public class GameScreen extends BasicScreen {
 		getMeshStage().addActor(entity2.getActor());
 
 		Entity entity3 = EntityFactory.createCircleThing();
-		getMeshStage().addActor(entity3.getActor());
+		getMeshStage().addProceduralSpriteActor(entity3.getActor());
 
 		getMeshStage().setShaderProgram(Shader.createSimpleMeshShader());
 		getMeshStage().setColor(Color.BLACK);
@@ -189,6 +189,18 @@ public class GameScreen extends BasicScreen {
 		shipSprite.setSprite(new Sprite(texture));
 		getMeshStage().addProceduralSpriteActor(shipSprite);
 
+		SpriteActor shipSprite2 = new SpriteActor();
+		shipSprite2.setPosition(0.25f * halfWidth, -0.25f * halfHeight);
+		shipSprite2.setWidth(300.0f);
+		shipSprite2.setHeight(300.0f);
+		shipSprite2.setOrigin(0.0f, 0.0f);
+		shipSprite2.addAction(forever(rotateBy(180.0f, 1.0f)));
+
+		Texture texture2 = new Texture("data/test_ship2.png");
+		texture2.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		shipSprite2.setSprite(new Sprite(texture2));
+		getMeshStage().addProceduralSpriteActor(shipSprite2);
+
 		SpriteContainer container = new SpriteContainer();
 		container.addComponent(arcSprite);
 		container.addComponent(circle);
@@ -208,7 +220,8 @@ public class GameScreen extends BasicScreen {
 				),
 				sequence(
 					scaleTo(2, 2, 5.0f),
-					scaleTo(1.0f, 1.0f, 5.0f)
+					scaleTo(1.0f, 1.0f, 5.0f),
+					removeActor()
 				)
 			)
 		);

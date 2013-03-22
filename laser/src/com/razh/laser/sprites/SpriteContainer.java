@@ -13,7 +13,7 @@ public class SpriteContainer extends EntityActor {
 	 */
 	@Override
 	public void act(float delta) {
-		super.act(delta);
+
 
 		Actor[] actors = mComponents.begin();
 
@@ -27,6 +27,7 @@ public class SpriteContainer extends EntityActor {
 		}
 
 		mComponents.end();
+		super.act(delta);
 	}
 
 	/**
@@ -40,5 +41,23 @@ public class SpriteContainer extends EntityActor {
 
 	public SnapshotArray<Actor> getComponents() {
 		return mComponents;
+	}
+
+	@Override
+	public boolean remove() {
+		if (!super.remove()) {
+			return false;
+		}
+
+		// Remove components as well.
+		Actor[] actors = mComponents.begin();
+
+		for (int i = 0, n = mComponents.size; i < n; i++) {
+			actors[i].remove();
+		}
+
+		mComponents.end();
+
+		return true;
 	}
 }
