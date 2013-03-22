@@ -6,6 +6,9 @@ import static com.razh.laser.sprites.DashedRingSpriteActor.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.razh.laser.Geometry;
@@ -21,6 +24,7 @@ import com.razh.laser.sprites.CircleSpriteActor;
 import com.razh.laser.sprites.DashedRingSpriteActor;
 import com.razh.laser.sprites.ProceduralSpriteActor;
 import com.razh.laser.sprites.ProceduralSpriteGroup;
+import com.razh.laser.sprites.SpriteActor;
 import com.razh.laser.sprites.SpriteContainer;
 
 public class GameScreen extends BasicScreen {
@@ -174,6 +178,16 @@ public class GameScreen extends BasicScreen {
 		mesh.setOrigin(200.0f, 0.0f);
 		mesh.setWidth(20.0f);
 		mesh.setHeight(20.0f);
+
+		SpriteActor shipSprite = new SpriteActor();
+		shipSprite.setPosition(-0.25f * halfWidth, 0.25f * halfHeight);
+		shipSprite.setWidth(300.0f);
+		shipSprite.setHeight(300.0f);
+
+		Texture texture = new Texture("data/test_ship.png");
+		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		shipSprite.setSprite(new Sprite(texture));
+		getMeshStage().addProceduralSpriteActor(shipSprite);
 
 		SpriteContainer container = new SpriteContainer();
 		container.addComponent(arcSprite);

@@ -44,7 +44,7 @@ public class MeshActor extends EntityActor {
 	}
 
 	public void draw() {
-		if (mShaderProgram == null || !isVisible()) {
+		if (mShaderProgram == null) {
 			return;
 		}
 

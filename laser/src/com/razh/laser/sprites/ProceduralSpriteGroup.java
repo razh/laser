@@ -35,6 +35,8 @@ public class ProceduralSpriteGroup extends Group {
 				((ProceduralSpriteActor) child).draw(spriteBatch, parentAlpha, mShaderProgram);
 			} else if (child instanceof MeshActor){
 				((MeshActor) child).draw(mShaderProgram);
+			} else {
+				child.draw(spriteBatch, parentAlpha);
 			}
 		}
 

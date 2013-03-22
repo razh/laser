@@ -116,14 +116,7 @@ public class MeshStage extends ShaderStage {
 
 	@Override
 	public void addActor(Actor actor) {
-//		if (actor instanceof MeshActor) {
-//			addMeshActor((MeshActor) actor);
-//		} else {
-		if (actor instanceof MeshActor) {
-			System.out.println("HELLO MESHSTAGE-123");
-		}
-			super.addActor(actor);
-//		}
+		super.addActor(actor);
 	}
 
 	public void addMeshActor(MeshActor actor) {
