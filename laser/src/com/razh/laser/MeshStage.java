@@ -60,12 +60,17 @@ public class MeshStage extends ShaderStage {
 		}
 	}
 
+	private float time = 0.0f;
 	@Override
 	public void draw() {
 		super.draw();
+		time += 0.01f;
 		Camera camera = getCamera();
-		camera.rotateAround(Vector3.Zero, Vector3.X, 0.1f);
-		camera.rotateAround(Vector3.Zero, Vector3.Y, -0.1f);
+//		camera.rotateAround(Vector3.Zero, Vector3.X, 0.1f);
+//		camera.rotateAround(Vector3.Zero, Vector3.Y, -0.1f);
+		camera.position.x = (float) (200.0f * Math.cos(time));
+		camera.position.y = (float) (200.0f * Math.sin(time)) - 200.0f;
+		camera.position.z = (float) (200.0f * Math.abs(Math.cos(time))) + 400.0f;
 //		camera.rotate(Vector3.Y, 0.2f);
 		camera.lookAt(0, 0, 0);
 
@@ -87,19 +92,19 @@ public class MeshStage extends ShaderStage {
 		}
 
 
-		if (mShaderProgram != null) {
-			mShaderProgram.begin();
-
-			mShaderProgram.setUniformMatrix("projectionMatrix", camera.projection);
-			mShaderProgram.setUniformMatrix("viewMatrix", camera.view);
-
-			mRoot.draw(mShaderProgram);
-			if (LaserGame.DEBUG) {
-				mTestGroup.draw(mShaderProgram);
-			}
-
-			mShaderProgram.end();
-		}
+//		if (mShaderProgram != null) {
+//			mShaderProgram.begin();
+//
+//			mShaderProgram.setUniformMatrix("projectionMatrix", camera.projection);
+//			mShaderProgram.setUniformMatrix("viewMatrix", camera.view);
+//
+//			mRoot.draw(mShaderProgram);
+//			if (LaserGame.DEBUG) {
+//				mTestGroup.draw(mShaderProgram);
+//			}
+//
+//			mShaderProgram.end();
+//		}
 
 		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
 	}
@@ -111,11 +116,14 @@ public class MeshStage extends ShaderStage {
 
 	@Override
 	public void addActor(Actor actor) {
+//		if (actor instanceof MeshActor) {
+//			addMeshActor((MeshActor) actor);
+//		} else {
 		if (actor instanceof MeshActor) {
-			addMeshActor((MeshActor) actor);
-		} else {
-			super.addActor(actor);
+			System.out.println("HELLO MESHSTAGE-123");
 		}
+			super.addActor(actor);
+//		}
 	}
 
 	public void addMeshActor(MeshActor actor) {

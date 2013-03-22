@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.razh.laser.MeshActor;
 
 public class ProceduralSpriteGroup extends Group {
 	private ShaderProgram mShaderProgram;
@@ -32,6 +33,8 @@ public class ProceduralSpriteGroup extends Group {
 
 			if (child instanceof ProceduralSpriteActor) {
 				((ProceduralSpriteActor) child).draw(spriteBatch, parentAlpha, mShaderProgram);
+			} else if (child instanceof MeshActor){
+				((MeshActor) child).draw(mShaderProgram);
 			}
 		}
 

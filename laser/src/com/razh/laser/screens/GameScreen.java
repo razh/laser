@@ -49,7 +49,7 @@ public class GameScreen extends BasicScreen {
 		getMeshStage().addActor(entity3.getActor());
 
 		getMeshStage().setShaderProgram(Shader.createSimpleMeshShader());
-		getMeshStage().setColor(Color.DARK_GRAY);
+		getMeshStage().setColor(Color.BLACK);
 
 		circleSpriteGroup = new ProceduralSpriteGroup();
 		circleShader = Shader.createCircleShader();
@@ -171,7 +171,7 @@ public class GameScreen extends BasicScreen {
 		mesh.setMesh(Geometry.createCircle(6));
 		mesh.setMode(GL20.GL_TRIANGLE_FAN);
 		mesh.setColor(0.5f, 0.0f, 0.0f, 1.0f);
-		mesh.setOrigin(-200.0f, 200.0f);
+		mesh.setOrigin(200.0f, 0.0f);
 		mesh.setWidth(20.0f);
 		mesh.setHeight(20.0f);
 

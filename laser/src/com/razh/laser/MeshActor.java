@@ -154,8 +154,10 @@ public class MeshActor extends EntityActor {
 
 	public void setupModelMatrix() {
 		mModelMatrix.idt()
-		            .translate(getX() + getOriginX(), getY() + getOriginY(), 0.0f)
+		            .translate(getX(), getY(), 0.0f)
+//		            .translate(getX() + getOriginX(), getY() + getOriginY(), 0.0f)
 		            .rotate(Vector3.Z, getRotation())
+		            .translate(getOriginX(), getOriginY(), 0.0f)
 		            .scale(getWidth() * getScaleX(), getHeight() * getScaleY(), 1.0f);
 	}
 

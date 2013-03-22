@@ -74,7 +74,7 @@ public class LaserGame extends Game {
 	private Map<String, BasicScreen> mScreens;
 
 	public static boolean DEBUG = false;
-	public static boolean USE_TEST_DATA = false;
+	public static boolean USE_TEST_DATA = true;
 
 	@Override
 	public void create() {

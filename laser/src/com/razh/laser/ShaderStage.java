@@ -65,7 +65,7 @@ public class ShaderStage extends Stage {
 		for (int i = 0, n = components.size; i < n; i++) {
 			actor = actors[i];
 
-			if (actor instanceof ProceduralSpriteActor) {
+			if (actor instanceof ProceduralSpriteActor || actor instanceof MeshActor) {
 				addProceduralSpriteActor(actor);
 			} else {
 				addActor(actor);
