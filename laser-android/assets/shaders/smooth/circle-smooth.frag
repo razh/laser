@@ -2,6 +2,7 @@
 precision mediump float;
 #endif
 
+uniform float radius;
 uniform vec4 color;
 
 varying vec2 v_texCoord;
@@ -14,5 +15,8 @@ void main() {
     discard;
   }
 
+  float stroke_width = 2.56 / radius;
+  float stroke_radius = (0.5 - stroke_width) * (0.5 - stroke_width);
   gl_FragColor = color;
+  gl_FragColor.a = mix(color.a, 0.0, smoothstep(stroke_radius, 0.25, distance_squared));
 }

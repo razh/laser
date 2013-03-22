@@ -10,6 +10,8 @@ import com.razh.laser.sprites.RingSpriteActor;
 
 public class Shader {
 
+	public static boolean smooth = false;
+
 	public static ShaderProgram getShaderForType(Class<?> type) {
 		if (type == ArcSpriteActor.class) {
 			return createArcShader();
@@ -21,6 +23,8 @@ public class Shader {
 			return createDashedRingShader();
 		} else if (type == RingSpriteActor.class) {
 			return createRingShader();
+		} else if (type == MeshActor.class) {
+			return createSimpleMeshShader();
 		} else {
 			return null;
 		}
@@ -66,7 +70,12 @@ public class Shader {
 
 	public static ShaderProgram createCircleShader() {
 		final String vertexName = "shaders/spritebatch.vert";
-		final String fragmentName = "shaders/circle.frag";
+		final String fragmentName;
+		if (smooth) {
+			fragmentName = "shaders/smooth/circle-smooth.frag";
+		} else {
+			fragmentName = "shaders/circle.frag";
+		}
 
 		return compileShader(Gdx.files.internal(vertexName).readString(),
 		                     Gdx.files.internal(fragmentName).readString());
@@ -74,7 +83,12 @@ public class Shader {
 
 	public static ShaderProgram createRingShader() {
 		final String vertexName = "shaders/spritebatch.vert";
-		final String fragmentName = "shaders/ring.frag";
+		final String fragmentName;
+		if (smooth) {
+			fragmentName = "shaders/smooth/ring-smooth.frag";
+		} else {
+			fragmentName = "shaders/ring.frag";
+		}
 
 		return compileShader(Gdx.files.internal(vertexName).readString(),
 		                     Gdx.files.internal(fragmentName).readString());
@@ -82,7 +96,12 @@ public class Shader {
 
 	public static ShaderProgram createDashedRingShader() {
 		final String vertexName = "shaders/spritebatch.vert";
-		final String fragmentName = "shaders/dashed-ring.frag";
+		final String fragmentName;
+		if (smooth) {
+			fragmentName = "shaders/smooth/dashed-ring-smooth.frag";
+		} else {
+			fragmentName = "shaders/dashed-ring.frag";
+		}
 
 		return compileShader(Gdx.files.internal(vertexName).readString(),
 		                     Gdx.files.internal(fragmentName).readString());
@@ -90,7 +109,12 @@ public class Shader {
 
 	public static ShaderProgram createDashedLineShader() {
 		final String vertexName = "shaders/spritebatch.vert";
-		final String fragmentName = "shaders/dashed-line.frag";
+		final String fragmentName;
+		if (smooth) {
+			fragmentName = "shaders/smooth/dashed-line-smooth.frag";
+		} else {
+			fragmentName = "shaders/dashed-line.frag";
+		}
 
 		return compileShader(Gdx.files.internal(vertexName).readString(),
 		                     Gdx.files.internal(fragmentName).readString());
@@ -98,7 +122,12 @@ public class Shader {
 
 	public static ShaderProgram createArcShader() {
 		final String vertexName = "shaders/spritebatch.vert";
-		final String fragmentName = "shaders/arc.frag";
+		final String fragmentName;
+		if (smooth) {
+			fragmentName = "shaders/smooth/arc-smooth.frag";
+		} else {
+			fragmentName = "shaders/arc.frag";
+		}
 
 		return compileShader(Gdx.files.internal(vertexName).readString(),
 		                     Gdx.files.internal(fragmentName).readString());

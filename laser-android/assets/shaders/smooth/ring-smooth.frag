@@ -2,6 +2,7 @@
 precision mediump float;
 #endif
 
+uniform float size;
 uniform vec4 color;
 
 uniform float outerRadius;
@@ -17,16 +18,12 @@ void main() {
   float outer = outerRadius * outerRadius;
   float inner = innerRadius * innerRadius;
 
-  /**
-   * Layer order (ring cross section):
-   *
-   *   inner_stroke | inner | outer | outer_stroke
-   */
-
-  if (inner > distance_squared) {
+  // Inner.
+  if (distance_squared < inner) {
     discard;
   }
 
+  // Outer.
   if (distance_squared > outer) {
     discard;
   }
