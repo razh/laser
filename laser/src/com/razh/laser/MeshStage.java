@@ -14,9 +14,6 @@ public class MeshStage extends ShaderStage {
 	private MeshGroup mRoot;
 	private ShaderProgram mShaderProgram;
 
-	// Allows us to set colors with actions.
-	private Actor mColorActor;
-
 	private MeshGroup mTestGroup;
 
 	public MeshStage() {
@@ -29,8 +26,7 @@ public class MeshStage extends ShaderStage {
 		mRoot = new MeshGroup();
 		mRoot.setStage(this);
 
-		mColorActor = new Actor();
-		mColorActor.setColor(Color.BLACK);
+		setColor(Color.BLACK);
 
 		if (LaserGame.DEBUG) {
 			mTestGroup = new MeshGroup();
@@ -127,7 +123,6 @@ public class MeshStage extends ShaderStage {
 	public void act(float delta) {
 		super.act(delta);
 		mRoot.act(delta);
-		mColorActor.act(delta);
 	}
 
 	public ShaderProgram getShaderProgram() {
@@ -142,18 +137,6 @@ public class MeshStage extends ShaderStage {
 		return mRoot;
 	}
 
-	public Color getColor() {
-		return mColorActor.getColor();
-	}
-
-	public void setColor(Color color) {
-		mColorActor.setColor(color);
-	}
-
-	@Override
-	public void addAction(Action action) {
-		mColorActor.addAction(action);
-	}
 
 	@Override
 	public void dispose() {

@@ -16,6 +16,7 @@ import com.razh.laser.LaserGame;
 import com.razh.laser.MeshActor;
 import com.razh.laser.MeshStage;
 import com.razh.laser.Shader;
+import com.razh.laser.ShaderGroup;
 import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
 import com.razh.laser.input.GameInputProcessor;
@@ -23,14 +24,13 @@ import com.razh.laser.sprites.ArcSpriteActor;
 import com.razh.laser.sprites.CircleSpriteActor;
 import com.razh.laser.sprites.DashedRingSpriteActor;
 import com.razh.laser.sprites.ProceduralSpriteActor;
-import com.razh.laser.sprites.ProceduralSpriteGroup;
 import com.razh.laser.sprites.SpriteActor;
 import com.razh.laser.sprites.SpriteContainer;
 
 public class GameScreen extends BasicScreen {
 
 	private ShaderProgram circleShader;
-	private ProceduralSpriteGroup circleSpriteGroup;
+	private ShaderGroup circleSpriteGroup;
 	private CircleSpriteActor circleSprite;
 
 	public GameScreen(LaserGame game) {
@@ -50,12 +50,12 @@ public class GameScreen extends BasicScreen {
 		getMeshStage().addActor(entity2.getActor());
 
 		Entity entity3 = EntityFactory.createCircleThing();
-		getMeshStage().addProceduralSpriteActor(entity3.getActor());
+		getMeshStage().addActor(entity3.getActor());
 
 		getMeshStage().setShaderProgram(Shader.createSimpleMeshShader());
 		getMeshStage().setColor(Color.BLACK);
 
-		circleSpriteGroup = new ProceduralSpriteGroup();
+		circleSpriteGroup = new ShaderGroup();
 		circleShader = Shader.createCircleShader();
 		circleSpriteGroup.setShaderProgram(circleShader);
 		System.out.println(circleSpriteGroup.getShaderProgram().hasUniform("color"));
@@ -91,7 +91,7 @@ public class GameScreen extends BasicScreen {
 		float halfWidth = 0.5f * Gdx.graphics.getWidth();
 		float halfHeight = 0.5f * Gdx.graphics.getHeight();
 
-		ProceduralSpriteGroup rectSpriteGroup = new ProceduralSpriteGroup();
+		ShaderGroup rectSpriteGroup = new ShaderGroup();
 		rectSpriteGroup.setShaderProgram(Shader.createRectangleShader());
 
 		ProceduralSpriteActor topLeftActor = new ProceduralSpriteActor();
@@ -125,7 +125,7 @@ public class GameScreen extends BasicScreen {
 
 		getStage().addActor(rectSpriteGroup);
 
-		ProceduralSpriteGroup dashedRingSpriteGroup = new ProceduralSpriteGroup();
+		ShaderGroup dashedRingSpriteGroup = new ShaderGroup();
 		dashedRingSpriteGroup.setShaderProgram(Shader.createDashedRingShader());
 
 		DashedRingSpriteActor dashedRing = new DashedRingSpriteActor();
@@ -187,7 +187,7 @@ public class GameScreen extends BasicScreen {
 		Texture texture = new Texture("data/test_ship.png");
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		shipSprite.setSprite(new Sprite(texture));
-		getMeshStage().addProceduralSpriteActor(shipSprite);
+		getMeshStage().addActor(shipSprite);
 
 		SpriteActor shipSprite2 = new SpriteActor();
 		shipSprite2.setPosition(0.25f * halfWidth, -0.25f * halfHeight);
@@ -199,7 +199,7 @@ public class GameScreen extends BasicScreen {
 		Texture texture2 = new Texture("data/test_ship2.png");
 		texture2.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		shipSprite2.setSprite(new Sprite(texture2));
-		getMeshStage().addProceduralSpriteActor(shipSprite2);
+		getMeshStage().addActor(shipSprite2);
 
 		SpriteContainer container = new SpriteContainer();
 		container.addComponent(arcSprite);
