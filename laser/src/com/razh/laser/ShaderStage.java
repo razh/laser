@@ -6,9 +6,11 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.laser.sprites.ProceduralSpriteActor;
 import com.razh.laser.sprites.SpriteContainer;
@@ -16,6 +18,10 @@ import com.razh.laser.sprites.SpriteContainer;
 public class ShaderStage extends Stage {
 
 	private final Map<Class<?>, ShaderGroup> mGroups;
+
+	// Decals.
+	private final DecalBatch mDecalBatch;
+	private final Array<DecalActor> mDecalActors;
 
 	// Allows us to set colors with actions.
 	private Actor mColorActor;
@@ -36,10 +42,18 @@ public class ShaderStage extends Stage {
 
 		mColorActor = new Actor();
 		addActor(mColorActor);
+
+		mDecalBatch = new DecalBatch();
+		mDecalActors = new SnapshotArray<DecalActor>(DecalActor.class);
 	}
 
 	@Override
 	public void addActor(Actor actor) {
+		if (actor instanceof DecalActor) {
+			addDecalActor((DecalActor) actor);
+			return;
+		}
+
 		ShaderGroup group = mGroups.get(actor.getClass());
 		// Add if the group exists.
 		if (group != null) {
@@ -48,6 +62,10 @@ public class ShaderStage extends Stage {
 			// Otherwise, create a new group.
 			addShaderGroup(actor.getClass()).addActor(actor);
 		}
+	}
+
+	public void addDecalActor(DecalActor actor) {
+		mDecalActors.add(actor);
 	}
 
 	/**
