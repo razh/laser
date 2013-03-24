@@ -4,12 +4,13 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 public class MeshGroup extends Group {
 	private ShaderProgram mShaderProgram;
-	private MeshStage mStage;
+	private Stage mStage;
 
 	public void draw(ShaderProgram shaderProgram) {
 		if (mShaderProgram != shaderProgram) {
@@ -71,15 +72,6 @@ public class MeshGroup extends Group {
 			actors[i].act(delta);
 		}
 		getChildren().end();
-	}
-
-	@Override
-	public MeshStage getStage() {
-		return mStage;
-	}
-
-	public void setStage(MeshStage stage) {
-		mStage = stage;
 	}
 
 	@Override
