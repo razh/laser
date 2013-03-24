@@ -93,8 +93,12 @@ public class LaserGame extends Game {
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		// Backface culling.
-		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
-		Gdx.gl20.glCullFace(GL20.GL_BACK);
+//		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
+//		Gdx.gl20.glCullFace(GL20.GL_BACK);
+
+		// Depth testing.
+		Gdx.gl.glDepthFunc(GL20.GL_LESS);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
 		mSpriteBatch = new SpriteBatch();
 		mFont = new BitmapFont();

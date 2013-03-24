@@ -20,7 +20,7 @@ import com.razh.laser.sprites.SpriteContainer;
 
 public class ShaderStage extends Stage {
 
-	private final Map<Class<?>, ShaderGroup> mGroups;
+	private final Map<Class<?>, Group> mGroups;
 
 	// Decals.
 	private final DecalBatch mDecalBatch;
@@ -42,7 +42,7 @@ public class ShaderStage extends Stage {
 		camera.far = 1e5f;
 		camera.lookAt(0.0f, 0.0f, 0.0f);
 
-		mGroups = new HashMap<Class<?>, ShaderGroup>();
+		mGroups = new HashMap<Class<?>, Group>();
 
 		mColorActor = new Actor();
 		super.addActor(mColorActor);
@@ -50,15 +50,15 @@ public class ShaderStage extends Stage {
 		mDecalBatch = new DecalBatch(new CameraGroupStrategy(camera));
 		// Create DecalGroup and add it to Groups container.
 		mDecalGroup = new DecalGroup();
-//		mGroups.put(DecalActor.class, mDecalGroup);
+		mGroups.put(DecalActor.class, mDecalGroup);
 		addActor(mDecalGroup);
 	}
 
 	@Override
 	public void draw() {
-		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
+		mDecalGroup.drawBehind(mDecalBatch);
 		super.draw();
-		mDecalGroup.draw(mDecalBatch);
+		mDecalGroup.drawAfter(mDecalBatch);
 	}
 
 	public float time = 0.0f;

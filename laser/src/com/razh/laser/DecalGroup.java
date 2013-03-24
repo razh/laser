@@ -1,5 +1,7 @@
 package com.razh.laser;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -8,6 +10,10 @@ import com.badlogic.gdx.utils.SnapshotArray;
 
 public class DecalGroup extends Group {
 
+	/**
+	 * Draws all decals (sends them to decalBatch).
+	 * @param decalBatch
+	 */
 	public void draw(DecalBatch decalBatch) {
 		SnapshotArray<Actor> children = getChildren();
 		Actor[] actors = children.begin();
@@ -24,6 +30,57 @@ public class DecalGroup extends Group {
 		}
 
 		children.end();
+		decalBatch.flush();
+	}
+
+	/**
+	 * Draws decals behind the stage (negative z-coordinate).
+	 * @param decalBatch
+	 */
+	public void drawBehind(DecalBatch decalBatch) {
+		SnapshotArray<Actor> children = getChildren();
+		Actor[] actors = children.begin();
+
+		DecalActor child;
+		for (int i = 0, n = children.size; i < n; i++) {
+			child = (DecalActor) actors[i];
+
+			if (!child.isVisible()) {
+				continue;
+			}
+
+			if (child.getZ() < 0) {
+				child.draw(decalBatch);
+			}
+		}
+
+		children.end();
+		decalBatch.flush();
+	}
+
+	/**
+	 * Draws decals after the stage (zero or positive z-coordinate).
+	 * @param decalBatch
+	 */
+	public void drawAfter(DecalBatch decalBatch) {
+		SnapshotArray<Actor> children = getChildren();
+		Actor[] actors = children.begin();
+
+		DecalActor child;
+		for (int i = 0, n = children.size; i < n; i++) {
+			child = (DecalActor) actors[i];
+
+			if (!child.isVisible()) {
+				continue;
+			}
+
+			if (child.getZ() >= 0) {
+				child.draw(decalBatch);
+			}
+		}
+
+		children.end();
+		decalBatch.flush();
 	}
 
 	/*

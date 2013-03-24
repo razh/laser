@@ -19,9 +19,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.razh.laser.DecalActor;
 import com.razh.laser.Geometry;
 import com.razh.laser.MeshActor;
 import com.razh.laser.Shader;
@@ -40,6 +43,12 @@ public class SimpleStageTest extends StageTest {
 
 	@Override
 	public void load(ShaderStage stage) {
+		float halfWidth = 0.5f * Gdx.graphics.getWidth();
+		float halfHeight = 0.5f * Gdx.graphics.getHeight();
+
+		Texture texture = new Texture("data/test_ship.png");
+		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
 		Entity entity = EntityFactory.createEmitter();
 		stage.addActor(entity.getActor());
 		entity.getActor().addAction(
@@ -52,6 +61,7 @@ public class SimpleStageTest extends StageTest {
 		stage.addActor(entity2.getActor());
 
 		Entity entity3 = EntityFactory.createCircleThing();
+		entity3.getActor().setColor(0.5f, 0.0f, 0.5f, 0.1f);
 		stage.addActor(entity3.getActor());
 
 		stage.setColor(Color.BLACK);
@@ -87,9 +97,6 @@ public class SimpleStageTest extends StageTest {
 		);
 		circleSpriteGroup.addActor(circleSprite);
 		stage.addActor(circleSpriteGroup);
-
-		float halfWidth = 0.5f * Gdx.graphics.getWidth();
-		float halfHeight = 0.5f * Gdx.graphics.getHeight();
 
 		ShaderGroup rectSpriteGroup = new ShaderGroup();
 		rectSpriteGroup.setShaderProgram(Shader.createRectangleShader());
@@ -184,8 +191,6 @@ public class SimpleStageTest extends StageTest {
 		shipSprite.setWidth(300.0f);
 		shipSprite.setHeight(300.0f);
 
-		Texture texture = new Texture("data/test_ship.png");
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		shipSprite.setSprite(new Sprite(texture));
 		stage.addActor(shipSprite);
 
@@ -225,5 +230,14 @@ public class SimpleStageTest extends StageTest {
 				)
 			)
 		);
+
+		DecalActor decal = new DecalActor();
+		decal.setDecal(Decal.newDecal(new TextureRegion(texture)));
+		decal.setWidth(200.0f);
+		decal.setHeight(200.0f);
+		decal.setPosition(0.3f * halfWidth, 0.4f * halfHeight, -100.0f);
+		decal.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		stage.addActor(decal);
 	}
 }
