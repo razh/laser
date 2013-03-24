@@ -1,5 +1,6 @@
 package com.razh.laser;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -104,16 +105,18 @@ public class MeshActor extends EntityActor {
 
 	public Vector2 worldToLocalCoordinates(Vector2 worldCoords) {
 		return worldCoords.cpy()
-		                  .sub(getX() + getOriginX(), getY() + getOriginY())
+		                  .sub(getX(), getY())
 		                  .rotate(-getRotation())
+		                  .sub(getOriginX(), getOriginY())
 		                  .div(getWidth() * getScaleX(), getHeight() * getScaleY());
 	}
 
 	public Vector2 localToWorldCoordinates(Vector2 localCoords) {
 		return localCoords.cpy()
 		                  .mul(getWidth() * getScaleX(), getHeight() * getScaleY())
+		                  .add(getOriginX(), getOriginY())
 		                  .rotate(getRotation())
-		                  .add(getX() + getOriginX(), getY() + getOriginY());
+		                  .add(getX(), getY());
 	}
 
 	public Mesh getMesh() {

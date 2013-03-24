@@ -99,7 +99,6 @@ public class ShaderStage extends Stage {
 	 * @return ShaderGroup
 	 */
 	public ShaderGroup addShaderGroup(Class<?> type) {
-		System.out.println(type.getName());
 		ShaderGroup group = new ShaderGroup();
 		group.setShaderProgram(Shader.getShaderForType(type));
 
