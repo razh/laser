@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -25,6 +26,9 @@ public class ShaderStage extends Stage {
 	// Decals.
 	private final DecalBatch mDecalBatch;
 	private final DecalGroup mDecalGroup;
+
+	private final MeshGroup mMeshGroup;
+	private final ShaderProgram mShaderProgram;
 
 	// Allows us to set colors with actions.
 	private Actor mColorActor;
@@ -48,16 +52,28 @@ public class ShaderStage extends Stage {
 		super.addActor(mColorActor);
 
 		mDecalBatch = new DecalBatch(new CameraGroupStrategy(camera));
+
 		// Create DecalGroup and add it to Groups container.
 		mDecalGroup = new DecalGroup();
 		mGroups.put(DecalActor.class, mDecalGroup);
 		addActor(mDecalGroup);
+
+		mMeshGroup = new MeshGroup();
+		mShaderProgram = Shader.createSimpleMeshShader();
+		mGroups.put(MeshActor.class, mMeshGroup);
+		addActor(mMeshGroup);
 	}
 
 	@Override
 	public void draw() {
 		mDecalGroup.drawBehind(mDecalBatch);
 		super.draw();
+
+		mShaderProgram.begin();
+		mShaderProgram.setUniformMatrix("u_projTrans", getCamera().combined);
+		mMeshGroup.draw(mShaderProgram);
+		mShaderProgram.end();
+
 		mDecalGroup.drawAfter(mDecalBatch);
 	}
 

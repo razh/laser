@@ -42,6 +42,8 @@ public class ShaderGroup extends Group {
 			((ProceduralSpriteActor) actor).draw(spriteBatch, parentAlpha, mShaderProgram);
 		} else if (actor instanceof MeshActor) {
 			((MeshActor) actor).draw(mShaderProgram);
+		} else if (actor instanceof MeshGroup) {
+			((MeshGroup) actor).draw(mShaderProgram);
 		} else {
 			actor.draw(spriteBatch, parentAlpha);
 		}

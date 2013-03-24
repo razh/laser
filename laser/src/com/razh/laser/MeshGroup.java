@@ -1,34 +1,27 @@
 package com.razh.laser;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 public class MeshGroup extends Group {
-	private ShaderProgram mShaderProgram;
-	private Stage mStage;
+
+	@Override
+	public void draw(SpriteBatch spriteBatch, float parentAlpha) {}
 
 	public void draw(ShaderProgram shaderProgram) {
-		if (mShaderProgram != shaderProgram) {
-			setShaderProgram(shaderProgram);
-		}
-
-		draw();
-	}
-
-	public void draw() {
-		if (mShaderProgram == null || !isVisible() ) {
+		if (shaderProgram == null) {
 			return;
 		}
 
-		drawChildren();
+		drawChildren(shaderProgram);
 	}
 
-	public void drawChildren() {
+	public void drawChildren(ShaderProgram shaderProgram) {
 		SnapshotArray<Actor> children = getChildren();
 		Actor[] actors = children.begin();
 
@@ -37,9 +30,9 @@ public class MeshGroup extends Group {
 			child = actors[i];
 
 			if (child instanceof MeshActor) {
-				((MeshActor) child).draw(mShaderProgram);
+				((MeshActor) child).draw(shaderProgram);
 			} else if (child instanceof MeshGroup) {
-				((MeshGroup) child).draw(mShaderProgram);
+				((MeshGroup) child).draw(shaderProgram);
 			}
 		}
 
@@ -124,13 +117,5 @@ public class MeshGroup extends Group {
 		}
 
 		return null;
-	}
-
-	public ShaderProgram getShaderProgram() {
-		return mShaderProgram;
-	}
-
-	public void setShaderProgram(ShaderProgram shaderProgram) {
-		mShaderProgram = shaderProgram;
 	}
 }

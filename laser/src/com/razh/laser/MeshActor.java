@@ -1,9 +1,9 @@
 package com.razh.laser;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -13,11 +13,10 @@ import com.razh.laser.Geometry.GeometryData;
 
 public class MeshActor extends EntityActor {
 	private Mesh mMesh;
-	private ShaderProgram mShaderProgram;
-
 	private int mMode;
 
 	private final Matrix4 mModelMatrix;
+	private final Matrix3 mTransformMatrix;
 
 	// Hull variables.
 	private float[] mVertices;
@@ -27,30 +26,23 @@ public class MeshActor extends EntityActor {
 		super();
 
 		mModelMatrix = new Matrix4();
+		mTransformMatrix = new Matrix3();
 
 		// Default value.
 		setMode(GL20.GL_TRIANGLE_FAN);
 	}
 
 	public void draw(ShaderProgram shaderProgram) {
-		if (mShaderProgram != shaderProgram) {
-			setShaderProgram(shaderProgram);
-		}
-
-		draw();
-	}
-
-	public void draw() {
-		if (mShaderProgram == null) {
+		if (shaderProgram == null) {
 			return;
 		}
 
 		setupModelMatrix();
-		mShaderProgram.setUniformMatrix("modelMatrix", mModelMatrix);
-		mShaderProgram.setUniformf("color", getColor());
+		shaderProgram.setUniformMatrix("modelMatrix", mModelMatrix);
+		shaderProgram.setUniformf("color", getColor());
 
 		if (hasMesh()) {
-			getMesh().render(mShaderProgram, getMode());
+			getMesh().render(shaderProgram, getMode());
 		}
 	}
 
@@ -131,14 +123,6 @@ public class MeshActor extends EntityActor {
 		return getMesh() != null;
 	}
 
-	public ShaderProgram getShaderProgram() {
-		return mShaderProgram;
-	}
-
-	public void setShaderProgram(ShaderProgram shaderProgram) {
-		mShaderProgram = shaderProgram;
-	}
-
 	public int getMode() {
 		return mMode;
 	}
@@ -157,6 +141,14 @@ public class MeshActor extends EntityActor {
 		            .rotate(Vector3.Z, getRotation())
 		            .translate(getOriginX(), getOriginY(), 0.0f)
 		            .scale(getWidth() * getScaleX(), getHeight() * getScaleY(), 1.0f);
+	}
+
+	public Matrix3 getTransformMatrix() {
+		return mTransformMatrix.idt()
+		                       .translate(getX(), getY())
+		                       .rotate(getRotation())
+		                       .translate(getOriginX(), getOriginY())
+		                       .scale(getWidth() * getScaleX(), getHeight() * getScaleY());
 	}
 
 	public float[] getVertices() {
@@ -179,5 +171,4 @@ public class MeshActor extends EntityActor {
 		setVertices(geometry.vertices);
 		setIndices(geometry.indices);
 	}
-
 }
