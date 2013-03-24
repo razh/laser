@@ -14,14 +14,6 @@ public class SpriteActor extends EntityActor {
 		mSprite.draw(spriteBatch, parentAlpha);
 	}
 
-	public Sprite getSprite() {
-		return mSprite;
-	}
-
-	public void setSprite(Sprite sprite) {
-		mSprite = sprite;
-	}
-
 	public void updateSprite() {
 		float width = getWidth();
 		float height = getHeight();
@@ -35,5 +27,13 @@ public class SpriteActor extends EntityActor {
 		mSprite.setOrigin(getOriginX() + halfWidth, getOriginY() + halfHeight);
 		mSprite.setPosition(getX() - halfWidth, getY() - halfHeight);
 		mSprite.setColor(getColor());
+	}
+
+	public Sprite getSprite() {
+		return mSprite;
+	}
+
+	public void setSprite(Sprite sprite) {
+		mSprite = sprite;
 	}
 }

@@ -4,24 +4,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.laser.sprites.ProceduralSpriteActor;
 import com.razh.laser.sprites.SpriteContainer;
 
 public class ShaderStage extends Stage {
 
-	private final Map<Class<?>, ShaderGroup> mGroups;
+	private final Map<Class<?>, Group> mGroups;
 
 	// Decals.
 	private final DecalBatch mDecalBatch;
-	private final Array<DecalActor> mDecalActors;
+	private final DecalGroup mDecalGroup;
 
 	// Allows us to set colors with actions.
 	private Actor mColorActor;
@@ -38,23 +39,47 @@ public class ShaderStage extends Stage {
 		getCamera().far = 1e5f;
 		getCamera().lookAt(0.0f, 0.0f, 0.0f);
 
-		mGroups = new HashMap<Class<?>, ShaderGroup>();
+		mGroups = new HashMap<Class<?>, Group>();
 
 		mColorActor = new Actor();
 		addActor(mColorActor);
 
 		mDecalBatch = new DecalBatch();
-		mDecalActors = new SnapshotArray<DecalActor>(DecalActor.class);
+		// Create DecalGroup and add it to Groups container.
+		mDecalGroup = new DecalGroup();
+		mGroups.put(DecalActor.class, mDecalGroup);
+		addActor(mDecalGroup);
+	}
+
+	@Override
+	public void draw() {
+		super.draw();
+		mDecalGroup.draw(mDecalBatch);
+	}
+
+	public float time = 0.0f;
+	@Override
+	public void act(float delta) {
+		time += 0.01f;
+		Camera camera = getCamera();
+		camera.position.x = (float) (200.0f * Math.cos(time));
+		camera.position.y = (float) (200.0f * Math.sin(time)) - 200.0f;
+		camera.position.z = (float) (200.0f * Math.abs(Math.cos(time))) + 400.0f;
+		camera.lookAt(0, 0, 0);
+
+		super.act(delta);
 	}
 
 	@Override
 	public void addActor(Actor actor) {
-		if (actor instanceof DecalActor) {
-			addDecalActor((DecalActor) actor);
+		// If actor is a group (ShaderGroup or otherwise), we don't need to add
+		// it to a group.
+		if (actor instanceof Group) {
+			super.addActor(actor);
 			return;
 		}
 
-		ShaderGroup group = mGroups.get(actor.getClass());
+		Group group = mGroups.get(actor.getClass());
 		// Add if the group exists.
 		if (group != null) {
 			group.addActor(actor);
@@ -64,16 +89,12 @@ public class ShaderStage extends Stage {
 		}
 	}
 
-	public void addDecalActor(DecalActor actor) {
-		mDecalActors.add(actor);
-	}
-
 	/**
 	 * Create ShaderGroup for the given type. Returns it for chaining.
 	 * @param type
 	 * @return ShaderGroup
 	 */
-	public ShaderGroup addShaderGroup(Class<?> type) {
+	public Group addShaderGroup(Class<?> type) {
 		ShaderGroup group = new ShaderGroup();
 		group.setShaderProgram(Shader.getShaderForType(type));
 
@@ -91,7 +112,9 @@ public class ShaderStage extends Stage {
 		for (int i = 0, n = components.size; i < n; i++) {
 			actor = actors[i];
 
-			if (actor instanceof ProceduralSpriteActor || actor instanceof MeshActor) {
+			if (actor instanceof ProceduralSpriteActor ||
+				actor instanceof MeshActor ||
+				actor instanceof DecalActor ) {
 				addActor(actor);
 			} else {
 				super.addActor(actor);

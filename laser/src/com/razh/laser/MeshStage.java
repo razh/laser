@@ -1,12 +1,9 @@
 package com.razh.laser;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
 
@@ -56,19 +53,9 @@ public class MeshStage extends ShaderStage {
 		}
 	}
 
-	private float time = 0.0f;
 	@Override
 	public void draw() {
 		super.draw();
-		time += 0.01f;
-		Camera camera = getCamera();
-//		camera.rotateAround(Vector3.Zero, Vector3.X, 0.1f);
-//		camera.rotateAround(Vector3.Zero, Vector3.Y, -0.1f);
-		camera.position.x = (float) (200.0f * Math.cos(time));
-		camera.position.y = (float) (200.0f * Math.sin(time)) - 200.0f;
-		camera.position.z = (float) (200.0f * Math.abs(Math.cos(time))) + 400.0f;
-//		camera.rotate(Vector3.Y, 0.2f);
-		camera.lookAt(0, 0, 0);
 
 		Gdx.gl20.glEnable(GL20.GL_CULL_FACE);
 
@@ -86,21 +73,6 @@ public class MeshStage extends ShaderStage {
 			}
 			children.end();
 		}
-
-
-//		if (mShaderProgram != null) {
-//			mShaderProgram.begin();
-//
-//			mShaderProgram.setUniformMatrix("projectionMatrix", camera.projection);
-//			mShaderProgram.setUniformMatrix("viewMatrix", camera.view);
-//
-//			mRoot.draw(mShaderProgram);
-//			if (LaserGame.DEBUG) {
-//				mTestGroup.draw(mShaderProgram);
-//			}
-//
-//			mShaderProgram.end();
-//		}
 
 		Gdx.gl20.glDisable(GL20.GL_CULL_FACE);
 	}
@@ -136,7 +108,6 @@ public class MeshStage extends ShaderStage {
 	public MeshGroup getMeshRoot() {
 		return mRoot;
 	}
-
 
 	@Override
 	public void dispose() {

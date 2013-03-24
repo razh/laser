@@ -5,7 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.razh.laser.LaserGame;
-import com.razh.laser.MeshStage;
+import com.razh.laser.ShaderStage;
 
 public abstract class BasicScreen implements Screen {
 	private LaserGame mGame;
@@ -29,9 +29,9 @@ public abstract class BasicScreen implements Screen {
 		return mStage;
 	}
 
-	public MeshStage getMeshStage() {
-		if (getStage() instanceof MeshStage) {
-			return (MeshStage) getStage();
+	public ShaderStage getShaderStage() {
+		if (getStage() instanceof ShaderStage) {
+			return (ShaderStage) getStage();
 		}
 
 		return null;
