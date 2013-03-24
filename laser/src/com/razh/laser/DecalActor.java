@@ -1,11 +1,7 @@
 package com.razh.laser;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /**
  *  This class may not work as we cannot explictly pass uniforms to a given shader.
@@ -22,24 +18,15 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 public class DecalActor extends Actor3D {
 	private Decal mDecal;
 
-	public DecalActor() {
-		super();
+	@Override
+	public void act(float delta) {
+		super.act(delta);
 
-		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-		Texture texture = new Texture(pixmap);
-		TextureRegion region = new TextureRegion(texture);
-		setDecal(Decal.newDecal(region, true));
+		mDecal.setPosition(getX(), getY(), getZ());
 	}
 
 	public void draw(DecalBatch decalBatch) {
-		draw(decalBatch, null);
-	}
-
-	public void draw(DecalBatch decalBatch, ShaderProgram shaderProgram) {
-	}
-
-	public void setUniforms(ShaderProgram shaderProgram) {
-		shaderProgram.setUniformf("color", getColor());
+		decalBatch.add(mDecal);
 	}
 
 	public Decal getDecal() {
