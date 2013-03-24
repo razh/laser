@@ -27,8 +27,9 @@ public class ShaderStage extends Stage {
 	private final DecalBatch mDecalBatch;
 	private final DecalGroup mDecalGroup;
 
+	// Meshes.
 	private final MeshGroup mMeshGroup;
-	private final ShaderProgram mShaderProgram;
+	private final ShaderProgram mMeshShader;
 
 	// Allows us to set colors with actions.
 	private Actor mColorActor;
@@ -58,9 +59,11 @@ public class ShaderStage extends Stage {
 		mGroups.put(DecalActor.class, mDecalGroup);
 		addActor(mDecalGroup);
 
+		// Create MeshGroup and add it to Groups container.
 		mMeshGroup = new MeshGroup();
-		mShaderProgram = Shader.createSimpleMeshShader();
+		mMeshShader = Shader.createSimpleMeshShader();
 		mGroups.put(MeshActor.class, mMeshGroup);
+		mGroups.put(MeshGroup.class, mMeshGroup);
 		addActor(mMeshGroup);
 	}
 
@@ -69,10 +72,15 @@ public class ShaderStage extends Stage {
 		mDecalGroup.drawBehind(mDecalBatch);
 		super.draw();
 
-		mShaderProgram.begin();
-		mShaderProgram.setUniformMatrix("u_projTrans", getCamera().combined);
-		mMeshGroup.draw(mShaderProgram);
-		mShaderProgram.end();
+		// Draw meshes.
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+
+		mMeshShader.begin();
+		mMeshShader.setUniformMatrix("u_projTrans", getCamera().combined);
+		mMeshGroup.draw(mMeshShader);
+		mMeshShader.end();
+
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 
 		mDecalGroup.drawAfter(mDecalBatch);
 	}

@@ -10,18 +10,28 @@ import com.badlogic.gdx.utils.SnapshotArray;
 
 public class MeshGroup extends Group {
 
+	private ShaderProgram mShaderProgram;
+
 	@Override
 	public void draw(SpriteBatch spriteBatch, float parentAlpha) {}
 
 	public void draw(ShaderProgram shaderProgram) {
-		if (shaderProgram == null) {
+		if (mShaderProgram != shaderProgram) {
+			setShaderProgram(shaderProgram);
+		}
+
+		drawChildren();
+	}
+
+	public void draw() {
+		if (mShaderProgram == null) {
 			return;
 		}
 
-		drawChildren(shaderProgram);
+		drawChildren();
 	}
 
-	public void drawChildren(ShaderProgram shaderProgram) {
+	public void drawChildren() {
 		SnapshotArray<Actor> children = getChildren();
 		Actor[] actors = children.begin();
 
@@ -29,10 +39,14 @@ public class MeshGroup extends Group {
 		for (int i = 0, n = children.size; i < n; i++) {
 			child = actors[i];
 
+			if (!child.isVisible()) {
+				return;
+			}
+
 			if (child instanceof MeshActor) {
-				((MeshActor) child).draw(shaderProgram);
+				((MeshActor) child).draw(mShaderProgram);
 			} else if (child instanceof MeshGroup) {
-				((MeshGroup) child).draw(shaderProgram);
+				((MeshGroup) child).draw(mShaderProgram);
 			}
 		}
 
@@ -117,5 +131,13 @@ public class MeshGroup extends Group {
 		}
 
 		return null;
+	}
+
+	public ShaderProgram getShaderProgram() {
+		return mShaderProgram;
+	}
+
+	public void setShaderProgram(ShaderProgram shaderProgram) {
+		mShaderProgram = shaderProgram;
 	}
 }

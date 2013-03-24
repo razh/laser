@@ -1,7 +1,6 @@
 package com.razh.laser.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
 import com.razh.laser.Geometry;
@@ -15,7 +14,7 @@ public class EntityFactory {
 		actor.setMode(GL20.GL_TRIANGLE_STRIP);
 
 		actor.setGeometry(Geometry.createRingHull(1.0f, 0.8f, 0, 180 * MathUtils.degreesToRadians, 32, true));
-		actor.setColor(Color.RED);
+		actor.setColor(1.0f, 0.0f, 0.0f, 0.5f);
 //		actor.setPosition((float) (Gdx.graphics.getWidth() * Math.random()),
 //		                  (float) (Gdx.graphics.getHeight() * Math.random()));
 		actor.setPosition(Gdx.graphics.getWidth() * 0.1f, Gdx.graphics.getHeight() * 0.2f);
@@ -35,7 +34,7 @@ public class EntityFactory {
 		actor.setMode(GL20.GL_TRIANGLE_FAN);
 
 //		actor.setGeometry(Geometry.createRingHull(1.0f, 0.8f, 0, 180 * MathUtils.degreesToRadians, 32, true));
-		actor.setColor(0.75f, 0.75f, 0.75f, 0.75f);
+		actor.setColor(0.75f, 0.75f, 0.75f, 0.5f);
 //		actor.setPosition((float) (Gdx.graphics.getWidth() * Math.random()),
 //		                  (float) (Gdx.graphics.getHeight() * Math.random()));
 		actor.setPosition(Gdx.graphics.getWidth() * 0.2f, Gdx.graphics.getHeight() * 0.1f);
