@@ -61,7 +61,6 @@ public class SimpleStageTest extends StageTest {
 		stage.addActor(entity2.getActor());
 
 		Entity entity3 = EntityFactory.createCircleThing();
-		entity3.getActor().setColor(0.5f, 0.0f, 0.5f, 0.1f);
 		stage.addActor(entity3.getActor());
 
 		stage.setColor(Color.BLACK);
@@ -70,7 +69,7 @@ public class SimpleStageTest extends StageTest {
 		ShaderProgram circleShader = Shader.createCircleShader();
 		circleSpriteGroup.setShaderProgram(circleShader);
 		CircleSpriteActor circleSprite = new CircleSpriteActor();
-		circleSprite.setColor(0.5f, 0.0f, 0.0f, 1.0f);
+		circleSprite.setColor(0.5f, 0.0f, 0.0f, 0.2f);
 		circleSprite.setWidth(180.0f);
 		circleSprite.setHeight(180.0f);
 //		circleSprite.setPosition(Gdx.graphics.getWidth() * 0.1f + 128f, Gdx.graphics.getHeight() * 0.1f + 128f);
@@ -79,8 +78,8 @@ public class SimpleStageTest extends StageTest {
 			forever(
 				parallel(
 					sequence(
-						color(new Color(0.75f, 0.0f, 0.0f, 1.0f), 2.0f),
-						color(new Color(0.25f, 0.0f, 0.0f, 1.0f), 2.0f)
+						color(new Color(0.75f, 0.0f, 0.0f, 0.5f), 2.0f),
+						color(new Color(0.25f, 0.0f, 0.0f, 0.5f), 2.0f)
 					),
 					sequence(
 						repeat(
@@ -133,13 +132,15 @@ public class SimpleStageTest extends StageTest {
 		stage.addActor(rectSpriteGroup);
 
 		ShaderGroup dashedRingSpriteGroup = new ShaderGroup();
+		Shader.smooth = true;
 		dashedRingSpriteGroup.setShaderProgram(Shader.createDashedRingShader());
+		Shader.smooth = false;
 
 		DashedRingSpriteActor dashedRing = new DashedRingSpriteActor();
-		dashedRing.setColor(0.0f, 1.0f, 1.0f, 1.0f);
+		dashedRing.setColor(0.0f, 1.0f, 1.0f, 0.15f);
 		dashedRing.setWidth(200.0f);
 		dashedRing.setHeight(200.0f);
-		dashedRing.setPosition(-0.5f * halfWidth, -0.5f * halfHeight);
+		dashedRing.setPosition(-0.3f * halfWidth, -0.3f * halfHeight);
 		dashedRing.setOuterRadius(0.5f);
 		dashedRing.setInnerRadius(0.4f);
 		dashedRing.setSegmentAngle(120.0f);
@@ -165,7 +166,7 @@ public class SimpleStageTest extends StageTest {
 		stage.addActor(dashedRingSpriteGroup);
 
 		ArcSpriteActor arcSprite = new ArcSpriteActor();
-		arcSprite.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+		arcSprite.setColor(1.0f, 1.0f, 1.0f, 0.7f);
 		arcSprite.setWidth(300.0f);
 		arcSprite.setHeight(300.0f);
 		arcSprite.setOuterRadius(0.5f);

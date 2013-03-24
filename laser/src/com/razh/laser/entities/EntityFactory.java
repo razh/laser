@@ -35,7 +35,7 @@ public class EntityFactory {
 		actor.setMode(GL20.GL_TRIANGLE_FAN);
 
 //		actor.setGeometry(Geometry.createRingHull(1.0f, 0.8f, 0, 180 * MathUtils.degreesToRadians, 32, true));
-		actor.setColor(Color.LIGHT_GRAY);
+		actor.setColor(0.75f, 0.75f, 0.75f, 0.75f);
 //		actor.setPosition((float) (Gdx.graphics.getWidth() * Math.random()),
 //		                  (float) (Gdx.graphics.getHeight() * Math.random()));
 		actor.setPosition(Gdx.graphics.getWidth() * 0.2f, Gdx.graphics.getHeight() * 0.1f);

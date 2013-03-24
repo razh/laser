@@ -3,7 +3,6 @@ package com.razh.laser;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -18,8 +17,6 @@ public class MeshActor extends EntityActor {
 	private int mMode;
 
 	private final Matrix4 mModelMatrix;
-	// Similar to modelMatrix, except 3x3.
-	private final Matrix3 mTransformMatrix;
 
 	// Hull variables.
 	private float[] mVertices;
@@ -29,7 +26,6 @@ public class MeshActor extends EntityActor {
 		super();
 
 		mModelMatrix = new Matrix4();
-		mTransformMatrix = new Matrix3();
 
 		// Default value.
 		setMode(GL20.GL_TRIANGLE_FAN);
@@ -155,17 +151,9 @@ public class MeshActor extends EntityActor {
 	public void setupModelMatrix() {
 		mModelMatrix.idt()
 		            .translate(getX(), getY(), 0.0f)
-//		            .translate(getX() + getOriginX(), getY() + getOriginY(), 0.0f)
 		            .rotate(Vector3.Z, getRotation())
 		            .translate(getOriginX(), getOriginY(), 0.0f)
 		            .scale(getWidth() * getScaleX(), getHeight() * getScaleY(), 1.0f);
-	}
-
-	public Matrix3 getTransformMatrix() {
-		return mTransformMatrix.idt()
-		                       .translate(-(getX() + getOriginX()), -(getY() + getOriginY()))
-		                       .rotate(-getRotation())
-		                       .scale(1.0f / (getWidth() * getScaleX()), 1.0f / (getHeight() * getScaleY()));
 	}
 
 	public float[] getVertices() {
