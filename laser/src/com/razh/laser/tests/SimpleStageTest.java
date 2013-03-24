@@ -1,15 +1,6 @@
 package com.razh.laser.tests;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.color;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.forever;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.removeActor;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.repeat;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.rotateBy;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sizeBy;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.razh.laser.sprites.DashedRingSpriteActor.segmentAngleTo;
 import static com.razh.laser.sprites.DashedRingSpriteActor.segmentSpacingTo;
 

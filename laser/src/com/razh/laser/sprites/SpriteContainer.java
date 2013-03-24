@@ -13,8 +13,6 @@ public class SpriteContainer extends EntityActor {
 	 */
 	@Override
 	public void act(float delta) {
-
-
 		Actor[] actors = mComponents.begin();
 
 		Actor actor;
