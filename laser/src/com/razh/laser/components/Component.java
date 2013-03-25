@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.razh.laser.entities.Entity;
 
 public abstract class Component {
+
 	private Entity mEntity;
 
 	public abstract void act(float delta);

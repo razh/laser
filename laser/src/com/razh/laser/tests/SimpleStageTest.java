@@ -183,6 +183,7 @@ public class SimpleStageTest extends StageTest {
 		shipSprite.setPosition(-0.25f * halfWidth, 0.25f * halfHeight);
 		shipSprite.setWidth(300.0f);
 		shipSprite.setHeight(300.0f);
+		shipSprite.setColor(1.0f, 0.0f, 0.0f, 1.0f);
 
 		shipSprite.setSprite(new Sprite(texture));
 		stage.addActor(shipSprite);
