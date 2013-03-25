@@ -31,6 +31,29 @@ public class Entity {
 		return mComponents;
 	}
 
+	public Component getComponentOfType(Class<?> type) {
+		if (!Component.class.isAssignableFrom(type)) {
+			return null;
+		}
+
+		Component[] components = mComponents.begin();
+
+		Component component;
+		for (int i = 0, n = mComponents.size; i < n; i++) {
+			component = components[i];
+			if (component.getClass() == type) {
+				mComponents.end();
+				return component;
+			}
+		}
+
+		mComponents.end();
+
+		return null;
+	}
+
 	public void addComponent(Component component) {
+		component.setEntity(this);
+		mComponents.add(component);
 	}
 }

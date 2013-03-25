@@ -44,14 +44,14 @@ public class PhysicsComponent extends Component {
 	@Override
 	public void act(float delta) {
 		Actor actor = getActor();
-		mPosition.set(actor.getX(), actor.getY());
 
+		mPosition.set(actor.getX(), actor.getY());
 		accelerate(mTempVector.set(mAcceleration).mul(delta));
 		translate(mTempVector.set(mVelocity).mul(delta));
 
 		mRotation = actor.getRotation();
-		mAngularVelocity += mAngularAcceleration * delta;
-		mRotation += mAngularVelocity * delta;
+		angularAccelerate(mAngularAcceleration * delta);
+		rotate(mAngularVelocity * delta);
 
 		actor.setPosition(mPosition.x, mPosition.y);
 		actor.setRotation(mRotation);
@@ -115,6 +115,10 @@ public class PhysicsComponent extends Component {
 		mVelocity.set(velocity).limit(mMaxSpeed);
 	}
 
+	public void setVelocity(float velocityX, float velocityY) {
+		mVelocity.set(velocityX, velocityY).limit(mMaxSpeed);
+	}
+
 	public void translate(Vector2 translation) {
 		translate(translation.x, translation.y);
 	}
@@ -162,6 +166,10 @@ public class PhysicsComponent extends Component {
 		mAcceleration.set(acceleration).limit(mMaxAcceleration);
 	}
 
+	public void setAcceleration(float accelerationX, float accelerationY) {
+		mAcceleration.set(accelerationX, accelerationY).limit(mMaxAcceleration);
+	}
+
 	public void accelerate(Vector2 acceleration) {
 		accelerate(acceleration.x, acceleration.y);
 	}
@@ -183,6 +191,17 @@ public class PhysicsComponent extends Component {
 	}
 
 	/**
+	 * Rotation.
+	 */
+	public float getRotation() {
+		return mRotation;
+	}
+
+	public void setRotation(float rotation) {
+		mRotation = rotation;
+	}
+
+	/**
 	 * Angular velocity.
 	 */
 	public float getAngularVelocity() {
@@ -191,6 +210,10 @@ public class PhysicsComponent extends Component {
 
 	public void setAngularVelocity(float angularVelocity) {
 		mAngularVelocity = MathUtils.clamp(angularVelocity, -mMaxAngularVelocity, mMaxAngularVelocity);
+	}
+
+	public void rotate(float angle) {
+		setRotation(getRotation() + angle);
 	}
 
 	/**

@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.razh.laser.ActorContainer;
 import com.razh.laser.Geometry;
 import com.razh.laser.MeshActor;
+import com.razh.laser.components.MissileComponent;
 import com.razh.laser.sprites.SpriteActor;
 
 public class EntityFactory {
@@ -71,8 +72,14 @@ public class EntityFactory {
 
 		missileContainer.addActor(missile);
 
+		// Add missile logic.
+		MissileComponent missileComponent = new MissileComponent();
+		missileComponent.setMaxAcceleration(1000.0f);
+		missileComponent.setMaxSpeed(2000.0f);
+
 		Entity entity = new Entity();
 		entity.setActor(missileContainer);
+		entity.addComponent(missileComponent);
 		missileContainer.setEntity(entity);
 
 		return entity;

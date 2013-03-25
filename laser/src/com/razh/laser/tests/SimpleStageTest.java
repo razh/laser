@@ -22,6 +22,7 @@ import com.razh.laser.MeshActor;
 import com.razh.laser.Shader;
 import com.razh.laser.ShaderGroup;
 import com.razh.laser.ShaderStage;
+import com.razh.laser.components.MissileComponent;
 import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
 import com.razh.laser.sprites.ArcSpriteActor;
@@ -241,6 +242,13 @@ public class SimpleStageTest extends StageTest {
 
 		stage.addActor(decal2);
 
-		stage.addActorContainer((ActorContainer) EntityFactory.createMissile(0).getActor());
+		Entity missile = EntityFactory.createMissile(0);
+		MissileComponent missileComponent = (MissileComponent) missile.getComponentOfType(MissileComponent.class);
+		missileComponent.setVelocity(0.0f, -500.0f);
+		if (missileComponent != null) {
+			missileComponent.setTarget(shipSprite2);
+		}
+
+		stage.addActorContainer((ActorContainer) missile.getActor());
 	}
 }

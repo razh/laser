@@ -1,5 +1,6 @@
 package com.razh.laser.components;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -20,10 +21,15 @@ public class MissileComponent extends PhysicsComponent {
 		super.act(delta);
 
 		Actor actor = getActor();
+		if (actor == null || mTarget == null) {
+			return;
+		}
+
 		mActorPosition.set(actor.getX(), actor.getY());
 		mTargetPosition.set(mTarget.getX(), mTarget.getY());
 
-		mTargetPosition.sub(mActorPosition);
+		setAcceleration(mTargetPosition.sub(mActorPosition));
+		actor.setRotation((float) Math.atan2(getVelocityY(), getVelocityX()) * MathUtils.radiansToDegrees + 90.0f);
 	}
 
 	public Actor getTarget() {
