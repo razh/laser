@@ -22,6 +22,8 @@ public class MissileComponent extends PhysicsComponent {
 		Actor actor = getActor();
 		mActorPosition.set(actor.getX(), actor.getY());
 		mTargetPosition.set(mTarget.getX(), mTarget.getY());
+
+		mTargetPosition.sub(mActorPosition);
 	}
 
 	public Actor getTarget() {
