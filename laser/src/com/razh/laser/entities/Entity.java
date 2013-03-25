@@ -2,6 +2,7 @@ package com.razh.laser.entities;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.razh.laser.components.Component;
 
 public class Entity {
 
