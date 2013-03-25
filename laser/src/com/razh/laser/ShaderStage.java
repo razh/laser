@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.laser.sprites.ProceduralSpriteActor;
-import com.razh.laser.sprites.SpriteContainer;
+import com.razh.laser.sprites.SpriteActor;
 
 public class ShaderStage extends Stage {
 
@@ -132,15 +132,15 @@ public class ShaderStage extends Stage {
 		return group;
 	}
 
-	public void addSpriteContainer(SpriteContainer container) {
-		SnapshotArray<Actor> components = container.getComponents();
+	public void addActorContainer(ActorContainer container) {
+		SnapshotArray<Actor> components = container.getActors();
 		Actor[] actors = components.begin();
 
 		Actor actor;
 		for (int i = 0, n = components.size; i < n; i++) {
 			actor = actors[i];
 
-			if (actor instanceof ProceduralSpriteActor ||
+			if (actor instanceof SpriteActor ||
 				actor instanceof MeshActor ||
 				actor instanceof DecalActor ) {
 				addActor(actor);

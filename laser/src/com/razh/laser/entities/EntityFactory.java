@@ -2,9 +2,14 @@ package com.razh.laser.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.razh.laser.ActorContainer;
 import com.razh.laser.Geometry;
 import com.razh.laser.MeshActor;
+import com.razh.laser.sprites.SpriteActor;
 
 public class EntityFactory {
 	public static Entity createEmitter() {
@@ -34,7 +39,7 @@ public class EntityFactory {
 		actor.setMode(GL20.GL_TRIANGLE_FAN);
 
 //		actor.setGeometry(Geometry.createRingHull(1.0f, 0.8f, 0, 180 * MathUtils.degreesToRadians, 32, true));
-		actor.setColor(0.75f, 0.75f, 0.75f, 0.5f);
+		actor.setColor(0.75f, 0.75f, 0.75f, 1.0f);
 //		actor.setPosition((float) (Gdx.graphics.getWidth() * Math.random()),
 //		                  (float) (Gdx.graphics.getHeight() * Math.random()));
 		actor.setPosition(Gdx.graphics.getWidth() * 0.2f, Gdx.graphics.getHeight() * 0.1f);
@@ -51,5 +56,25 @@ public class EntityFactory {
 	public static Entity createCircleSprite() {
 		// ShaderGroups?
 		return null;
+	}
+
+	public static Entity createMissile(int segmentCount) {
+		ActorContainer missileContainer = new ActorContainer();
+		missileContainer.setPosition(Gdx.graphics.getWidth() * 0.4f, Gdx.graphics.getHeight() * 0.2f);
+
+		Texture texture = new Texture("data/missile.png");
+		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		SpriteActor missile = new SpriteActor();
+		missile.setSprite(new Sprite(texture));
+		missile.setWidth(128.0f);
+		missile.setHeight(128.0f);
+
+		missileContainer.addActor(missile);
+
+		Entity entity = new Entity();
+		entity.setActor(missileContainer);
+		missileContainer.setEntity(entity);
+
+		return entity;
 	}
 }

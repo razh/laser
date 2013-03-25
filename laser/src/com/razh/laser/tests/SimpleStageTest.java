@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.razh.laser.ActorContainer;
 import com.razh.laser.DecalActor;
 import com.razh.laser.Geometry;
 import com.razh.laser.MeshActor;
@@ -28,7 +29,6 @@ import com.razh.laser.sprites.CircleSpriteActor;
 import com.razh.laser.sprites.DashedRingSpriteActor;
 import com.razh.laser.sprites.ProceduralSpriteActor;
 import com.razh.laser.sprites.SpriteActor;
-import com.razh.laser.sprites.SpriteContainer;
 
 public class SimpleStageTest extends StageTest {
 
@@ -198,12 +198,12 @@ public class SimpleStageTest extends StageTest {
 		shipSprite2.setSprite(new Sprite(texture2));
 		stage.addActor(shipSprite2);
 
-		SpriteContainer container = new SpriteContainer();
-		container.addComponent(arcSprite);
-		container.addComponent(circle);
-		container.addComponent(mesh);
+		ActorContainer container = new ActorContainer();
+		container.addActor(arcSprite);
+		container.addActor(circle);
+		container.addActor(mesh);
 
-		stage.addSpriteContainer(container);
+		stage.addActorContainer(container);
 		container.addAction(
 			parallel(
 				forever(
@@ -224,12 +224,23 @@ public class SimpleStageTest extends StageTest {
 		);
 
 		DecalActor decal = new DecalActor();
-		decal.setDecal(Decal.newDecal(new TextureRegion(texture)));
+		decal.setDecal(Decal.newDecal(new TextureRegion(texture2)));
 		decal.setWidth(200.0f);
 		decal.setHeight(200.0f);
 		decal.setPosition(0.3f * halfWidth, 0.4f * halfHeight, -100.0f);
 		decal.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		stage.addActor(decal);
+
+		DecalActor decal2 = new DecalActor();
+		decal2.setDecal(Decal.newDecal(new TextureRegion(texture2)));
+		decal2.setWidth(200.0f);
+		decal2.setHeight(200.0f);
+		decal2.setPosition(0.3f * halfWidth, 0.4f * halfHeight, 100.0f);
+		decal2.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		stage.addActor(decal2);
+
+		stage.addActorContainer((ActorContainer) EntityFactory.createMissile(0).getActor());
 	}
 }
