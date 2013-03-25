@@ -115,13 +115,13 @@ public class PhysicsComponent extends Component {
 		mVelocity.set(velocity).limit(mMaxSpeed);
 	}
 
-	public void translate(Vector2 translate) {
-		translate(translate.x, translate.y);
+	public void translate(Vector2 translation) {
+		translate(translation.x, translation.y);
 	}
 
-	public void translate(float translateX, float translateY) {
+	public void translate(float translationX, float translationY) {
 		mTempVector2.set(mPosition);
-		setPosition(mTempVector2.add(translateX, translateY));
+		setPosition(mTempVector2.add(translationX, translationY));
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class PhysicsComponent extends Component {
 	}
 
 	public void setMaxSpeed(float maxSpeed) {
-		mMaxSpeed = maxSpeed;
+		mMaxSpeed = Math.abs(maxSpeed);
 	}
 
 	/**
@@ -162,13 +162,13 @@ public class PhysicsComponent extends Component {
 		mAcceleration.set(acceleration).limit(mMaxAcceleration);
 	}
 
-	public void accelerate(Vector2 accelerate) {
-		accelerate(accelerate.x, accelerate.y);
+	public void accelerate(Vector2 acceleration) {
+		accelerate(acceleration.x, acceleration.y);
 	}
 
-	public void accelerate(float accelerateX, float accelerateY) {
+	public void accelerate(float accelerationX, float accelerationY) {
 		mTempVector2.set(getVelocity());
-		setVelocity(mTempVector2.add(accelerateX, accelerateY));
+		setVelocity(mTempVector2.add(accelerationX, accelerationY));
 	}
 
 	/**
@@ -213,6 +213,10 @@ public class PhysicsComponent extends Component {
 
 	public void setAngularAcceleration(float angularAcceleration) {
 		mAngularAcceleration = MathUtils.clamp(angularAcceleration, -mMaxAngularAcceleration, mMaxAngularAcceleration);
+	}
+
+	public void angularAccelerate(float angularAcceleration) {
+		setAngularVelocity(mAngularVelocity + angularAcceleration);
 	}
 
 	/**
