@@ -3,8 +3,8 @@ package com.razh.laser.components;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
@@ -24,7 +24,7 @@ public class MissilePathComponent extends Component {
 
 	private Mode mDrawingMode;
 
-	private Sprite mPathSprite;
+	private Sprite mPathSprite = new Sprite(new Texture("data/missile_path.png"));
 
 	private final ActorContainer mPathActors;
 	private final Queue<Actor> mUnusedPathActors;
@@ -46,7 +46,7 @@ public class MissilePathComponent extends Component {
 		mPathActors = new ActorContainer();
 		mUnusedPathActors = new LinkedList<Actor>();
 
-		mSegmentCount = 2;
+		mSegmentCount = 4;
 
 		mPathWidth = 10.0f;
 		mSegmentLength = 80.0f;
@@ -57,6 +57,8 @@ public class MissilePathComponent extends Component {
 		mLastPosition = new Vector2();
 		mDistanceTraveled = 0.0f;
 
+		// TODO: Allocating path actors here means we can't
+		// add from the child ActorContainer.
 		allocatePathActors();
 
 		// Get the first path actor available and remove it from the
@@ -94,14 +96,18 @@ public class MissilePathComponent extends Component {
 			mCurrentPathActor.setWidth(length);
 		}else if (mDrawingMode == Mode.PEN_UP) {
 			mDistanceTraveled += mTempVector.dst(mLastPosition);
+			System.out.println(mDistanceTraveled);
 
 			if (mDistanceTraveled > mSegmentSpacing) {
 				// Add a new path actor.
-				mCurrentPathActor = mUnusedPathActors.remove();
+				if (mUnusedPathActors.size() > 0) {
+					mCurrentPathActor = mUnusedPathActors.remove();
+				}
 				mCurrentPathActor.getColor().a = 1.0f;
 
 				// Set segment start to current position.
 				mCurrentPathActor.setPosition(mTempVector.x, mTempVector.y);
+				mDistanceTraveled = 0.0f;
 
 				// Start drawing.
 				mDrawingMode = Mode.PEN_DOWN;
