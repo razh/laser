@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.razh.laser.ActorContainer;
 import com.razh.laser.Geometry;
 import com.razh.laser.MeshActor;
+import com.razh.laser.TransformActorContainer;
 import com.razh.laser.components.MissileComponent;
 import com.razh.laser.sprites.SpriteActor;
 
@@ -60,7 +61,7 @@ public class EntityFactory {
 	}
 
 	public static Entity createMissile(int segmentCount) {
-		ActorContainer missileContainer = new ActorContainer();
+		ActorContainer missileContainer = new TransformActorContainer();
 		missileContainer.setPosition(Gdx.graphics.getWidth() * 0.4f, Gdx.graphics.getHeight() * 0.2f);
 
 		Texture texture = new Texture("data/missile.png");

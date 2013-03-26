@@ -13,26 +13,6 @@ public class ActorContainer extends EntityActor {
 	private final SnapshotArray<Actor> mActors = new SnapshotArray<Actor>(true, 4, Actor.class);
 
 	/**
-	 * Sets components to the same transformation: scale, rotation, and position.
-	 */
-	@Override
-	public void act(float delta) {
-		Actor[] actors = mActors.begin();
-
-		Actor actor;
-		for (int i = 0, n = mActors.size; i < n; i++) {
-			actor = actors[i];
-
-			actor.setRotation(getRotation());
-			actor.setScale(getScaleX(), getScaleY());
-			actor.setPosition(getX(), getY());
-		}
-
-		mActors.end();
-		super.act(delta);
-	}
-
-	/**
 	 * Adds an actor as to this container. Actor is not removed from
 	 * its original parent group.
 	 * @param actor

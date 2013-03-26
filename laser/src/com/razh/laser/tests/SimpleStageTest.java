@@ -22,6 +22,7 @@ import com.razh.laser.MeshActor;
 import com.razh.laser.Shader;
 import com.razh.laser.ShaderGroup;
 import com.razh.laser.ShaderStage;
+import com.razh.laser.TransformActorContainer;
 import com.razh.laser.components.MissileComponent;
 import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
@@ -200,7 +201,7 @@ public class SimpleStageTest extends StageTest {
 		shipSprite2.setSprite(new Sprite(texture2));
 		stage.addActor(shipSprite2);
 
-		ActorContainer container = new ActorContainer();
+		ActorContainer container = new TransformActorContainer();
 		container.addActor(arcSprite);
 		container.addActor(circle);
 		container.addActor(mesh);
