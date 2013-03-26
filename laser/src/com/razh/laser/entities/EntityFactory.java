@@ -11,6 +11,7 @@ import com.razh.laser.Geometry;
 import com.razh.laser.MeshActor;
 import com.razh.laser.TransformActorContainer;
 import com.razh.laser.components.MissileComponent;
+import com.razh.laser.components.MissilePathComponent;
 import com.razh.laser.sprites.SpriteActor;
 
 public class EntityFactory {
@@ -78,9 +79,15 @@ public class EntityFactory {
 		missileComponent.setMaxAcceleration(1000.0f);
 		missileComponent.setMaxSpeed(2000.0f);
 
+		// Add missile path.
+		Texture missilePathTexture = new Texture("data/missile_path.png");
+		MissilePathComponent missilePath = new MissilePathComponent();
+		missilePath.setPathSprite(new Sprite(missilePathTexture));
+
 		Entity entity = new Entity();
 		entity.setActor(missileContainer);
 		entity.addComponent(missileComponent);
+		entity.addComponent(missilePath);
 		missileContainer.setEntity(entity);
 
 		return entity;
