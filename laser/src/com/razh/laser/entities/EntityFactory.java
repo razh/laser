@@ -81,6 +81,7 @@ public class EntityFactory {
 
 		// Add missile path.
 		Texture missilePathTexture = new Texture("data/missile_path.png");
+		missilePathTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		MissilePathComponent missilePath = new MissilePathComponent();
 		missilePath.setPathSprite(new Sprite(missilePathTexture));
 

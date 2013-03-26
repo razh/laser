@@ -255,6 +255,7 @@ public class SimpleStageTest extends StageTest {
 		// Add missile path actors.
 		MissilePathComponent missilePath = (MissilePathComponent) missile.getComponentOfType(MissilePathComponent.class);
 		ActorContainer pathActors = missilePath.getPathActors();
+		System.out.println(pathActors.getActors().size);
 		stage.addActorContainer(pathActors);
 	}
 }

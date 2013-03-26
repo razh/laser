@@ -1,10 +1,12 @@
 package com.razh.laser.components;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
@@ -28,6 +30,7 @@ public class MissilePathComponent extends Component {
 
 	private final ActorContainer mPathActors;
 	private final Queue<Actor> mUnusedPathActors;
+	private final Deque<Actor> mCurrentPathActors;
 	private Actor mCurrentPathActor;
 
 	private int mSegmentCount;
@@ -45,14 +48,15 @@ public class MissilePathComponent extends Component {
 
 		mPathActors = new ActorContainer();
 		mUnusedPathActors = new LinkedList<Actor>();
+		mCurrentPathActors = new LinkedList<Actor>();
 
 		mSegmentCount = 4;
 
-		mPathWidth = 10.0f;
-		mSegmentLength = 80.0f;
+		mPathWidth = 20.0f;
+		mSegmentLength = 200.0f;
 		mSegmentSpacing = 20.0f;
 
-		mAlphaDecayRate = 0.1f;
+		mAlphaDecayRate = 10.0f;
 
 		mLastPosition = new Vector2();
 		mDistanceTraveled = 0.0f;
@@ -74,11 +78,11 @@ public class MissilePathComponent extends Component {
 
 		// Lengthen current path actor.
 		if (mDrawingMode == Mode.PEN_DOWN && mCurrentPathActor != null) {
-			// Get vector to from mCurrentPathActor position to current position.
+			// Get vector from mCurrentPathActor position to current position.
 			mTempVector2.set(mCurrentPathActor.getX(), mCurrentPathActor.getY());
 			mTempVector.sub(mTempVector2);
 
-			mCurrentPathActor.setRotation((float) Math.atan2(mTempVector.y, mTempVector.x));
+			mCurrentPathActor.setRotation((float) Math.atan2(mTempVector.y, mTempVector.x) * MathUtils.radiansToDegrees);
 
 			// If length is greater, limit it, and stop drawing.
 			float length = mTempVector.len();
@@ -94,16 +98,20 @@ public class MissilePathComponent extends Component {
 
 			// Set mCurrentPathActor to new length.
 			mCurrentPathActor.setWidth(length);
-		}else if (mDrawingMode == Mode.PEN_UP) {
+		} else if (mDrawingMode == Mode.PEN_UP) {
 			mDistanceTraveled += mTempVector.dst(mLastPosition);
-			System.out.println(mDistanceTraveled);
 
 			if (mDistanceTraveled > mSegmentSpacing) {
 				// Add a new path actor.
 				if (mUnusedPathActors.size() > 0) {
 					mCurrentPathActor = mUnusedPathActors.remove();
+				} else {
+					mCurrentPathActor = mCurrentPathActors.removeLast();
 				}
+
+				mCurrentPathActors.addFirst(mCurrentPathActor);
 				mCurrentPathActor.getColor().a = 1.0f;
+				mCurrentPathActor.setWidth(0.0f);
 
 				// Set segment start to current position.
 				mCurrentPathActor.setPosition(mTempVector.x, mTempVector.y);
@@ -125,7 +133,7 @@ public class MissilePathComponent extends Component {
 			pathActor = pathActors[i];
 
 			alpha = Math.max(actor.getColor().a - mAlphaDecayRate * delta, 0.0f);
-			if (alpha == 0.0f) {
+			if (alpha <= 0.0f) {
 				pathActor.setVisible(false);
 				mUnusedPathActors.add(pathActor);
 			}
@@ -147,8 +155,9 @@ public class MissilePathComponent extends Component {
 		for (int i = size; i < mSegmentCount; i++) {
 			spriteActor = new SpriteActor();
 			spriteActor.setSprite(mPathSprite);
-			spriteActor.setOrigin(Origin.LEFT);
-			spriteActor.setVisible(false);
+			spriteActor.setOrigin(Origin.CENTER);
+			spriteActor.setHeight(mPathWidth);
+			spriteActor.setVisible(true);
 
 			actors.add(spriteActor);
 			mUnusedPathActors.add(spriteActor);
