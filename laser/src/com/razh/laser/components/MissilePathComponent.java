@@ -267,5 +267,4 @@ public class MissilePathComponent extends Component {
 	public void setAlphaDecayRate(float alphaDecayRate) {
 		mAlphaDecayRate = alphaDecayRate;
 	}
-
 }

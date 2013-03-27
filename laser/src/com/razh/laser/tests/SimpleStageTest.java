@@ -248,8 +248,8 @@ public class SimpleStageTest extends StageTest {
 
 		Entity missile = EntityFactory.createMissile(0);
 		MissileComponent missileComponent = (MissileComponent) missile.getComponentOfType(MissileComponent.class);
-		missileComponent.setVelocity(0.0f, -500.0f);
-		missileComponent.setTarget(shipSprite2);
+		missileComponent.getPhysicsComponent().setVelocity(0.0f, -500.0f);
+		missileComponent.getTargetComponent().setTarget(shipSprite2);
 
 		stage.addActorContainer((ActorContainer) missile.getActor());
 
@@ -259,6 +259,21 @@ public class SimpleStageTest extends StageTest {
 		System.out.println(pathActors.getActors().size);
 		stage.addActorContainer(pathActors);
 
+		// Second missile.
+		Entity missile2 = EntityFactory.createMissile(0);
+		missileComponent = (MissileComponent) missile2.getComponentOfType(MissileComponent.class);
+		missileComponent.getPhysicsComponent().setVelocity(-800.0f, -300.0f);
+		missileComponent.getTargetComponent().setTarget(shipSprite2);
+		missile2.getActor().setPosition(Gdx.graphics.getWidth() * -0.4f, Gdx.graphics.getHeight() * 0.2f);
+
+		stage.addActorContainer((ActorContainer) missile2.getActor());
+
+		// Add missile path actors.
+		missilePath = (MissilePathComponent) missile2.getComponentOfType(MissilePathComponent.class);
+		pathActors = missilePath.getPathActors();
+		stage.addActorContainer(pathActors);
+
+		// Test SpriteActor Origin enum.
 		SpriteActor testPath = new SpriteActor();
 		testPath.setSprite(new Sprite(new Texture("data/missile_path.png")));
 		testPath.setPosition(-0.7f * halfWidth, -0.7f * halfHeight);

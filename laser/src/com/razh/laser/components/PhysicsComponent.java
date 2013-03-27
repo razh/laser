@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  */
 public class PhysicsComponent extends Component {
 
+	private static final Vector2 mTempVector = new Vector2();
+	private static final Vector2 mTempVector2 = new Vector2();
+
 	private final Vector2 mPosition;
 	private float mRotation;
 
@@ -25,9 +28,6 @@ public class PhysicsComponent extends Component {
 
 	private float mMaxAngularVelocity;
 	private float mMaxAngularAcceleration;
-
-	private static final Vector2 mTempVector = new Vector2();
-	private static final Vector2 mTempVector2 = new Vector2();
 
 	public PhysicsComponent() {
 		mPosition = new Vector2();

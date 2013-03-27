@@ -2,41 +2,55 @@ package com.razh.laser.components;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.razh.laser.entities.Entity;
 
-public class MissileComponent extends PhysicsComponent {
+/**
+ * Statically composed of a PhysicsComponent and a TargetComponent.
+ * @author raz
+ *
+ */
+public class MissileComponent extends Component {
 
-	private final Vector2 mActorPosition;
-	private final Vector2 mTargetPosition;
-
-	private Actor mTarget;
+	private PhysicsComponent mPhysicsComponent;
+	private TargetComponent mTargetComponent;
 
 	public MissileComponent() {
-		mActorPosition = new Vector2();
-		mTargetPosition = new Vector2();
+		super();
+
+		mPhysicsComponent = new PhysicsComponent();
+		mTargetComponent = new TargetComponent();
 	}
 
 	@Override
 	public void act(float delta) {
-		super.act(delta);
+		mPhysicsComponent.act(delta);
+		mTargetComponent.act(delta);
 
-		Actor actor = getActor();
-		if (actor == null || mTarget == null) {
+		Vector2 toTarget = mTargetComponent.getVectorToTarget();
+		if (toTarget == null) {
 			return;
 		}
 
-		mActorPosition.set(actor.getX(), actor.getY());
-		mTargetPosition.set(mTarget.getX(), mTarget.getY());
+		mPhysicsComponent.setAcceleration(mTargetComponent.getVectorToTarget());
 
-		setAcceleration(mTargetPosition.sub(mActorPosition));
-		actor.setRotation((float) Math.atan2(getVelocityY(), getVelocityX()) * MathUtils.radiansToDegrees + 90.0f);
+		Vector2 velocity = mPhysicsComponent.getVelocity();
+		// We add 90.0f because of image orientation.
+		getActor().setRotation((float) Math.atan2(velocity.y, velocity.x) * MathUtils.radiansToDegrees + 90.0f);
 	}
 
-	public Actor getTarget() {
-		return mTarget;
+	@Override
+	public void setEntity(Entity entity) {
+		super.setEntity(entity);
+
+		mPhysicsComponent.setEntity(entity);
+		mTargetComponent.setEntity(entity);
 	}
 
-	public void setTarget(Actor actor) {
-		mTarget = actor;
+	public PhysicsComponent getPhysicsComponent() {
+		return mPhysicsComponent;
+	}
+
+	public TargetComponent getTargetComponent() {
+		return mTargetComponent;
 	}
 }

@@ -76,8 +76,8 @@ public class EntityFactory {
 
 		// Add missile logic.
 		MissileComponent missileComponent = new MissileComponent();
-		missileComponent.setMaxAcceleration(1000.0f);
-		missileComponent.setMaxSpeed(2000.0f);
+		missileComponent.getPhysicsComponent().setMaxAcceleration(1000.0f);
+		missileComponent.getPhysicsComponent().setMaxSpeed(2000.0f);
 
 		// Add missile path.
 		Texture missilePathTexture = new Texture("data/missile_path.png");
