@@ -13,7 +13,8 @@ public class SpriteActor extends EntityActor {
 	public enum Origin {
 		BOTTOM_LEFT,
 		LEFT,
-		CENTER
+		CENTER,
+		CUSTOM
 	}
 
 	private Sprite mSprite;
@@ -40,18 +41,25 @@ public class SpriteActor extends EntityActor {
 		mSprite.setRotation(getRotation());
 		mSprite.setScale(getScaleX(), getScaleY());
 		mSprite.setSize(width, height);
-		mSprite.setOrigin(getOriginX() + halfWidth, getOriginY() + halfHeight);
 
 		switch (mOrigin) {
 			case BOTTOM_LEFT:
+				mSprite.setOrigin(getOriginX(), getOriginY());
 				mSprite.setPosition(getX(), getY());
 				break;
 
 			case LEFT:
+				mSprite.setOrigin(getOriginX(), getOriginY() + halfHeight);
 				mSprite.setPosition(getX(), getY() - halfHeight);
 				break;
 
 			case CENTER:
+				mSprite.setOrigin(getOriginX() + halfWidth, getOriginY() + halfHeight);
+				mSprite.setPosition(getX() - halfWidth, getY() - halfHeight);
+				break;
+
+			case CUSTOM:
+				mSprite.setOrigin(getOriginX(), getOriginY());
 				mSprite.setPosition(getX() - halfWidth, getY() - halfHeight);
 				break;
 		}
@@ -73,5 +81,11 @@ public class SpriteActor extends EntityActor {
 
 	public void setOrigin(Origin origin) {
 		mOrigin = origin;
+	}
+
+	@Override
+	public void setOrigin(float originX, float originY) {
+		super.setOrigin(originX, originY);
+		mOrigin = Origin.CUSTOM;
 	}
 }

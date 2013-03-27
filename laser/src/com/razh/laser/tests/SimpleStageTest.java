@@ -32,6 +32,7 @@ import com.razh.laser.sprites.CircleSpriteActor;
 import com.razh.laser.sprites.DashedRingSpriteActor;
 import com.razh.laser.sprites.ProceduralSpriteActor;
 import com.razh.laser.sprites.SpriteActor;
+import com.razh.laser.sprites.SpriteActor.Origin;
 
 public class SimpleStageTest extends StageTest {
 
@@ -194,8 +195,8 @@ public class SimpleStageTest extends StageTest {
 		shipSprite2.setPosition(0.25f * halfWidth, -0.25f * halfHeight);
 		shipSprite2.setWidth(300.0f);
 		shipSprite2.setHeight(300.0f);
-		shipSprite2.setOrigin(0.0f, 0.0f);
-		shipSprite2.addAction(forever(rotateBy(180.0f, 1.0f)));
+		shipSprite2.setOrigin(Origin.BOTTOM_LEFT);
+		shipSprite2.addAction(forever(rotateBy(180.0f, 2.0f)));
 
 		Texture texture2 = new Texture("data/test_ship2.png");
 		texture2.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -257,5 +258,19 @@ public class SimpleStageTest extends StageTest {
 		ActorContainer pathActors = missilePath.getPathActors();
 		System.out.println(pathActors.getActors().size);
 		stage.addActorContainer(pathActors);
+
+		SpriteActor testPath = new SpriteActor();
+		testPath.setSprite(new Sprite(new Texture("data/missile_path.png")));
+		testPath.setPosition(-0.7f * halfWidth, -0.7f * halfHeight);
+		testPath.setWidth(200.0f);
+		testPath.setHeight(50.0f);
+		testPath.setOrigin(Origin.LEFT);
+		testPath.addAction(
+			forever(
+				rotateBy(180.0f, 1.0f)
+			)
+		);
+
+		stage.addActor(testPath);
 	}
 }
