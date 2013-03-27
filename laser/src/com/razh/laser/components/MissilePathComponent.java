@@ -49,15 +49,15 @@ public class MissilePathComponent extends Component {
 		mDrawingMode = Mode.PEN_UP;
 
 		mPathSprite = new Sprite(new Texture("data/missile_path2.png"));
-		mPathColor = new Color(Color.RED);
+		mPathColor = new Color(218 / 255.0f, 56 / 255.0f, 56 / 255.0f, 1.0f);
 
 		mPathActors = new ActorContainer();
 		mCurrentPathActors = new LinkedList<Actor>();
 
 		mSegmentCount = 8;
 
-		mPathWidth = 10.0f;
-		mSegmentLength = 80.0f;
+		mPathWidth = 15.0f;
+		mSegmentLength = 100.0f;
 		mSegmentSpacing = 5.0f;
 
 		mAlphaDecayRate = 0.6f;
