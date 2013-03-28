@@ -60,6 +60,7 @@ public class ShaderStage extends Stage {
 		addActor(mDecalGroup);
 
 		// Create MeshGroup and add it to Groups container.
+		// MeshGroup is necessary for transparency/draw(shaderProgram).
 		mMeshGroup = new MeshGroup();
 		mMeshShader = Shader.createSimpleMeshShader();
 		mGroups.put(MeshActor.class, mMeshGroup);

@@ -17,6 +17,10 @@ public class DecalActor extends Actor3D {
 		mDecal.setPosition(getX(), getY(), getZ());
 		mDecal.setDimensions(getWidth(), getHeight());
 		mDecal.setScale(getScaleX(), getScaleY());
+		// Hacky, since we're not supposed to modify this quaternion.
+		mDecal.getRotation().set(getRotationQuaternion());
+		// Force update to rotation quaternion of decal.
+		mDecal.rotateX(0.0f);
 	}
 
 	public void draw(DecalBatch decalBatch) {
