@@ -35,6 +35,7 @@ public class GameInputProcessor extends BasicInputProcessor {
 		}
 
 		boolean anticlockwise = screenX < 0.5f * Gdx.graphics.getWidth() ? true : false;
+		System.out.println(anticlockwise ? "left" : "right");
 
 		return false;
 	}

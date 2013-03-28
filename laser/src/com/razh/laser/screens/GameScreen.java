@@ -28,6 +28,10 @@ public class GameScreen extends BasicScreen {
 
 	@Override
 	public void render(float delta) {
+		if (delta > 0.25f) {
+			delta = 0.25f;
+		}
+
 		getStage().act(delta);
 
 		Color backgroundColor = getShaderStage().getColor();
