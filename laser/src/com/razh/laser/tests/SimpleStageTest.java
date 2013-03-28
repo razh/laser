@@ -233,9 +233,13 @@ public class SimpleStageTest extends StageTest {
 		decal.setDecal(Decal.newDecal(new TextureRegion(texture2)));
 		decal.setWidth(200.0f);
 		decal.setHeight(200.0f);
-		decal.setPosition(0.3f * halfWidth, 0.4f * halfHeight, -100.0f);
+		decal.setPosition(0.3f * halfWidth, -0.3f * halfHeight, -100.0f);
 		decal.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
+		decal.addAction(
+			forever(
+				rotateBy3D(0.0f, 0.0f, 180.0f, 2.0f)
+			)
+		);
 		stage.addActor(decal);
 
 		// Second decal.
@@ -247,10 +251,9 @@ public class SimpleStageTest extends StageTest {
 		decal2.addAction(
 			forever(
 				sequence(
-					rotateTo3D(180.0f, 90.0f, 0.0f, 1.0f),
+					rotateTo3D(180.0f, 0.0f, 0.0f, 1.0f),
 					rotateTo3D(0.0f, 0.0f, 0.0f, 1.0f)
 				)
-//				rotateBy3D(0.0f, 0.0f, 90.0f, 10.0f, Interpolation.swing)
 			)
 		);
 		decal2.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -265,7 +268,7 @@ public class SimpleStageTest extends StageTest {
 		decal3.setPosition(-0.5f * halfWidth, 0.4f * halfHeight, 100.0f);
 		decal3.addAction(
 			forever(
-				rotateBy3D(0.0f, 0.0f, 90.0f, 5.0f, Interpolation.swing)
+				rotateBy3D(0.0f, 180.0f, 0.0f, 2.0f)
 			)
 		);
 		decal3.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

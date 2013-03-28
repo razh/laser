@@ -14,24 +14,20 @@ import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 
 public class Actor3D extends EntityActor {
 
-	private static final Quaternion mTempQuaternion = new Quaternion();
-	private static final Quaternion mTempQuaternion2 = new Quaternion();
-	private static final Quaternion mRotator = new Quaternion(0, 0, 0, 0);
-
 	private float mZ;
 
 	private final Vector2 mPosition2D;
 	private final Vector3 mPosition;
 
-	private final Quaternion mRotation;
+	private float mRotationX;
+	private float mRotationY;
+	private float mRotationZ;
 
 	public Actor3D() {
 		super();
 
 		mPosition2D = new Vector2();
 		mPosition = new Vector3();
-
-		mRotation = new Quaternion();
 	}
 
 	public float getZ() {
@@ -65,43 +61,52 @@ public class Actor3D extends EntityActor {
 		setZ(getZ() + z);
 	}
 
-	public void setRotationX(float angle) {
-		mRotation.set(Vector3.X, angle);
+	public float getRotationX() {
+		return mRotationX;
 	}
 
-	public void setRotationY(float angle) {
-		mRotation.set(Vector3.Y, angle);
+	public void setRotationX(float rotationX) {
+		mRotationX = rotationX;
 	}
 
-	public void setRotationZ(float angle) {
-		mRotation.set(Vector3.Z, angle);
+	public float getRotationY() {
+		return mRotationY;
+	}
+
+	public void setRotationY(float rotationY) {
+		mRotationY = rotationY;
+	}
+
+	public float getRotationZ() {
+		return mRotationZ;
+	}
+
+	public void setRotationZ(float rotationZ) {
+		mRotationZ = rotationZ;
+	}
+
+	public void setRotation(float rotationX, float rotationY, float rotationZ) {
+		setRotationX(rotationX);
+		setRotationY(rotationY);
+		setRotationZ(rotationZ);
+	}
+
+	public void rotate(float rotationX, float rotationY, float rotationZ) {
+		rotateX(rotationX);
+		rotateY(rotationY);
+		rotateZ(rotationZ);
 	}
 
 	public void rotateX(float angle) {
-		mRotator.set(Vector3.X, angle);
-		mRotation.mul(mRotator);
+		mRotationX += angle;
 	}
 
 	public void rotateY(float angle) {
-		mRotator.set(Vector3.Y, angle);
-		mRotation.mul(mRotator);
+		mRotationY += angle;
 	}
 
 	public void rotateZ(float angle) {
-		mRotator.set(Vector3.Z, angle);
-		mRotation.mul(mRotator);
-	}
-
-	public void setRotation(Vector3 axis, float angle) {
-		mRotation.set(axis, angle);
-	}
-
-	public void setRotation(Quaternion rotationQuaternion) {
-		mRotation.set(rotationQuaternion);
-	}
-
-	public Quaternion getRotationQuaternion() {
-		return mRotation;
+		mRotationZ += angle;
 	}
 
 	/**
@@ -169,7 +174,7 @@ public class Actor3D extends EntityActor {
 
 		public void setPosition(float x, float y, float z) {
 			super.setPosition(x, y);
-			mEndZ = z;
+			setZ(z);
 		}
 
 		public float getZ() {
@@ -189,58 +194,26 @@ public class Actor3D extends EntityActor {
 		private float mAmountY;
 		private float mAmountZ;
 
-		private Quaternion mStartRotation;
-		private Quaternion mEndRotation;
-
-		private float mPercent;
-
-		public RotateByAction3D() {
-			mEndRotation = new Quaternion();
-		}
-
 		@Override
 		protected void begin() {
 			super.begin();
-
 			mActor = convertToActor3D(actor);
-			mStartRotation = mActor.getRotationQuaternion();
-			mPercent = 0.0f;
-
-			updateRotationQuaternion();
-		}
-
-		@Override
-		protected void end() {
-			mActor.setRotation(mEndRotation);
 		}
 
 		@Override
 		protected void updateRelative(float percentDelta) {
-			mPercent += percentDelta;
-
-			mTempQuaternion2.set(mEndRotation);
-			mTempQuaternion.set(mStartRotation).slerp(mTempQuaternion2, mPercent);
-			mActor.setRotation(mTempQuaternion);
-		}
-
-		public Quaternion getRotationQuaternion() {
-			return mEndRotation;
-		}
-
-		public void updateRotationQuaternion() {
-			mEndRotation.set(mStartRotation);
-
-			mRotator.setEulerAngles(mAmountX, mAmountY, mAmountZ);
-			mEndRotation.mul(mRotator);
+			mActor.rotate(getAmountX() * percentDelta,
+			              getAmountY() * percentDelta,
+			              getAmountZ() * percentDelta);
 		}
 
 		/**
 		 * Necessary to update rotation quaternion on change.
 		 */
 		public void setAmount(float amountX, float amountY, float amountZ) {
-			mAmountX = amountX;
-			mAmountY = amountY;
-			mAmountZ = amountZ;
+			setAmountX(amountX);
+			setAmountY(amountY);
+			setAmountZ(amountZ);
 		}
 
 		public float getAmountX() {
@@ -248,7 +221,7 @@ public class Actor3D extends EntityActor {
 		}
 
 		public void setAmountX(float amountX) {
-			setAmount(amountX, mAmountY, mAmountZ);
+			mAmountX = amountX;
 		}
 
 		public float getAmountY() {
@@ -256,7 +229,7 @@ public class Actor3D extends EntityActor {
 		}
 
 		public void setAmountY(float amountY) {
-			setAmount(mAmountX, amountY, mAmountZ);
+			mAmountY = amountY;
 		}
 
 		public float getAmountZ() {
@@ -264,7 +237,7 @@ public class Actor3D extends EntityActor {
 		}
 
 		public void setAmountZ(float amountZ) {
-			setAmount(mAmountX, mAmountY, amountZ);
+			mAmountZ = amountZ;
 		}
 	}
 
@@ -272,77 +245,61 @@ public class Actor3D extends EntityActor {
 
 		protected Actor3D mActor;
 
-		private Quaternion mStartRotation;
-		private Quaternion mEndRotation;
+		private float mStartRotationX;
+		private float mStartRotationY;
+		private float mStartRotationZ;
 
-		private float mRotationX;
-		private float mRotationY;
-		private float mRotationZ;
-
-		public RotateToAction3D() {
-			mEndRotation = new Quaternion();
-		}
+		private float mEndRotationX;
+		private float mEndRotationY;
+		private float mEndRotationZ;
 
 		@Override
 		protected void begin() {
 			super.begin();
 
 			mActor = convertToActor3D(actor);
-			mStartRotation = mActor.getRotationQuaternion();
-
-			updateRotationQuaternion();
-		}
-
-		@Override
-		protected void end() {
-			mActor.setRotation(mEndRotation);
+			mStartRotationX = mActor.getRotationX();
+			mStartRotationY = mActor.getRotationY();
+			mStartRotationZ = mActor.getRotationZ();
 		}
 
 		@Override
 		protected void update(float percent) {
 			super.update(percent);
 
-			mTempQuaternion2.set(mEndRotation);
-			mTempQuaternion.set(mStartRotation).slerp(mTempQuaternion2, percent);
-			mActor.setRotation(mTempQuaternion);
-		}
-
-		public Quaternion getRotationQuaternion() {
-			return mEndRotation;
-		}
-
-		public void updateRotationQuaternion() {
-			mEndRotation.setEulerAngles(mRotationX, mRotationY, mRotationZ);
+			mActor.setRotation(mStartRotationX + (mEndRotationX - mStartRotationX) * percent,
+			                   mStartRotationY + (mEndRotationY - mStartRotationY) * percent,
+			                   mStartRotationZ + (mEndRotationZ - mStartRotationZ) * percent);
 		}
 
 		public void setRotation(float rotationX, float rotationY, float rotationZ) {
-			mRotationX = rotationX;
-			mRotationY = rotationY;
-			mRotationZ = rotationZ;
+			setRotationX(rotationX);
+			setRotationY(rotationY);
+			setRotationZ(rotationZ);
 		}
 
 		public float getRotationX() {
-			return mRotationX;
+			return mEndRotationX;
 		}
 
 		public void setRotationX(float rotationX) {
-			setRotation(rotationX, mRotationY, mRotationZ);
+			mEndRotationX = rotationX;
 		}
 
 		public float getRotationY() {
-			return mRotationY;
+			return mEndRotationY;
 		}
 
 		public void setRotationY(float rotationY) {
-			setRotation(mRotationX, rotationY, mRotationZ);
+			mEndRotationY = rotationY;
 		}
 
 		public float getRotationZ() {
-			return mRotationZ;
+			return mEndRotationZ;
 		}
 
 		public void setRotationZ(float rotationZ) {
-			setRotation(mRotationX, mRotationY, rotationZ);
+			mEndRotationZ = rotationZ;
 		}
 	}
 
