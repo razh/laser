@@ -1,6 +1,7 @@
 package com.razh.laser.tests;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import static com.razh.laser.Actor3D.*;
 import static com.razh.laser.sprites.DashedRingSpriteActor.segmentAngleTo;
 import static com.razh.laser.sprites.DashedRingSpriteActor.segmentSpacingTo;
 
@@ -242,6 +243,11 @@ public class SimpleStageTest extends StageTest {
 		decal2.setWidth(200.0f);
 		decal2.setHeight(200.0f);
 		decal2.setPosition(0.3f * halfWidth, 0.4f * halfHeight, 100.0f);
+		decal2.addAction(
+			forever(
+				rotateBy3D(0.0f, 180.0f, 0.0f, 1.0f)
+			)
+		);
 		decal2.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		stage.addActor(decal2);

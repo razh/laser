@@ -191,15 +191,32 @@ public class Actor3D extends EntityActor {
 		private Quaternion mStartRotation;
 		private Quaternion mEndRotation;
 
+		private float mPercent;
+
+		public RotateByAction3D() {
+			mEndRotation = new Quaternion();
+		}
+
 		@Override
 		protected void begin() {
 			super.begin();
+
 			mActor = convertToActor3D(actor);
+			mStartRotation = mActor.getRotationQuaternion();
+			mPercent = 0.0f;
+
+			updateRotationQuaternion();
+		}
+
+		@Override
+		protected void end() {
+			mActor.setRotation(mEndRotation);
 		}
 
 		@Override
 		protected void updateRelative(float percentDelta) {
-			mTempQuaternion.set(mStartRotation).slerp(mEndRotation, percentDelta);
+			mPercent += percentDelta;
+			mTempQuaternion.set(mStartRotation).slerp(mEndRotation, mPercent);
 			mActor.setRotation(mTempQuaternion);
 		}
 
@@ -230,7 +247,6 @@ public class Actor3D extends EntityActor {
 			mAmountX = amountX;
 			mAmountY = amountY;
 			mAmountZ = amountZ;
-			updateRotationQuaternion();
 		}
 
 		public float getAmountX() {
@@ -269,11 +285,23 @@ public class Actor3D extends EntityActor {
 		private float mRotationY;
 		private float mRotationZ;
 
+		public RotateToAction3D() {
+			mEndRotation = new Quaternion();
+		}
+
 		@Override
 		protected void begin() {
 			super.begin();
+
 			mActor = convertToActor3D(actor);
 			mStartRotation = mActor.getRotationQuaternion();
+
+			updateRotationQuaternion();
+		}
+
+		@Override
+		protected void end() {
+			mActor.setRotation(mEndRotation);
 		}
 
 		@Override
@@ -307,7 +335,6 @@ public class Actor3D extends EntityActor {
 			mRotationX = rotationX;
 			mRotationY = rotationY;
 			mRotationZ = rotationZ;
-			updateRotationQuaternion();
 		}
 
 		public float getRotationX() {
