@@ -238,6 +238,7 @@ public class SimpleStageTest extends StageTest {
 
 		stage.addActor(decal);
 
+		// Second decal.
 		DecalActor decal2 = new DecalActor();
 		decal2.setDecal(Decal.newDecal(new TextureRegion(texture2)));
 		decal2.setWidth(200.0f);
@@ -245,12 +246,31 @@ public class SimpleStageTest extends StageTest {
 		decal2.setPosition(0.3f * halfWidth, 0.4f * halfHeight, 100.0f);
 		decal2.addAction(
 			forever(
-				rotateBy3D(0.0f, 180.0f, 0.0f, 1.0f)
+				sequence(
+					rotateTo3D(180.0f, 90.0f, 0.0f, 1.0f),
+					rotateTo3D(0.0f, 0.0f, 0.0f, 1.0f)
+				)
+//				rotateBy3D(0.0f, 0.0f, 90.0f, 10.0f, Interpolation.swing)
 			)
 		);
 		decal2.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		stage.addActor(decal2);
+
+		// Third decal.
+		DecalActor decal3 = new DecalActor();
+		decal3.setDecal(Decal.newDecal(new TextureRegion(texture2)));
+		decal3.setWidth(200.0f);
+		decal3.setHeight(200.0f);
+		decal3.setPosition(-0.5f * halfWidth, 0.4f * halfHeight, 100.0f);
+		decal3.addAction(
+			forever(
+				rotateBy3D(0.0f, 0.0f, 90.0f, 5.0f, Interpolation.swing)
+			)
+		);
+		decal3.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		stage.addActor(decal3);
 
 		Entity missile = EntityFactory.createMissile(0);
 		MissileComponent missileComponent = (MissileComponent) missile.getComponentOfType(MissileComponent.class);

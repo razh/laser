@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 public class Actor3D extends EntityActor {
 
 	private static final Quaternion mTempQuaternion = new Quaternion();
+	private static final Quaternion mTempQuaternion2 = new Quaternion();
 	private static final Quaternion mRotator = new Quaternion(0, 0, 0, 0);
 
 	private float mZ;
@@ -216,7 +217,9 @@ public class Actor3D extends EntityActor {
 		@Override
 		protected void updateRelative(float percentDelta) {
 			mPercent += percentDelta;
-			mTempQuaternion.set(mStartRotation).slerp(mEndRotation, mPercent);
+
+			mTempQuaternion2.set(mEndRotation);
+			mTempQuaternion.set(mStartRotation).slerp(mTempQuaternion2, mPercent);
 			mActor.setRotation(mTempQuaternion);
 		}
 
@@ -227,16 +230,7 @@ public class Actor3D extends EntityActor {
 		public void updateRotationQuaternion() {
 			mEndRotation.set(mStartRotation);
 
-			// Rotate x.
-			mRotator.set(Vector3.X, mAmountX);
-			mEndRotation.mul(mRotator);
-
-			// Rotate y.
-			mRotator.set(Vector3.Y, mAmountY);
-			mEndRotation.mul(mRotator);
-
-			// Rotate z.
-			mRotator.set(Vector3.Z, mAmountZ);
+			mRotator.setEulerAngles(mAmountX, mAmountY, mAmountZ);
 			mEndRotation.mul(mRotator);
 		}
 
@@ -307,7 +301,9 @@ public class Actor3D extends EntityActor {
 		@Override
 		protected void update(float percent) {
 			super.update(percent);
-			mTempQuaternion.set(mStartRotation).slerp(mEndRotation, percent);
+
+			mTempQuaternion2.set(mEndRotation);
+			mTempQuaternion.set(mStartRotation).slerp(mTempQuaternion2, percent);
 			mActor.setRotation(mTempQuaternion);
 		}
 
@@ -316,19 +312,7 @@ public class Actor3D extends EntityActor {
 		}
 
 		public void updateRotationQuaternion() {
-			mEndRotation.idt();
-
-			// Rotate x.
-			mRotator.set(Vector3.X, mRotationX);
-			mEndRotation.mul(mRotator);
-
-			// Rotate y.
-			mRotator.set(Vector3.Y, mRotationY);
-			mEndRotation.mul(mRotator);
-
-			// Rotate z.
-			mRotator.set(Vector3.Z, mRotationZ);
-			mEndRotation.mul(mRotator);
+			mEndRotation.setEulerAngles(mRotationX, mRotationY, mRotationZ);
 		}
 
 		public void setRotation(float rotationX, float rotationY, float rotationZ) {
