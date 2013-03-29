@@ -45,7 +45,7 @@ public class ShaderStage extends Stage {
 		Camera camera = new PerspectiveCamera(90.0f, width, height);
 		setCamera(camera);
 		camera.position.set(0, 0, 400f);
-		camera.far = 1e5f;
+		camera.far = 1e3f;
 		camera.lookAt(0.0f, 0.0f, 0.0f);
 
 		mGroups = new HashMap<Class<?>, Group>();

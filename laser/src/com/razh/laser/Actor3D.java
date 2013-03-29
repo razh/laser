@@ -52,11 +52,6 @@ public class Actor3D extends EntityActor {
 		return mPosition.set(getX(), getY(), getZ());
 	}
 
-	@Override
-	public void setPosition(float x, float y) {
-		super.setPosition(x, y);
-	}
-
 	public void setPosition(float x, float y, float z) {
 		super.setPosition(x, y);
 		setZ(z);
