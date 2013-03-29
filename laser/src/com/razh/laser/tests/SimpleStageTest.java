@@ -363,20 +363,20 @@ public class SimpleStageTest extends StageTest {
 		// Test ActorContainer with Decals.
 		DecalActor decalComponent = new DecalActor();
 		decalComponent.setDecal(Decal.newDecal(new TextureRegion(texture2), true));
-		decalComponent.setOrigin(0.0f, 50.0f, 10.0f);
+		decalComponent.setOrigin(0.0f, 200.0f, 0.0f);
 		decalComponent.setWidth(200.0f);
 		decalComponent.setHeight(200.0f);
 
 		DecalActor decalComponent2 = new DecalActor();
 		decalComponent2.setDecal(Decal.newDecal(new TextureRegion(texture2), true));
-		decalComponent2.setOrigin(50.0f, 0.0f, 0.0f);
+		decalComponent2.setOrigin(200.0f, 0.0f, 0.0f);
 		decalComponent2.setWidth(200.0f);
 		decalComponent2.setHeight(200.0f);
 		decalComponent2.setColor(1.0f, 1.0f, 0.0f, 0.5f);
 
 		DecalActor decalComponent3 = new DecalActor();
 		decalComponent3.setDecal(Decal.newDecal(new TextureRegion(texture2), true));
-		decalComponent3.setOrigin(-50.0f, 0.0f, -0.0f);
+		decalComponent3.setOrigin(-200.0f, 0.0f, 0.0f);
 		decalComponent3.setWidth(200.0f);
 		decalComponent3.setHeight(200.0f);
 
