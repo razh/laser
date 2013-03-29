@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.laser.sprites.ProceduralSpriteActor;
 import com.razh.laser.sprites.SpriteActor;
@@ -103,7 +104,8 @@ public class ShaderStage extends Stage {
 	public void addActor(Actor actor) {
 		// If actor is a group (ShaderGroup or otherwise), we don't need to add
 		// it to a group.
-		if (actor instanceof Group) {
+		if (actor instanceof Group ||
+			actor instanceof Widget) {
 			super.addActor(actor);
 			return;
 		}

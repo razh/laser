@@ -14,14 +14,16 @@ public class DecalActor extends Actor3D {
 		Color color = getColor();
 		mDecal.setColor(color.r, color.g, color.b, color.a);
 
-		mDecal.setPosition(getX(), getY(), getZ());
+		mDecal.setPosition(getX() + getOriginX(),
+				           getY() + getOriginY(),
+				           getZ() + getOriginZ());
 		mDecal.setDimensions(getWidth(), getHeight());
 		mDecal.setScale(getScaleX(), getScaleY());
 
 		mDecal.getRotation().idt();
 		mDecal.rotateX(getRotationX());
 		mDecal.rotateY(getRotationY());
-		mDecal.rotateZ(getRotationZ());
+		mDecal.rotateZ(getRotation() + getRotationZ());
 	}
 
 	public void draw(DecalBatch decalBatch) {

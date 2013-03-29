@@ -243,16 +243,44 @@ public class SimpleStageTest extends StageTest {
 		stage.addActor(decal);
 
 		// Second decal.
-		DecalActor decal2 = new DecalActor();
+		final DecalActor decal2 = new DecalActor();
 		decal2.setDecal(Decal.newDecal(new TextureRegion(texture2)));
 		decal2.setWidth(200.0f);
 		decal2.setHeight(200.0f);
+		decal2.setColor(0.5f, 0.5f, 1.0f, 0.5f);
 		decal2.setPosition(0.3f * halfWidth, 0.4f * halfHeight, 100.0f);
 		decal2.addAction(
 			forever(
 				sequence(
 					rotateTo3D(180.0f, 0.0f, 0.0f, 1.0f),
-					rotateTo3D(0.0f, 0.0f, 0.0f, 1.0f)
+					rotateTo3D(360.0f, 0.0f, 0.0f, 1.0f),
+					rotateTo3D(0.0f, 0.0f, 0.0f, 1.0f),
+					new Action() {
+						int frame = 0;
+						@Override
+						public boolean act(float delta) {
+							switch (frame % 4) {
+								case 0:
+									decal2.setOriginX(decal2.getOriginX() + 100.0f);
+									break;
+
+								case 1:
+									decal2.setOriginY(decal2.getOriginY() - 100.0f);
+									break;
+
+								case 2:
+									decal2.setOriginX(decal2.getOriginX() - 100.0f);
+									break;
+
+								case 3:
+									decal2.setOriginY(decal2.getOriginY() + 100.0f);
+									break;
+							}
+							frame++;
+
+							return true;
+						}
+					}
 				)
 			)
 		);
@@ -285,7 +313,6 @@ public class SimpleStageTest extends StageTest {
 		// Add missile path actors.
 		MissilePathComponent missilePath = (MissilePathComponent) missile.getComponentOfType(MissilePathComponent.class);
 		ActorContainer pathActors = missilePath.getPathActors();
-		System.out.println(pathActors.getActors().size);
 		stage.addActorContainer(pathActors);
 
 		// Second missile.
@@ -316,5 +343,42 @@ public class SimpleStageTest extends StageTest {
 		);
 
 		stage.addActor(testPath);
+
+		// Test ActorContainer with Decals.
+		DecalActor decalComponent = new DecalActor();
+		decalComponent.setOrigin(50.0f, 0.0f);
+		decalComponent.setWidth(200.0f);
+		decalComponent.setHeight(200.0f);
+		decalComponent.setDecal(Decal.newDecal(new TextureRegion(texture2)));
+		decalComponent.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		DecalActor decalComponent2 = new DecalActor();
+		decalComponent2.setOrigin(-50.0f, 0.0f);
+		decalComponent2.setWidth(200.0f);
+		decalComponent2.setHeight(200.0f);
+		decalComponent2.setDecal(Decal.newDecal(new TextureRegion(texture2)));
+		decalComponent2.setColor(1.0f, 1.0f, 0.0f, 0.5f);
+		decalComponent2.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		DecalActor decalComponent3 = new DecalActor();
+		decalComponent3.setOrigin(0.0f, 50.0f);
+		decalComponent3.setWidth(200.0f);
+		decalComponent3.setHeight(200.0f);
+		decalComponent3.setDecal(Decal.newDecal(new TextureRegion(texture2)));
+		decalComponent3.getDecal().setBlending(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		ActorContainer decalContainer = new ActorContainer();
+		decalContainer.addActor(decalComponent);
+		decalContainer.addActor(decalComponent2);
+		decalContainer.addActor(decalComponent3);
+		decalContainer.setPosition(0.0f, -0.8f * halfHeight);
+
+		decalContainer.addAction(
+			forever(
+				rotateBy(180.0f, 1.0f)
+			)
+		);
+
+		stage.addActorContainer(decalContainer);
 	}
 }

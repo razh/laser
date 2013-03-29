@@ -3,7 +3,6 @@ package com.razh.laser;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
 
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,21 +13,15 @@ import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 
 public class Actor3D extends EntityActor {
 
-	private float mZ;
+	private static final Vector2 mPosition2D = new Vector2();
+	private static final Vector3 mPosition = new Vector3();
 
-	private final Vector2 mPosition2D;
-	private final Vector3 mPosition;
+	private float mZ;
+	private float mOriginZ;
 
 	private float mRotationX;
 	private float mRotationY;
 	private float mRotationZ;
-
-	public Actor3D() {
-		super();
-
-		mPosition2D = new Vector2();
-		mPosition = new Vector3();
-	}
 
 	public float getZ() {
 		return mZ;
@@ -36,6 +29,19 @@ public class Actor3D extends EntityActor {
 
 	public void setZ(float z) {
 		mZ = z;
+	}
+
+	public float getOriginZ() {
+		return mOriginZ;
+	}
+
+	public void setOriginZ(float originZ) {
+		mOriginZ = originZ;
+	}
+
+	public void setOrigin(float originX, float originY, float originZ) {
+		super.setOrigin(originX, originY);
+		setOriginZ(originZ);
 	}
 
 	public Vector2 getPosition2D() {
