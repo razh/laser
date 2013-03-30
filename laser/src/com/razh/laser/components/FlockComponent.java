@@ -1,5 +1,6 @@
 package com.razh.laser.components;
 
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.laser.ActorContainer;
 
 /**
@@ -11,13 +12,14 @@ import com.razh.laser.ActorContainer;
 public class FlockComponent extends Component {
 
 	private final ActorContainer mFlockActors;
+	private final SnapshotArray<BoidComponent> mBoids;
 
 	public FlockComponent() {
 		mFlockActors = new ActorContainer();
+		mBoids = new SnapshotArray(true, 2, BoidComponent.class);
 	}
 
 	@Override
 	public void act(float delta) {
-
 	}
 }

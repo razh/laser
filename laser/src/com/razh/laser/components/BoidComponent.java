@@ -1,7 +1,6 @@
 package com.razh.laser.components;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -13,16 +12,12 @@ import com.badlogic.gdx.utils.Array;
 public class BoidComponent extends PhysicsComponent {
 
 	private static final Vector2 mTempVector = new Vector2();
-	private static final Vector2 mTempVector2 = new Vector2();
 
-	@Override
-	public void act(float delta) {
-		super.act(delta);
+	private static final Vector2 mSteerSeparate = new Vector2();
+	private static final Vector2 mSteerAlign = new Vector2();
+	private static final Vector2 mSteerCohesion = new Vector2();
 
-		setAcceleration(0.0f, 0.0f);
-	}
-
-	public void flock(Array<Actor> boids) {
+	public void flock(Array<BoidComponent> boids) {
 		Vector2 separation = separate(boids);
 		Vector2 align = align(boids);
 		Vector2 cohesion = cohesion(boids);
@@ -38,7 +33,7 @@ public class BoidComponent extends PhysicsComponent {
 	protected Vector2 seek(Vector2 target) {
 		// Get desired direction to target. Normalize, and scale to maximum speed.
 		mTempVector.set(target)
-		           .sub(getX(), getY())
+		           .sub(getPosition())
 		           .nor()
 		           .mul(getMaxSpeed());
 
@@ -46,43 +41,112 @@ public class BoidComponent extends PhysicsComponent {
 		mTempVector.sub(getVelocity())
 		           .limit(getMaxAcceleration());
 
-		return mTempVector.cpy();
+		return mTempVector;
 	}
 
-	protected Vector2 separate(Array<Actor> boids) {
-		return null;
-	}
-
-	protected Vector2 align(Array<Actor> boids) {
-		return null;
-	}
-
-	// Find centroid of all nearest boids. Calculate steering location to that centroid.
-	protected Vector2 cohesion(Array<Actor> boids) {
-		float neighborDistance = 50.0f;
-		mTempVector2.set(Vector2.Zero);
+	/**
+	 * Moves away from nearby boids.
+	 * @param boids
+	 * @return
+	 */
+	protected Vector2 separate(Array<BoidComponent> boids) {
+		float desiredSeparation = 25.0f;
+		mSteerSeparate.set(Vector2.Zero);
 		int count = 0;
 
 		float distance;
-		for (Actor boid : boids) {
-			if (boid == this.getActor()) {
+		for (BoidComponent boid : boids) {
+			if (boid == this) {
 				continue;
 			}
 
-			distance = mTempVector.set(boid.getX(), boid.getY())
-			                      .dst(getPosition());
+			distance = mTempVector.set(getPosition())
+			                      .dst(boid.getPosition());
+
+			if (0 < distance && distance < desiredSeparation) {
+				mTempVector.sub(boid.getPosition())
+				           .nor()
+				           .div(distance);
+
+				mSteerSeparate.add(mTempVector);
+				count++;
+			}
+		}
+
+		// Determine average steering.
+		if (count > 0) {
+			mSteerSeparate.div(count);
+		}
+
+		if (mSteerSeparate.len2() > 0) {
+			mSteerSeparate.nor()
+			              .mul(getMaxSpeed())
+			              .sub(getVelocity())
+			              .limit(getMaxAcceleration());
+		}
+
+		return mSteerSeparate;
+	}
+
+	protected Vector2 align(Array<BoidComponent> boids) {
+		float neighborDistance = 50.0f;
+		mSteerAlign.set(Vector2.Zero);
+		int count = 0;
+
+		float distance;
+		for (BoidComponent boid : boids) {
+			if (boid == this) {
+				continue;
+			}
+
+			distance = mTempVector.set(getPosition())
+			                      .dst(boid.getPosition());
 
 			if (0 < distance && distance < neighborDistance) {
-				mTempVector2.add(boid.getX(), boid.getY());
+				mSteerAlign.add(boid.getPosition());
 				count++;
 			}
 		}
 
 		if (count > 0) {
-			mTempVector2.div(count);
-			return seek(mTempVector2);
+			mSteerAlign.div(count)
+			           .nor()
+			           .mul(getMaxSpeed())
+			           .sub(getVelocity())
+			           .limit(getMaxAcceleration());
+
+			return mSteerAlign;
 		} else {
-			return mTempVector2.set(Vector2.Zero);
+			return mSteerAlign.set(Vector2.Zero);
+		}
+	}
+
+	// Find centroid of all nearest boids. Calculate steering location to that centroid.
+	protected Vector2 cohesion(Array<BoidComponent> boids) {
+		float neighborDistance = 50.0f;
+		mSteerCohesion.set(Vector2.Zero);
+		int count = 0;
+
+		float distance;
+		for (BoidComponent boid : boids) {
+			if (boid == this) {
+				continue;
+			}
+
+			distance = mTempVector.set(getPosition())
+			                      .dst(boid.getPosition());
+
+			if (0 < distance && distance < neighborDistance) {
+				mSteerCohesion.add(boid.getPosition());
+				count++;
+			}
+		}
+
+		if (count > 0) {
+			mSteerCohesion.div(count);
+			return mSteerCohesion.set(seek(mSteerCohesion));
+		} else {
+			return mSteerCohesion.set(Vector2.Zero);
 		}
 	}
 }
