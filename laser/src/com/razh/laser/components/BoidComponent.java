@@ -17,6 +17,16 @@ public class BoidComponent extends PhysicsComponent {
 	private static final Vector2 mSteerAlign = new Vector2();
 	private static final Vector2 mSteerCohesion = new Vector2();
 
+	private float mSeparation;
+	private float mAlignDistance;
+	private float mCohesionDistance;
+
+	public BoidComponent() {
+		setSeparation(25.0f);
+		setAlignDistance(50.0f);
+		setCohesionDistance(50.0f);
+	}
+
 	public void flock(Array<BoidComponent> boids) {
 		Vector2 separation = separate(boids);
 		Vector2 align = align(boids);
@@ -50,7 +60,6 @@ public class BoidComponent extends PhysicsComponent {
 	 * @return
 	 */
 	protected Vector2 separate(Array<BoidComponent> boids) {
-		float desiredSeparation = 25.0f;
 		mSteerSeparate.set(Vector2.Zero);
 		int count = 0;
 
@@ -63,7 +72,7 @@ public class BoidComponent extends PhysicsComponent {
 			distance = mTempVector.set(getPosition())
 			                      .dst(boid.getPosition());
 
-			if (0 < distance && distance < desiredSeparation) {
+			if (0 < distance && distance < mSeparation) {
 				mTempVector.sub(boid.getPosition())
 				           .nor()
 				           .div(distance);
@@ -89,7 +98,6 @@ public class BoidComponent extends PhysicsComponent {
 	}
 
 	protected Vector2 align(Array<BoidComponent> boids) {
-		float neighborDistance = 50.0f;
 		mSteerAlign.set(Vector2.Zero);
 		int count = 0;
 
@@ -102,7 +110,7 @@ public class BoidComponent extends PhysicsComponent {
 			distance = mTempVector.set(getPosition())
 			                      .dst(boid.getPosition());
 
-			if (0 < distance && distance < neighborDistance) {
+			if (0 < distance && distance < mAlignDistance) {
 				mSteerAlign.add(boid.getPosition());
 				count++;
 			}
@@ -123,7 +131,6 @@ public class BoidComponent extends PhysicsComponent {
 
 	// Find centroid of all nearest boids. Calculate steering location to that centroid.
 	protected Vector2 cohesion(Array<BoidComponent> boids) {
-		float neighborDistance = 50.0f;
 		mSteerCohesion.set(Vector2.Zero);
 		int count = 0;
 
@@ -136,7 +143,7 @@ public class BoidComponent extends PhysicsComponent {
 			distance = mTempVector.set(getPosition())
 			                      .dst(boid.getPosition());
 
-			if (0 < distance && distance < neighborDistance) {
+			if (0 < distance && distance < mCohesionDistance) {
 				mSteerCohesion.add(boid.getPosition());
 				count++;
 			}
@@ -148,5 +155,29 @@ public class BoidComponent extends PhysicsComponent {
 		} else {
 			return mSteerCohesion.set(Vector2.Zero);
 		}
+	}
+
+	public float getSeparation() {
+		return mSeparation;
+	}
+
+	public void setSeparation(float separation) {
+		mSeparation = separation;
+	}
+
+	public float getAlignDistance() {
+		return mAlignDistance;
+	}
+
+	public void setAlignDistance(float alignDistance) {
+		mAlignDistance = alignDistance;
+	}
+
+	public float getCohesionDistance() {
+		return mCohesionDistance;
+	}
+
+	public void setCohesionDistance(float cohesionDistance) {
+		mCohesionDistance = cohesionDistance;
 	}
 }

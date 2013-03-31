@@ -11,15 +11,30 @@ import com.razh.laser.ActorContainer;
  */
 public class FlockComponent extends Component {
 
-	private final ActorContainer mFlockActors;
-	private final SnapshotArray<BoidComponent> mBoids;
+	private final ActorContainer mBoidActors;
+	private final SnapshotArray<BoidComponent> mBoidComponents;
 
 	public FlockComponent() {
-		mFlockActors = new ActorContainer();
-		mBoids = new SnapshotArray(true, 2, BoidComponent.class);
+		mBoidActors = new ActorContainer();
+		mBoidComponents = new SnapshotArray<BoidComponent>(true, 2, BoidComponent.class);
 	}
 
 	@Override
 	public void act(float delta) {
+		BoidComponent[] components = mBoidComponents.begin();
+
+		for (int i = 0, n = mBoidComponents.size; i < n; i++) {
+			components[i].flock(mBoidComponents);
+		}
+
+		mBoidComponents.end();
+	}
+
+	public SnapshotArray<BoidComponent> getBoidComponents() {
+		return mBoidComponents;
+	}
+
+	public ActorContainer getBoids() {
+		return mBoidActors;
 	}
 }
