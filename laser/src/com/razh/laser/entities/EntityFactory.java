@@ -132,4 +132,10 @@ public class EntityFactory {
 		boids.setEntity(entity);
 		return entity;
 	}
+
+	public static Entity createPlayer() {
+		Entity playerEntity = new Entity();
+
+		return playerEntity;
+	}
 }

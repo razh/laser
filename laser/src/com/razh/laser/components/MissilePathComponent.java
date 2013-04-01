@@ -163,7 +163,6 @@ public class MissilePathComponent extends Component {
 			spriteActor.setSprite(mPathSprite);
 			spriteActor.setOrigin(Origin.LEFT);
 			spriteActor.setHeight(mPathWidth);
-			spriteActor.setVisible(true);
 
 			actors.add(spriteActor);
 			mCurrentPathActors.add(spriteActor);

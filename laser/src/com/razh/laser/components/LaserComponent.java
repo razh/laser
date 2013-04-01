@@ -2,7 +2,11 @@ package com.razh.laser.components;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.laser.ActorContainer;
+import com.razh.laser.sprites.SpriteActor;
+import com.razh.laser.sprites.SpriteActor.Origin;
 
 public class LaserComponent extends TransformComponent {
 
@@ -40,13 +44,24 @@ public class LaserComponent extends TransformComponent {
 		}
 
 		mLayerCount = layerCount;
+		// Add any necessary actors.
 		mLaserActors.getActors().ensureCapacity(mLayerCount);
 		allocateLayerActors();
-		// Add any necessary actors
 	}
 
 	public void allocateLayerActors() {
+		SnapshotArray<Actor> actors = mLaserActors.getActors();
+		int size = actors.size;
 
+		SpriteActor spriteActor;
+		for (int i = size; i < mLayerCount; i++) {
+			spriteActor = new SpriteActor();
+			spriteActor.setSprite(mLaserSprite);
+			spriteActor.setOrigin(Origin.LEFT);
+			spriteActor.setWidth(mLaserWidth);
+			spriteActor.setHeight(mLaserHeight);
+
+			actors.add(spriteActor);
+		}
 	}
-
 }
