@@ -24,7 +24,7 @@ public class BoidComponent extends PhysicsComponent {
 	private float mCohesionDistance;
 
 	public BoidComponent() {
-		setSeparation(25.0f);
+		setSeparation(100.0f);
 		setAlignDistance(50.0f);
 		setCohesionDistance(50.0f);
 	}
@@ -32,26 +32,6 @@ public class BoidComponent extends PhysicsComponent {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-
-		// TODO: Remove temp code for keeping boids within bounds.
-		float halfWidth = 0.5f * Gdx.graphics.getWidth();
-		float halfHeight = 0.5f * Gdx.graphics.getHeight();
-		float width = getActor().getWidth();
-		float height = getActor().getHeight();
-		Vector2 position = getPosition();
-		if (position.x < -halfWidth) {
-			position.x = halfWidth;
-		}
-		if (position.y < -halfHeight) {
-			position.y = halfHeight;
-		}
-		if (position.x > halfWidth) {
-			position.x = -halfWidth;
-		}
-		if (position.y > halfHeight) {
-			position.y = -halfHeight;
-		}
-		getActor().setPosition(position.x, position.y);
 
 		Vector2 velocity = getVelocity();
 		getActor().setRotation((float) Math.atan2(velocity.y, velocity.x) * MathUtils.radiansToDegrees);
@@ -69,6 +49,7 @@ public class BoidComponent extends PhysicsComponent {
 		cohesion.mul(1.0f);
 
 		setAcceleration(getAcceleration().add(separation.add(cohesion).add(align)));
+		setAcceleration(getAcceleration().sub(mTempVector.set(getPosition()).limit(500.0f)));
 	}
 
 	protected Vector2 seek(Vector2 target) {
