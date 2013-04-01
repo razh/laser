@@ -12,6 +12,7 @@ import com.razh.laser.MeshActor;
 import com.razh.laser.TransformActorContainer;
 import com.razh.laser.components.BoidComponent;
 import com.razh.laser.components.FlockComponent;
+import com.razh.laser.components.LaserComponent;
 import com.razh.laser.components.MissileComponent;
 import com.razh.laser.components.MissilePathComponent;
 import com.razh.laser.sprites.SpriteActor;
@@ -135,6 +136,9 @@ public class EntityFactory {
 
 	public static Entity createPlayer() {
 		Entity playerEntity = new Entity();
+
+		LaserComponent laserComponent = new LaserComponent();
+		laserComponent.setLayerCount(20);
 
 		return playerEntity;
 	}

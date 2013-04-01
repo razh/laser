@@ -1,5 +1,8 @@
 package com.razh.laser.components;
 
+import java.util.Deque;
+import java.util.LinkedList;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -19,10 +22,12 @@ public class LaserComponent extends TransformComponent {
 	private int mLayerCount;
 
 	private final ActorContainer mLaserActors;
+	private final Deque<Actor> mLaserPathActors;
 
 	public LaserComponent() {
 		mLaserColor = new Color();
 		mLaserActors = new ActorContainer();
+		mLaserPathActors = new LinkedList<Actor>();
 	}
 
 	@Override
@@ -38,10 +43,13 @@ public class LaserComponent extends TransformComponent {
 		// Remove unwanted actors.
 		if (mLayerCount < layerCount) {
 			int count = layerCount - mLayerCount;
+			Actor removedActor;
 			while (count-- > 0) {
-				mLaserActors.getActors().removeIndex(count + layerCount);
+				removedActor = mLaserActors.getActors().removeIndex(count + layerCount);
+				removedActor.remove();
 			}
 		}
+		System.out.println(layerCount + ", " + mLaserActors.getActors().size);
 
 		mLayerCount = layerCount;
 		// Add any necessary actors.
@@ -63,5 +71,21 @@ public class LaserComponent extends TransformComponent {
 
 			actors.add(spriteActor);
 		}
+	}
+
+	public float getLaserWidth() {
+		return mLaserWidth;
+	}
+
+	public void setLaserWidth(float laserWidth) {
+		mLaserWidth = laserWidth;
+	}
+
+	public float getLaserHeight() {
+		return mLaserHeight;
+	}
+
+	public void setLaserHeight(float laserHeight) {
+		mLaserHeight = laserHeight;
 	}
 }
