@@ -35,7 +35,7 @@ public class MissileComponent extends Component {
 
 		Vector2 velocity = mPhysicsComponent.getVelocity();
 		// We add 90.0f because of image orientation.
-		getActor().setRotation((float) Math.atan2(velocity.y, velocity.x) * MathUtils.radiansToDegrees + 90.0f);
+		getActor().setRotation((float) Math.atan2(velocity.y, velocity.x) * MathUtils.radiansToDegrees);
 	}
 
 	@Override
