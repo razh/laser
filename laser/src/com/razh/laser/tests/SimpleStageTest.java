@@ -27,6 +27,7 @@ import com.razh.laser.TransformActorContainer;
 import com.razh.laser.components.LaserComponent;
 import com.razh.laser.components.MissileComponent;
 import com.razh.laser.components.MissilePathComponent;
+import com.razh.laser.components.PlayerComponent;
 import com.razh.laser.entities.Entity;
 import com.razh.laser.entities.EntityFactory;
 import com.razh.laser.sprites.ArcSpriteActor;
@@ -410,7 +411,8 @@ public class SimpleStageTest extends StageTest {
 		Entity player = EntityFactory.createPlayer();
 		stage.addActor(player.getActor());
 
-		LaserComponent laser = (LaserComponent) player.getComponentOfType(LaserComponent.class);
-		stage.addActorContainer((ActorContainer) laser.getActor());
+		PlayerComponent playerComponent = (PlayerComponent) player.getComponentOfType(PlayerComponent.class);
+		LaserComponent laserComponent = playerComponent.getLaserComponent();
+		stage.addActorContainer(laserComponent.getLaserActors());
 	}
 }

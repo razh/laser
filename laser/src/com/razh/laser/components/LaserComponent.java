@@ -40,13 +40,16 @@ public class LaserComponent extends TransformComponent {
 	}
 
 	public void setLayerCount(int layerCount) {
+		System.out.println(mLayerCount + ", " + layerCount + ", " + mLaserActors.getActors().size);
+
 		// Remove unwanted actors.
-		if (mLayerCount < layerCount) {
+		if (mLayerCount > layerCount) {
 			int count = layerCount - mLayerCount;
 			Actor removedActor;
-			while (count-- > 0) {
-				removedActor = mLaserActors.getActors().removeIndex(count + layerCount);
+			while (count > 0) {
+				removedActor = mLaserActors.getActors().removeIndex(count + layerCount - 1);
 				removedActor.remove();
+				count--;
 			}
 		}
 		System.out.println(layerCount + ", " + mLaserActors.getActors().size);
@@ -73,6 +76,28 @@ public class LaserComponent extends TransformComponent {
 		}
 	}
 
+	public Sprite getLaserSprite() {
+		return mLaserSprite;
+	}
+
+	public void setLaserSprite(Sprite sprite) {
+		mLaserSprite = sprite;
+
+		SnapshotArray<Actor> laserActorArray = mLaserActors.getActors();
+		Actor[] laserActors = laserActorArray.begin();
+
+		Actor laserActor;
+		for (int i = 0, n = laserActorArray.size; i < n; i++) {
+			laserActor = laserActors[i];
+
+			if (laserActor instanceof SpriteActor) {
+				((SpriteActor) laserActor).setSprite(mLaserSprite);
+			}
+		}
+
+		laserActorArray.end();
+	}
+
 	public float getLaserWidth() {
 		return mLaserWidth;
 	}
@@ -87,5 +112,9 @@ public class LaserComponent extends TransformComponent {
 
 	public void setLaserHeight(float laserHeight) {
 		mLaserHeight = laserHeight;
+	}
+
+	public ActorContainer getLaserActors() {
+		return mLaserActors;
 	}
 }

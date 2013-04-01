@@ -15,6 +15,7 @@ import com.razh.laser.components.FlockComponent;
 import com.razh.laser.components.LaserComponent;
 import com.razh.laser.components.MissileComponent;
 import com.razh.laser.components.MissilePathComponent;
+import com.razh.laser.components.PlayerComponent;
 import com.razh.laser.sprites.SpriteActor;
 
 public class EntityFactory {
@@ -137,8 +138,21 @@ public class EntityFactory {
 	public static Entity createPlayer() {
 		Entity playerEntity = new Entity();
 
-		LaserComponent laserComponent = new LaserComponent();
+		PlayerComponent playerComponent = new PlayerComponent();
+		LaserComponent laserComponent = playerComponent.getLaserComponent();
+		laserComponent.setLaserSprite(new Sprite(new Texture("data/libgdx.png")));
+		laserComponent.setLaserWidth(100.0f);
+		laserComponent.setLaserHeight(10.0f);
 		laserComponent.setLayerCount(20);
+
+		SpriteActor playerActor = new SpriteActor();
+		playerActor.setSprite(new Sprite(new Texture("data/libgdx.png")));
+		playerActor.setWidth(256.0f);
+		playerActor.setHeight(256.0f);
+
+		playerEntity.setActor(playerActor);
+		playerEntity.addComponent(playerComponent);
+		playerActor.setEntity(playerEntity);
 
 		return playerEntity;
 	}

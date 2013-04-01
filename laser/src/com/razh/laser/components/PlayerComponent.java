@@ -1,6 +1,6 @@
 package com.razh.laser.components;
 
-public class PlayerComponent extends PhysicsComponent {
+public class PlayerComponent extends TransformComponent {
 
 	private final LaserComponent mLaserComponent;
 
@@ -11,5 +11,12 @@ public class PlayerComponent extends PhysicsComponent {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
+
+		mLaserComponent.setPosition(getPosition());
+		mLaserComponent.setRotation(getRotation());
+	}
+
+	public LaserComponent getLaserComponent() {
+		return mLaserComponent;
 	}
 }
