@@ -109,13 +109,13 @@ public class EntityFactory {
 		for (int i = 0; i < 30; i++ ) {
 			boid = new SpriteActor();
 			boid.setSprite(new Sprite(texture));
-			boid.setPosition((float) Math.random() * -500.0f + 250.0f, (float) Math.random() * -500.0f + 250.0f);
+			boid.setPosition((float) Math.random() * -100.0f + 250.0f, (float) Math.random() * -100.0f + 250.0f);
 //			boid.setRotation((float) Math.random() * 360.0f);
 			boid.setWidth(32.0f);
 			boid.setHeight(32.0f);
 
 			boidComponent = new BoidComponent();
-			boidComponent.setMaxSpeed(750.0f);
+			boidComponent.setMaxSpeed(1000.0f);
 			boidComponent.setMaxAcceleration(750.0f);
 
 			boidEntity = new Entity();
