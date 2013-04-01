@@ -9,13 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  * Should probably switch to Box2D.
  * @author raz
  */
-public class PhysicsComponent extends Component {
+public class PhysicsComponent extends TransformComponent {
 
 	private static final Vector2 mTempVector = new Vector2();
 	private static final Vector2 mTempVector2 = new Vector2();
-
-	private final Vector2 mPosition;
-	private float mRotation;
 
 	private final Vector2 mVelocity;
 	private final Vector2 mAcceleration;
@@ -30,7 +27,6 @@ public class PhysicsComponent extends Component {
 	private float mMaxAngularAcceleration;
 
 	public PhysicsComponent() {
-		mPosition = new Vector2();
 		mVelocity = new Vector2();
 		mAcceleration = new Vector2();
 
@@ -45,47 +41,17 @@ public class PhysicsComponent extends Component {
 	public void act(float delta) {
 		Actor actor = getActor();
 
-		mPosition.set(actor.getX(), actor.getY());
+		setPosition(actor.getX(), actor.getY());
 		accelerate(mTempVector.set(mAcceleration).mul(delta));
 		translate(mTempVector.set(mVelocity).mul(delta));
 
-		mRotation = actor.getRotation();
+		setRotation(actor.getRotation());
 		angularAccelerate(mAngularAcceleration * delta);
 		rotate(mAngularVelocity * delta);
 
-		actor.setPosition(mPosition.x, mPosition.y);
-		actor.setRotation(mRotation);
-	}
-
-	/**
-	 * Position.
-	 */
-	public float getX() {
-		return mPosition.x;
-	}
-
-	public void setX(float x) {
-		mPosition.x = x;
-	}
-
-	public float getY() {
-		return mPosition.y;
-	}
-
-	public void setY(float y) {
-		mPosition.y = y;
-	}
-
-	public Vector2 getPosition() {
-		return mPosition;
-	}
-
-	public void setPosition(Vector2 position) {
-		mPosition.set(position);
-	}
-
-	public void setPosition(float x, float y) {
-		mPosition.set(x, y);
+		Vector2 position = getPosition();
+		actor.setPosition(position.x, position.y);
+		actor.setRotation(getRotation());
 	}
 
 	/**
@@ -124,7 +90,7 @@ public class PhysicsComponent extends Component {
 	}
 
 	public void translate(float translationX, float translationY) {
-		mTempVector2.set(mPosition);
+		mTempVector2.set(getPosition());
 		setPosition(mTempVector2.add(translationX, translationY));
 	}
 
@@ -191,17 +157,6 @@ public class PhysicsComponent extends Component {
 	}
 
 	/**
-	 * Rotation.
-	 */
-	public float getRotation() {
-		return mRotation;
-	}
-
-	public void setRotation(float rotation) {
-		mRotation = rotation;
-	}
-
-	/**
 	 * Angular velocity.
 	 */
 	public float getAngularVelocity() {
@@ -210,10 +165,6 @@ public class PhysicsComponent extends Component {
 
 	public void setAngularVelocity(float angularVelocity) {
 		mAngularVelocity = MathUtils.clamp(angularVelocity, -mMaxAngularVelocity, mMaxAngularVelocity);
-	}
-
-	public void rotate(float angle) {
-		setRotation(getRotation() + angle);
 	}
 
 	/**

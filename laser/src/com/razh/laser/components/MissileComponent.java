@@ -11,8 +11,8 @@ import com.razh.laser.entities.Entity;
  */
 public class MissileComponent extends Component {
 
-	private PhysicsComponent mPhysicsComponent;
-	private TargetComponent mTargetComponent;
+	private final PhysicsComponent mPhysicsComponent;
+	private final TargetComponent mTargetComponent;
 
 	public MissileComponent() {
 		super();
