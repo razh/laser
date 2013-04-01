@@ -39,6 +39,9 @@ public class SimpleStageTest extends StageTest {
 
 	@Override
 	public void load(ShaderStage stage) {
+
+		stage.setColor(Color.BLACK);
+
 		float halfWidth = 0.5f * Gdx.graphics.getWidth();
 		float halfHeight = 0.5f * Gdx.graphics.getHeight();
 
@@ -58,8 +61,6 @@ public class SimpleStageTest extends StageTest {
 
 		Entity entity3 = EntityFactory.createCircleThing();
 		stage.addActor(entity3.getActor());
-
-		stage.setColor(Color.BLACK);
 
 		ShaderGroup circleSpriteGroup = new ShaderGroup();
 		ShaderProgram circleShader = Shader.createCircleShader();
@@ -399,5 +400,9 @@ public class SimpleStageTest extends StageTest {
 		);
 
 		stage.addActorContainer(decalContainer);
+
+		// Flock.
+		Entity flock = EntityFactory.createFlock();
+		stage.addActorContainer((ActorContainer) flock.getActor());
 	}
 }

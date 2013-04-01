@@ -34,7 +34,16 @@ public class FlockComponent extends Component {
 		return mBoidComponents;
 	}
 
-	public ActorContainer getBoids() {
+	public ActorContainer getBoidActors() {
 		return mBoidActors;
+	}
+
+	/**
+	 * Adds the given BoidComponent and its respective Actor.
+	 * @param boid
+	 */
+	public void addBoid(BoidComponent boid) {
+		mBoidActors.addActor(boid.getActor());
+		mBoidComponents.add(boid);
 	}
 }

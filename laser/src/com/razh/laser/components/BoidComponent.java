@@ -1,5 +1,6 @@
 package com.razh.laser.components;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -22,9 +23,17 @@ public class BoidComponent extends PhysicsComponent {
 	private float mCohesionDistance;
 
 	public BoidComponent() {
-		setSeparation(25.0f);
-		setAlignDistance(50.0f);
-		setCohesionDistance(50.0f);
+		setSeparation(100.0f);
+		setAlignDistance(150.0f);
+		setCohesionDistance(100.0f);
+	}
+
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+
+		Vector2 velocity = getVelocity();
+		getActor().setRotation((float) Math.atan2(velocity.y, velocity.x) * MathUtils.radiansToDegrees);
 	}
 
 	public void flock(Array<BoidComponent> boids) {
@@ -37,7 +46,10 @@ public class BoidComponent extends PhysicsComponent {
 		align.mul(1.0f);
 		cohesion.mul(1.0f);
 
-		setAcceleration(getAcceleration().add(separation.add(cohesion).add(align)));
+		Vector2 acceleration = getAcceleration().add(separation.add(cohesion).add(align));
+		// TODO: Temporary weight for testing.
+		acceleration.sub(mTempVector.set(getPosition().sub(0.0f, 10.0f).mul(0.5f)));
+		setAcceleration(acceleration);
 	}
 
 	protected Vector2 seek(Vector2 target) {

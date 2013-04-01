@@ -10,6 +10,8 @@ import com.razh.laser.ActorContainer;
 import com.razh.laser.Geometry;
 import com.razh.laser.MeshActor;
 import com.razh.laser.TransformActorContainer;
+import com.razh.laser.components.BoidComponent;
+import com.razh.laser.components.FlockComponent;
 import com.razh.laser.components.MissileComponent;
 import com.razh.laser.components.MissilePathComponent;
 import com.razh.laser.sprites.SpriteActor;
@@ -91,6 +93,43 @@ public class EntityFactory {
 		entity.addComponent(missilePath);
 		missileContainer.setEntity(entity);
 
+		return entity;
+	}
+
+	public static Entity createFlock() {
+		Texture texture = new Texture("data/boid.png");
+		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+		FlockComponent flock = new FlockComponent();
+		ActorContainer boids = flock.getBoidActors();
+
+		SpriteActor boid;
+		Entity boidEntity;
+		BoidComponent boidComponent;
+		for (int i = 0; i < 30; i++ ) {
+			boid = new SpriteActor();
+			boid.setSprite(new Sprite(texture));
+			boid.setPosition((float) Math.random() * -500.0f + 250.0f, (float) Math.random() * -500.0f + 250.0f);
+//			boid.setRotation((float) Math.random() * 360.0f);
+			boid.setWidth(32.0f);
+			boid.setHeight(32.0f);
+
+			boidComponent = new BoidComponent();
+			boidComponent.setMaxSpeed(750.0f);
+			boidComponent.setMaxAcceleration(750.0f);
+
+			boidEntity = new Entity();
+			boidEntity.setActor(boid);
+			boidEntity.addComponent(boidComponent);
+			boid.setEntity(boidEntity);
+
+			flock.addBoid(boidComponent);
+		}
+
+		Entity entity = new Entity();
+		entity.setActor(boids);
+		entity.addComponent(flock);
+		boids.setEntity(entity);
 		return entity;
 	}
 }
