@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.laser.ActorContainer;
+import com.razh.laser.math.Range;
 import com.razh.laser.sprites.SpriteActor;
 import com.razh.laser.sprites.SpriteActor.Origin;
 
@@ -16,8 +17,8 @@ public class LaserComponent extends TransformComponent {
 	private Sprite mLaserSprite;
 	private final Color mLaserColor;
 
-	private float mLaserWidth;
-	private float mLaserHeight;
+	private final Range mSegmentWidth;
+	private final Range mSegmentLength;
 
 	private int mLayerCount;
 
@@ -28,6 +29,9 @@ public class LaserComponent extends TransformComponent {
 		mLaserColor = new Color();
 		mLaserActors = new ActorContainer();
 		mLaserPathActors = new LinkedList<Actor>();
+
+		mSegmentWidth = new Range();
+		mSegmentLength = new Range();
 	}
 
 	@Override
@@ -40,8 +44,6 @@ public class LaserComponent extends TransformComponent {
 	}
 
 	public void setLayerCount(int layerCount) {
-		System.out.println(mLayerCount + ", " + layerCount + ", " + mLaserActors.getActors().size);
-
 		// Remove unwanted actors.
 		if (mLayerCount > layerCount) {
 			int count = layerCount - mLayerCount;
@@ -52,7 +54,6 @@ public class LaserComponent extends TransformComponent {
 				count--;
 			}
 		}
-		System.out.println(layerCount + ", " + mLaserActors.getActors().size);
 
 		mLayerCount = layerCount;
 		// Add any necessary actors.
@@ -69,8 +70,8 @@ public class LaserComponent extends TransformComponent {
 			spriteActor = new SpriteActor();
 			spriteActor.setSprite(mLaserSprite);
 			spriteActor.setOrigin(Origin.LEFT);
-			spriteActor.setWidth(mLaserWidth);
-			spriteActor.setHeight(mLaserHeight);
+			spriteActor.setWidth(mSegmentLength.random());
+			spriteActor.setHeight(mSegmentWidth.random());
 
 			actors.add(spriteActor);
 		}
@@ -98,20 +99,28 @@ public class LaserComponent extends TransformComponent {
 		laserActorArray.end();
 	}
 
-	public float getLaserWidth() {
-		return mLaserWidth;
+	public Range getSegmentWidth() {
+		return mSegmentWidth;
 	}
 
-	public void setLaserWidth(float laserWidth) {
-		mLaserWidth = laserWidth;
+	public void setSegmentWidth(Range segmentWidth) {
+		mSegmentWidth.set(segmentWidth);
 	}
 
-	public float getLaserHeight() {
-		return mLaserHeight;
+	public void setSegmentWidth(float startWidth, float endWidth) {
+		mSegmentWidth.set(startWidth, endWidth);
 	}
 
-	public void setLaserHeight(float laserHeight) {
-		mLaserHeight = laserHeight;
+	public Range getSegmentLength() {
+		return mSegmentLength;
+	}
+
+	public void setSegmentLength(Range segmentLength) {
+		mSegmentLength.set(segmentLength);
+	}
+
+	public void setSegmentLength(float startLength, float endLength) {
+		mSegmentLength.set(startLength, endLength);
 	}
 
 	public ActorContainer getLaserActors() {
