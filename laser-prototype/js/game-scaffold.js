@@ -30,7 +30,7 @@ Game.prototype.update = function() {
 };
 
 Game.prototype.draw = function() {
-  this._cavas.style.backgroundColor = this.getBackgroundColor().toHexString();
+  this._canvas.style.backgroundColor = this.getBackgroundColor().toHexString();
 
   this._ctx.clearRect( 0, 0, this.WIDTH, this.HEIGHT );
 
