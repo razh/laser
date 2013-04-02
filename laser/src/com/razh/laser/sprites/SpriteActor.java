@@ -1,5 +1,7 @@
 package com.razh.laser.sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.razh.laser.EntityActor;
@@ -20,14 +22,20 @@ public class SpriteActor extends EntityActor {
 	private Sprite mSprite;
 	private Origin mOrigin;
 
+	private int mSrcFactor;
+	private int mDstFactor;
+
 	public SpriteActor() {
 		super();
 		mOrigin = Origin.CENTER;
+
+		setBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	@Override
 	public void draw(SpriteBatch spriteBatch, float parentAlpha) {
 		updateSprite();
+		spriteBatch.setBlendFunction(mSrcFactor, mDstFactor);
 		mSprite.draw(spriteBatch, parentAlpha);
 	}
 
@@ -87,5 +95,18 @@ public class SpriteActor extends EntityActor {
 	public void setOrigin(float originX, float originY) {
 		super.setOrigin(originX, originY);
 		mOrigin = Origin.CUSTOM;
+	}
+
+	public int getSrcFactor() {
+		return mSrcFactor;
+	}
+
+	public int getDstFactor() {
+		return mDstFactor;
+	}
+
+	public void setBlendFunc(int srcFactor, int dstFactor) {
+		mSrcFactor = srcFactor;
+		mDstFactor = dstFactor;
 	}
 }
