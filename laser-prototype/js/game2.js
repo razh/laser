@@ -1,24 +1,5 @@
-$(
-  function() {
-    init();
-  }
-);
-
-window.requestAnimFrame = (function() {
-  return window.requestAnimationFrame       ||
-         window.webkitRequestAnimationFrame ||
-         window.mozRequestAnimationFrame    ||
-         window.oRequestAnimationFrame      ||
-         window.msRequestAnimationFrame     ||
-         function( callback ) {
-            window.setTimeout( callback, 1000 / 60 );
-         };
-}) ();
-
-var _game;
-
 function init() {
-  _game = new Game();
+  _game = new TestGame2();
 
   var playerEntity = _game._playerEntity;
   playerEntity.setPosition( 0.5 * _game.WIDTH, 0.5 * _game.HEIGHT );
@@ -43,24 +24,9 @@ function init() {
   loop();
 }
 
-function loop() {
-  if ( !_game.isRunning() ) {
-    return;
-  }
-
-  _game.tick();
-  requestAnimFrame( loop );
-}
-
-function quit() {
-  _game.stop();
-}
-
-var Game = function() {
-  this.WIDTH = window.innerWidth;
-  this.HEIGHT = window.innerHeight;
-
-  $( 'body' ).append( '<canvas>' );
+function TestGame2() {
+  Game.call( this );
+    $( 'body' ).append( '<canvas>' );
 
   this._canvas = $( 'canvas' )[0];
 
@@ -69,16 +35,8 @@ var Game = function() {
 
   this._ctx = this._canvas.getContext( '2d' );
 
-  this._backgroundColor = new Color( 127, 127, 127, 1.0 );
-
-  this._prevTime = Date.now();
-  this._currTime = this._prevTime;
-  this._running = true;
-
   this._player = new Player();
-  this._entities = [];
   this._playerEntity = new PlayerEntity();
-
 
   this._camera = new Camera();
   // Setup camera.
@@ -90,16 +48,12 @@ var Game = function() {
   };
 
   this._frameCount = 0;
+}
 
-  this.EPSILON = 1e-5;
-};
+TestGame2.prototype = new Game();
+TestGame2.prototype.constructor = TestGame2;
 
-Game.prototype.tick = function() {
-  this.update();
-  this.draw();
-};
-
-Game.prototype.update = function() {
+TestGame2.prototype.update = function() {
   this._currTime = Date.now();
   var elapsedTime = this._currTime - this._prevTime;
   this._prevTime = this._currTime;
@@ -146,7 +100,7 @@ Game.prototype.update = function() {
   }
 };
 
-Game.prototype.draw = function() {
+TestGame2.prototype.draw = function() {
   this._canvas.style.backgroundColor = this.getBackgroundColor().toHexString();
 
   var ctx = this.getCtx();
@@ -171,7 +125,7 @@ Game.prototype.draw = function() {
   ctx.restore();
 };
 
-Game.prototype.hit = function( x, y ) {
+TestGame2.prototype.hit = function( x, y ) {
   var entities = this.getEntities();
   for ( var i = 0, n = entities.length; i < n; i++ ) {
     if ( entities[i].contains( x, y ) ) {
@@ -182,7 +136,7 @@ Game.prototype.hit = function( x, y ) {
   return null;
 };
 
-Game.prototype.processInput = function( elapsedTime ) {
+TestGame2.prototype.processInput = function( elapsedTime ) {
   var angularAcceleration = 6 * Math.PI * elapsedTime;
   var dAngularVelocity = 10 * Math.PI / 180 * elapsedTime;
 
@@ -210,23 +164,15 @@ Game.prototype.processInput = function( elapsedTime ) {
   }
 };
 
-Game.prototype.getCtx = function() {
+TestGame2.prototype.getCtx = function() {
   return this._ctx;
 };
 
-Game.prototype.getCamera = function() {
+TestGame2.prototype.getCamera = function() {
   return this._camera;
 };
 
-Game.prototype.getEntities = function() {
-  return this._entities;
-};
-
-Game.prototype.addEntity = function( entity ) {
-  this.getEntities().push( entity );
-};
-
-Game.prototype.removeEntity = function( entity ) {
+TestGame2.prototype.removeEntity = function( entity ) {
   var entities = this.getEntities();
   var index = entities.indexOf( entity );
   if ( index !== -1 ) {
@@ -234,23 +180,6 @@ Game.prototype.removeEntity = function( entity ) {
   }
 };
 
-Game.prototype.getPlayer = function() {
+TestGame2.prototype.getPlayer = function() {
   return this._player;
-};
-
-// Background color.
-Game.prototype.getBackgroundColor = function() {
-  return this._backgroundColor;
-};
-
-Game.prototype.setBackgroundColor = function() {
-  this.getBackgroundColor().set.apply( this.getBackgroundColor(), arguments );
-};
-
-Game.prototype.isRunning = function() {
-  return this._running;
-};
-
-Game.prototype.stop = function() {
-  this._running = false;
 };
