@@ -1,9 +1,24 @@
+var beam;
+
 function init() {
   _game = new BeamTest();
 
-  _game.addEntity( new Rectangle().setPosition( 200, 300 )
-                                  .setWidth( 300 )
-                                  .setHeight( 200 ) );
+  beam = new Beam();
+  beam.setPosition( 200, 100 );
+  beam.setColor( 200, 50, 50, 0.25 );
+
+  beam.getBeamWidth().set( -10, 10 );
+  beam.setBeamLength( 300 );
+
+  beam.getSegmentWidth().set( 5, 20 );
+  beam.getSegmentLength().set( 100, 200 );
+  beam.getSegmentVelocity().set( 100, 200 );
+  beam.getSegmentInterval().set( 2, 10 );
+
+  beam.setLayerCount( 30 );
+  beam.setRotationInDegrees( 45 );
+
+  _game.addEntity( beam );
 
   loop();
 }
@@ -27,8 +42,8 @@ function BeamTest() {
 BeamTest.prototype = new Game();
 BeamTest.prototype.constructor = BeamTest;
 
-BeamTest.prototype.update = function( elapsedTime ) {
-  Game.prototype.update.call( this, elapsedTime );
+BeamTest.prototype.update = function() {
+  Game.prototype.update.call( this );
 
-  this._entities[0].rotate( 2 * Math.PI / 180 );
+  // this._entities[0].rotate( 1 * Math.PI / 180 );
 };

@@ -58,7 +58,7 @@ public class LaserComponent extends TransformComponent {
 	public void setLayerCount(int layerCount) {
 		// Remove unwanted actors.
 		if (mLayerCount > layerCount) {
-			int count = layerCount - mLayerCount;
+			int count = mLayerCount - layerCount;
 			Actor removedActor;
 			while (count > 0) {
 				removedActor = mLaserActors.getActors().removeIndex(count + layerCount - 1);
