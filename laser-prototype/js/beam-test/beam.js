@@ -48,7 +48,6 @@ Beam.prototype.update = function( elapsedTime ) {
 
     // Reset if more than beam length.
     if ( segment.getX() > this._beamLength ) {
-      console.log( 'reset')
       segment.setWidth(0);
       segment.setX(0);
     }
