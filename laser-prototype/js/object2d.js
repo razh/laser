@@ -4,11 +4,6 @@ var Object2D = function() {
     y: 0.0
   };
 
-  this._origin = {
-    x: 0.0,
-    y: 0.0
-  };
-
   this._width = 1.0;
   this._height = 1.0;
   this._rotation = 0.0;
@@ -68,41 +63,6 @@ Object2D.prototype.translate = function() {
   } else if ( arguments.length === 2 ) {
     this.translateX( arguments[0] );
     this.translateY( arguments[1] );
-  }
-
-  return this;
-};
-
-// Origin.
-Object.prototype.getOriginX = function() {
-  return this.getOrigin().x;
-};
-
-Object.prototype.setOriginX = function( originX ) {
-  this._origin.x = originX;
-  return this;
-};
-
-Object.prototype.getOriginY = function() {
-  return this.getOrigin().y;
-};
-
-Object.prototype.setOriginY = function( originY ) {
-  this._origin.y = originY;
-  return this;
-};
-
-Object2D.prototype.getOrigin = function() {
-  return this._origin;
-};
-
-Object2D.prototype.setOrigin = function() {
-  if ( arguments.length === 1 ) {
-    this.setOriginX( arguments[0].x );
-    this.setOriginY( arguments[0].y );
-  } else if ( arguments.length === 2 ) {
-    this.setOriginX( arguments[0] );
-    this.setOriginY( arguments[1] );
   }
 
   return this;

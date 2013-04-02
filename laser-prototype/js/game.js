@@ -26,7 +26,6 @@ function init() {
                           .setColor( new Color( 0, 0, 127, 1.0 ) );
   test.addShape( shape );
   test.addShape( shape2 );
-  test.setOrigin( 100, 0 );
   _game.addEntity( test );
   _game.addEntity( new Emitter() );
 
