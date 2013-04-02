@@ -17,7 +17,6 @@ function Beam() {
   this._segmentLength = new Range();
 
   this._segmentVelocity = new Range();
-  this._segmentInterval = new Range();
 }
 
 Beam.prototype = new PhysicsEntity();
@@ -107,10 +106,6 @@ Beam.prototype.getSegmentLength = function() {
 
 Beam.prototype.getSegmentVelocity = function() {
   return this._segmentVelocity;
-};
-
-Beam.prototype.getSegmentInterval = function() {
-  return this._segmentInterval;
 };
 
 Beam.prototype.getColor = function() {

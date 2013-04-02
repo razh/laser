@@ -20,11 +20,13 @@ public class LaserComponent extends TransformComponent {
 	private Sprite mLaserSprite;
 	private final Color mLaserColor;
 
+	private final Range mBeamWidth;
+	private float mBeamLength;
+
 	private final Range mSegmentWidth;
 	private final Range mSegmentLength;
 
 	private final Range mSegmentVelocity;
-	private final Range mSegmentInterval;
 
 	private int mLayerCount;
 
@@ -36,11 +38,12 @@ public class LaserComponent extends TransformComponent {
 		mLaserActors = new ActorContainer();
 		mLaserPathActors = new LinkedList<Actor>();
 
+		mBeamWidth = new Range();
+
 		mSegmentWidth = new Range();
 		mSegmentLength = new Range();
 
 		mSegmentVelocity = new Range();
-		mSegmentInterval = new Range();
 	}
 
 	@Override
@@ -111,48 +114,20 @@ public class LaserComponent extends TransformComponent {
 		laserActorArray.end();
 	}
 
-	/**
-	 * Segment width.
-	 */
+	public Color getLaserColor() {
+		return mLaserColor;
+	}
+
 	public Range getSegmentWidth() {
 		return mSegmentWidth;
 	}
 
-	public void setSegmentWidth(float startWidth, float endWidth) {
-		mSegmentWidth.set(startWidth, endWidth);
-	}
-
-	/**
-	 * Segment length.
-	 */
 	public Range getSegmentLength() {
 		return mSegmentLength;
 	}
 
-	public void setSegmentLength(float startLength, float endLength) {
-		mSegmentLength.set(startLength, endLength);
-	}
-
-	/**
-	 * Segment velocity.
-	 */
 	public Range getSegmentVelocity() {
 		return mSegmentVelocity;
-	}
-
-	public void setSegmentVelocity(float startVelocity, float endVelocity) {
-		mSegmentVelocity.set(startVelocity, endVelocity);
-	}
-
-	/**
-	 * Segment interval. Timings at which new segments are spawned.
-	 */
-	public Range getSegmentInterval() {
-		return mSegmentInterval;
-	}
-
-	public void setSegmentInterval(float startInterval, float endInterval) {
-		mSegmentInterval.set(startInterval, endInterval);
 	}
 
 	public ActorContainer getLaserActors() {

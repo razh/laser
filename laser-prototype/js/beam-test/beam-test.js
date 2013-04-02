@@ -11,7 +11,6 @@ function init() {
   _game._beam.getSegmentWidth().set( 5, 20 );
   _game._beam.getSegmentLength().set( 200, 300 );
   _game._beam.getSegmentVelocity().set( 1000, 3000 );
-  _game._beam.getSegmentInterval().set( 2, 10 );
 
   _game._beam.setLayerCount( 30 );
   _game._beam.setRotationInDegrees( 45 );
