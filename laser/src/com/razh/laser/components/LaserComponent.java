@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.razh.laser.ActorContainer;
@@ -14,11 +15,16 @@ import com.razh.laser.sprites.SpriteActor.Origin;
 
 public class LaserComponent extends TransformComponent {
 
+	private static final Vector2 mTempVector = new Vector2();
+
 	private Sprite mLaserSprite;
 	private final Color mLaserColor;
 
 	private final Range mSegmentWidth;
 	private final Range mSegmentLength;
+
+	private final Range mSegmentVelocity;
+	private final Range mSegmentInterval;
 
 	private int mLayerCount;
 
@@ -32,11 +38,17 @@ public class LaserComponent extends TransformComponent {
 
 		mSegmentWidth = new Range();
 		mSegmentLength = new Range();
+
+		mSegmentVelocity = new Range();
+		mSegmentInterval = new Range();
 	}
 
 	@Override
 	public void act(float delta) {
 		super.act(delta);
+
+		Actor actor = getActor();
+		mTempVector.set(actor.getX(), actor.getY());
 	}
 
 	public int getLayerCount() {
@@ -99,28 +111,48 @@ public class LaserComponent extends TransformComponent {
 		laserActorArray.end();
 	}
 
+	/**
+	 * Segment width.
+	 */
 	public Range getSegmentWidth() {
 		return mSegmentWidth;
-	}
-
-	public void setSegmentWidth(Range segmentWidth) {
-		mSegmentWidth.set(segmentWidth);
 	}
 
 	public void setSegmentWidth(float startWidth, float endWidth) {
 		mSegmentWidth.set(startWidth, endWidth);
 	}
 
+	/**
+	 * Segment length.
+	 */
 	public Range getSegmentLength() {
 		return mSegmentLength;
 	}
 
-	public void setSegmentLength(Range segmentLength) {
-		mSegmentLength.set(segmentLength);
-	}
-
 	public void setSegmentLength(float startLength, float endLength) {
 		mSegmentLength.set(startLength, endLength);
+	}
+
+	/**
+	 * Segment velocity.
+	 */
+	public Range getSegmentVelocity() {
+		return mSegmentVelocity;
+	}
+
+	public void setSegmentVelocity(float startVelocity, float endVelocity) {
+		mSegmentVelocity.set(startVelocity, endVelocity);
+	}
+
+	/**
+	 * Segment interval. Timings at which new segments are spawned.
+	 */
+	public Range getSegmentInterval() {
+		return mSegmentInterval;
+	}
+
+	public void setSegmentInterval(float startInterval, float endInterval) {
+		mSegmentInterval.set(startInterval, endInterval);
 	}
 
 	public ActorContainer getLaserActors() {

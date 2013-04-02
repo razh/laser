@@ -1,10 +1,12 @@
 package com.razh.laser;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.razh.laser.entities.Entity;
 
 public class Player {
 	private int mScore;
 	private Actor mSelected;
+	private Entity mEntity;
 
 	public int getScore() {
 		return mScore;
@@ -24,5 +26,13 @@ public class Player {
 
 	public boolean hasSelected() {
 		return mSelected != null;
+	}
+
+	public Entity getEntity() {
+		return mEntity;
+	}
+
+	public void setEntity(Entity entity) {
+		mEntity = entity;
 	}
 }
