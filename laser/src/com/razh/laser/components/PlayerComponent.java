@@ -7,25 +7,37 @@ public class PlayerComponent extends PhysicsComponent {
 
 	public float DEFAULT_ANGULAR_VELOCITY = 90.0f * 1e2f;
 
+	private boolean mTurningLeft;
+	private boolean mTurningRight;
+
 	@Override
 	public void act(float delta) {
-		System.out.println(delta * 1e2f);
 		super.act(delta);
 
-		boolean turningLeft = Gdx.input.isKeyPressed(Keys.LEFT);
-		boolean turningRight = Gdx.input.isKeyPressed(Keys.RIGHT);
+		boolean turningLeft = mTurningLeft || Gdx.input.isKeyPressed(Keys.LEFT);
+		boolean turningRight = mTurningRight || Gdx.input.isKeyPressed(Keys.RIGHT);
 
+		float angularVelocity = 0.0f;
 		if (turningLeft) {
-			setAngularVelocity(DEFAULT_ANGULAR_VELOCITY * delta);
-			System.out.println("LEFT");
+			angularVelocity += DEFAULT_ANGULAR_VELOCITY * delta;
 		}
 
 		if (turningRight) {
-			setAngularVelocity(-DEFAULT_ANGULAR_VELOCITY * delta);
+			angularVelocity += -DEFAULT_ANGULAR_VELOCITY * delta;
 		}
 
 		if (!turningLeft && !turningRight) {
-			setAngularVelocity(0.0f);
+			angularVelocity = 0.0f;
 		}
+
+		setAngularVelocity(angularVelocity);
+	}
+
+	public void turnLeft(boolean turnLeft) {
+		mTurningLeft = turnLeft;
+	}
+
+	public void turnRight(boolean turnRight) {
+		mTurningRight = turnRight;
 	}
 }

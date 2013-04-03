@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.razh.laser.LaserGame;
 import com.razh.laser.ShaderStage;
+import com.razh.laser.entities.EntityFactory;
 import com.razh.laser.input.GameInputProcessor;
 import com.razh.laser.tests.SimpleStageTest;
 import com.razh.laser.tests.StageTest;
@@ -14,13 +15,15 @@ public class GameScreen extends BasicScreen {
 	public GameScreen(LaserGame game) {
 		super(game);
 
+		LaserGame.getPlayer().setEntity(EntityFactory.createPlayer());
+
 		setStage(new ShaderStage());
 		StageTest test = new SimpleStageTest();
 		test.load(getShaderStage());
 
 		GameInputProcessor gameInputProcessor = new GameInputProcessor();
 		gameInputProcessor.setStage(getStage());
-		gameInputProcessor.setPlayer(getGame().getPlayer());
+		gameInputProcessor.setPlayer(LaserGame.getPlayer());
 
 		addInputProcessor(getStage());
 		addInputProcessor(gameInputProcessor);

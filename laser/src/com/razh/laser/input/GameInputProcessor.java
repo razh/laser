@@ -4,8 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.razh.laser.Player;
+import com.razh.laser.components.PlayerComponent;
 
 public class GameInputProcessor extends BasicInputProcessor {
+
+	private PlayerComponent mPlayerComponent;
 	// Offsets from touch position to object position.
 	private final Vector2 mOffset;
 
@@ -36,12 +39,25 @@ public class GameInputProcessor extends BasicInputProcessor {
 
 		boolean anticlockwise = screenX < 0.5f * Gdx.graphics.getWidth() ? true : false;
 		System.out.println(anticlockwise ? "left" : "right");
+		if (mPlayerComponent != null) {
+			if (anticlockwise) {
+				mPlayerComponent.turnLeft(true);
+			} else {
+				mPlayerComponent.turnRight(true);
+			}
+		}
 
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		if (mPlayerComponent != null) {
+			mPlayerComponent.setAngularVelocity(0.0f);
+			mPlayerComponent.turnLeft(false);
+			mPlayerComponent.turnRight(false);
+		}
+
 		return false;
 	}
 
@@ -58,6 +74,15 @@ public class GameInputProcessor extends BasicInputProcessor {
 	@Override
 	public boolean scrolled(int amount) {
 		return false;
+	}
+
+	@Override
+	public void setPlayer(Player player) {
+		super.setPlayer(player);
+		PlayerComponent playerComponent = (PlayerComponent) player.getEntity().getComponentOfType(PlayerComponent.class);
+		if (playerComponent != null) {
+			mPlayerComponent = playerComponent;
+		}
 	}
 
 }

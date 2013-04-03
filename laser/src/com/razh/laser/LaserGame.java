@@ -32,7 +32,7 @@ public class LaserGame extends Game {
 	public static final float HEIGHT = 720.0f;
 
 	private InputMultiplexer mInputMultiplexer;
-	private Player mPlayer;
+	private static Player mPlayer;
 	private FPSLogger mFPSLogger;
 
 	private SpriteBatch mSpriteBatch;
@@ -378,7 +378,7 @@ public class LaserGame extends Game {
 		}
 	}
 
-	public Player getPlayer() {
+	public static Player getPlayer() {
 		return mPlayer;
 	}
 

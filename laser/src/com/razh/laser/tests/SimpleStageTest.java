@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.razh.laser.ActorContainer;
 import com.razh.laser.DecalActor;
 import com.razh.laser.Geometry;
+import com.razh.laser.LaserGame;
 import com.razh.laser.MeshActor;
 import com.razh.laser.Shader;
 import com.razh.laser.ShaderGroup;
@@ -408,7 +409,7 @@ public class SimpleStageTest extends StageTest {
 		stage.addActorContainer((ActorContainer) flock.getActor());
 
 		// Player.
-		Entity player = EntityFactory.createPlayer();
+		Entity player = LaserGame.getPlayer().getEntity();
 		stage.addActor(player.getActor());
 
 		PlayerComponent playerComponent = (PlayerComponent) player.getComponentOfType(PlayerComponent.class);
