@@ -73,7 +73,8 @@ Beam.prototype.setLayerCount = function( layerCount ) {
 Beam.prototype.allocateLayerActors = function() {
   var rect;
   for ( var i = this._shapes.length, n = this._layerCount; i < n; i++ ) {
-    rect = new Rectangle().setY( this._beamWidth.random() )
+    rect = new Rectangle().setX( Math.random() * this._beamLength )
+                          .setY( this._beamWidth.random() )
                           .setWidth(0) // Initial width of each rectangle is zero.
                           .setHeight( this._segmentWidth.random() )
                           .setColor( this.getColor() );

@@ -141,7 +141,7 @@ public class EntityFactory {
 		PlayerComponent playerComponent = new PlayerComponent();
 		LaserComponent laserComponent = playerComponent.getLaserComponent();
 		laserComponent.setLaserSprite(new Sprite(new Texture("data/laser.png")));
-		laserComponent.getLaserColor().set(0.6f, 0.5f, 0.5f, 0.5f);
+		laserComponent.getLaserColor().set(0.75f, 0.5f, 0.5f, 0.75f);
 
 		laserComponent.getBeamWidth().set(-10.0f, 10.0f);
 		laserComponent.setBeamLength(3000.0f);
