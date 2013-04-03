@@ -139,7 +139,7 @@ public class EntityFactory {
 		Entity playerEntity = new Entity();
 
 		PlayerComponent playerComponent = new PlayerComponent();
-		LaserComponent laserComponent = playerComponent.getLaserComponent();
+		LaserComponent laserComponent = new LaserComponent();
 		laserComponent.setLaserSprite(new Sprite(new Texture("data/laser.png")));
 		laserComponent.getLaserSprite().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		laserComponent.getLaserColor().set(0.75f, 0.5f, 0.5f, 0.75f);
@@ -161,6 +161,7 @@ public class EntityFactory {
 		playerActor.setHeight(256.0f);
 
 		playerEntity.setActor(playerActor);
+		playerEntity.addComponent(playerComponent);
 		playerEntity.addComponent(laserComponent);
 		playerActor.setEntity(playerEntity);
 

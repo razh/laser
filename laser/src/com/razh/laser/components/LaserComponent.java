@@ -69,7 +69,7 @@ public class LaserComponent extends TransformComponent {
 		float actorY = actor.getY();
 		mTempVector.set(actor.getX(), actor.getY());
 
-		float rotation = getRotation();
+		float rotation = actor.getRotation();
 		float cos = (float) Math.cos(rotation * MathUtils.degreesToRadians);
 		float sin = (float) Math.sin(rotation * MathUtils.degreesToRadians);
 

@@ -1,25 +1,31 @@
 package com.razh.laser.components;
 
-public class PlayerComponent extends TransformComponent {
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 
-	private final LaserComponent mLaserComponent;
+public class PlayerComponent extends PhysicsComponent {
 
-	public PlayerComponent() {
-		mLaserComponent = new LaserComponent();
-		mLaserComponent.setEntity(getEntity());
-	}
+	public float DEFAULT_ANGULAR_VELOCITY = 90.0f * 1e2f;
 
 	@Override
 	public void act(float delta) {
+		System.out.println(delta * 1e2f);
 		super.act(delta);
 
-		mLaserComponent.act(delta);
+		boolean turningLeft = Gdx.input.isKeyPressed(Keys.LEFT);
+		boolean turningRight = Gdx.input.isKeyPressed(Keys.RIGHT);
 
-		mLaserComponent.setPosition(getPosition());
-		mLaserComponent.setRotation(getRotation());
-	}
+		if (turningLeft) {
+			setAngularVelocity(DEFAULT_ANGULAR_VELOCITY * delta);
+			System.out.println("LEFT");
+		}
 
-	public LaserComponent getLaserComponent() {
-		return mLaserComponent;
+		if (turningRight) {
+			setAngularVelocity(-DEFAULT_ANGULAR_VELOCITY * delta);
+		}
+
+		if (!turningLeft && !turningRight) {
+			setAngularVelocity(0.0f);
+		}
 	}
 }

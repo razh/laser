@@ -411,8 +411,7 @@ public class SimpleStageTest extends StageTest {
 		Entity player = EntityFactory.createPlayer();
 		stage.addActor(player.getActor());
 
-//		PlayerComponent playerComponent = (PlayerComponent) player.getComponentOfType(PlayerComponent.class);
-//		LaserComponent laserComponent = playerComponent.getLaserComponent();
+		PlayerComponent playerComponent = (PlayerComponent) player.getComponentOfType(PlayerComponent.class);
 		LaserComponent laserComponent = (LaserComponent) player.getComponentOfType(LaserComponent.class);
 		stage.addActorContainer(laserComponent.getLaserActors());
 	}
