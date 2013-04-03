@@ -1,8 +1,6 @@
 package com.razh.laser.components;
 
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,7 +17,6 @@ import com.razh.laser.sprites.SpriteActor.Origin;
 public class LaserComponent extends TransformComponent {
 
 	private static final Vector2 mTempVector = new Vector2();
-	private static final Vector2 mTempVector2 = new Vector2();
 
 	private Sprite mLaserSprite;
 	private final Color mLaserColor;
@@ -35,7 +32,6 @@ public class LaserComponent extends TransformComponent {
 	private int mLayerCount;
 
 	private final ActorContainer mLaserActors;
-	private final Deque<Actor> mLaserPathActors;
 
 	private final ArrayList<Float> mSegmentPositionsX;
 	private final ArrayList<Float> mSegmentPositionsY;
@@ -45,7 +41,6 @@ public class LaserComponent extends TransformComponent {
 	public LaserComponent() {
 		mLaserColor = new Color();
 		mLaserActors = new ActorContainer();
-		mLaserPathActors = new LinkedList<Actor>();
 
 		mBeamWidth = new Range();
 

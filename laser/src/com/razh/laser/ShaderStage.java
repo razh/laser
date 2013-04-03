@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.SnapshotArray;
-import com.razh.laser.sprites.ProceduralSpriteActor;
 import com.razh.laser.sprites.SpriteActor;
 
 public class ShaderStage extends Stage {
