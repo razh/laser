@@ -35,6 +35,8 @@ public class ShaderStage extends Stage {
 	// Allows us to set colors with actions.
 	private Actor mColorActor;
 
+	private LaserGame mGame;
+
 	public ShaderStage() {
 		this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 	}
@@ -167,5 +169,13 @@ public class ShaderStage extends Stage {
 	@Override
 	public void addAction(Action action) {
 		mColorActor.addAction(action);
+	}
+
+	public LaserGame getGame() {
+		return mGame;
+	}
+
+	public void setGame(LaserGame game) {
+		mGame = game;
 	}
 }

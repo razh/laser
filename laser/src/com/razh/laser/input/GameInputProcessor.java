@@ -52,10 +52,14 @@ public class GameInputProcessor extends BasicInputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		boolean anticlockwise = screenX < 0.5f * Gdx.graphics.getWidth() ? true : false;
 		if (mPlayerComponent != null) {
 			mPlayerComponent.setAngularVelocity(0.0f);
-			mPlayerComponent.turnLeft(false);
-			mPlayerComponent.turnRight(false);
+			if (anticlockwise) {
+				mPlayerComponent.turnLeft(false);
+			} else {
+				mPlayerComponent.turnRight(false);
+			}
 		}
 
 		return false;

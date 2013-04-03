@@ -409,7 +409,7 @@ public class SimpleStageTest extends StageTest {
 		stage.addActorContainer((ActorContainer) flock.getActor());
 
 		// Player.
-		Entity player = LaserGame.getPlayer().getEntity();
+		Entity player = stage.getGame().getPlayer().getEntity();
 		stage.addActor(player.getActor());
 
 		PlayerComponent playerComponent = (PlayerComponent) player.getComponentOfType(PlayerComponent.class);

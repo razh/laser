@@ -378,7 +378,7 @@ public class LaserGame extends Game {
 		}
 	}
 
-	public static Player getPlayer() {
+	public Player getPlayer() {
 		return mPlayer;
 	}
 

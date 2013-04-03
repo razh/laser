@@ -15,15 +15,18 @@ public class GameScreen extends BasicScreen {
 	public GameScreen(LaserGame game) {
 		super(game);
 
-		LaserGame.getPlayer().setEntity(EntityFactory.createPlayer());
+		getGame().getPlayer().setEntity(EntityFactory.createPlayer());
 
-		setStage(new ShaderStage());
+		ShaderStage stage = new ShaderStage();
+		stage.setGame(getGame());
+		setStage(stage);
+
 		StageTest test = new SimpleStageTest();
 		test.load(getShaderStage());
 
 		GameInputProcessor gameInputProcessor = new GameInputProcessor();
 		gameInputProcessor.setStage(getStage());
-		gameInputProcessor.setPlayer(LaserGame.getPlayer());
+		gameInputProcessor.setPlayer(getGame().getPlayer());
 
 		addInputProcessor(getStage());
 		addInputProcessor(gameInputProcessor);
