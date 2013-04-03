@@ -42,7 +42,7 @@ public class SimpleStageTest extends StageTest {
 	@Override
 	public void load(ShaderStage stage) {
 
-		stage.setColor(Color.BLACK);
+		stage.setColor(new Color(30 / 255.0f, 24 / 255.0f, 47 / 255.0f, 1.0f));
 
 		float halfWidth = 0.5f * Gdx.graphics.getWidth();
 		float halfHeight = 0.5f * Gdx.graphics.getHeight();

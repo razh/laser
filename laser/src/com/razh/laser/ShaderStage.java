@@ -72,8 +72,10 @@ public class ShaderStage extends Stage {
 
 	@Override
 	public void draw() {
+		// Draw decals with negative z-coordinate.
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		mDecalGroup.drawBehind(mDecalBatch);
-		super.draw();
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
 		// Draw meshes.
 		Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -85,7 +87,12 @@ public class ShaderStage extends Stage {
 
 		Gdx.gl.glDisable(GL20.GL_BLEND);
 
+		super.draw();
+
+		// Draw decals with positive z-coordinate.
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		mDecalGroup.drawAfter(mDecalBatch);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 	}
 
 	public float time = 0.0f;
