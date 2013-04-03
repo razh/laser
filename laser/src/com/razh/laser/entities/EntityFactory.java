@@ -140,10 +140,18 @@ public class EntityFactory {
 
 		PlayerComponent playerComponent = new PlayerComponent();
 		LaserComponent laserComponent = playerComponent.getLaserComponent();
-		laserComponent.setLaserSprite(new Sprite(new Texture("data/missile_path.png")));
-		laserComponent.setSegmentWidth(3.0f, 15.0f);
-		laserComponent.setSegmentLength(50.0f, 150.0f);
-		laserComponent.setLayerCount(20);
+		laserComponent.setLaserSprite(new Sprite(new Texture("data/laser.png")));
+		laserComponent.getLaserColor().set(0.6f, 0.5f, 0.5f, 0.5f);
+
+		laserComponent.getBeamWidth().set(-10.0f, 10.0f);
+		laserComponent.setBeamLength(3000.0f);
+
+		laserComponent.getSegmentWidth().set(10.0f, 30.0f);
+		laserComponent.getSegmentLength().set(700.0f, 1500.0f);
+
+		laserComponent.getSegmentVelocity().set(6000.0f, 10000.0f);
+
+		laserComponent.setLayerCount(30);
 
 		SpriteActor playerActor = new SpriteActor();
 		playerActor.setSprite(new Sprite(new Texture("data/boid.png")));
@@ -151,7 +159,7 @@ public class EntityFactory {
 		playerActor.setHeight(256.0f);
 
 		playerEntity.setActor(playerActor);
-		playerEntity.addComponent(playerComponent);
+		playerEntity.addComponent(laserComponent);
 		playerActor.setEntity(playerEntity);
 
 		return playerEntity;

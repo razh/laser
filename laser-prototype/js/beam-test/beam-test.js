@@ -5,7 +5,7 @@ function init() {
   _game._beam.setMaxAngularVelocity( 1000 );
   _game._beam.setColor( 200, 100, 100, 0.25 );
 
-  _game._beam.getBeamWidth().set( -5, 5 );
+  _game._beam.getBeamWidth().set( -1, 1 );
   _game._beam.setBeamLength( 750 );
 
   _game._beam.getSegmentWidth().set( 5, 20 );
