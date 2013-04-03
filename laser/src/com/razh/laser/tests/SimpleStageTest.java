@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.razh.laser.ActorContainer;
+import com.razh.laser.AnimationActor;
 import com.razh.laser.DecalActor;
 import com.razh.laser.Geometry;
 import com.razh.laser.MeshActor;
@@ -401,6 +402,15 @@ public class SimpleStageTest extends StageTest {
 		);
 
 		stage.addActorContainer(decalContainer);
+
+		// Animation.
+		AnimationActor animation = AnimationActor.create(new Texture("data/animation.png"), 9, 0.0417f, 4, 4);
+		animation.setOrigin(Origin.LEFT);
+		animation.setWidth(256.0f);
+		animation.setHeight(256.0f);
+		animation.setPosition(0.8f * halfWidth, -0.4f * halfHeight);
+		animation.addAction(forever(rotateBy(180.0f, 1.0f)));
+		stage.addActor(animation);
 
 		// Flock.
 		Entity flock = EntityFactory.createFlock();
