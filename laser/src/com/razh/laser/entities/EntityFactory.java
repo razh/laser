@@ -1,12 +1,16 @@
 package com.razh.laser.entities;
 
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.math.MathUtils;
 import com.razh.laser.ActorContainer;
+import com.razh.laser.DecalActor;
 import com.razh.laser.Geometry;
 import com.razh.laser.MeshActor;
 import com.razh.laser.TransformActorContainer;
@@ -17,6 +21,10 @@ import com.razh.laser.components.MissileComponent;
 import com.razh.laser.components.MissilePathComponent;
 import com.razh.laser.components.PlayerComponent;
 import com.razh.laser.sprites.SpriteActor;
+
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import static com.razh.laser.Actor3D.*;
 
 public class EntityFactory {
 	public static Entity createEmitter() {
@@ -149,16 +157,31 @@ public class EntityFactory {
 
 		laserComponent.getSegmentWidth().set(10.0f, 30.0f);
 		laserComponent.getSegmentLength().set(700.0f, 1500.0f);
-
 		laserComponent.getSegmentVelocity().set(6000.0f, 10000.0f);
 
 		laserComponent.setLayerCount(30);
 
-		SpriteActor playerActor = new SpriteActor();
-		playerActor.setSprite(new Sprite(new Texture("data/player.png")));
-		playerActor.getSprite().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		playerActor.setWidth(256.0f);
-		playerActor.setHeight(256.0f);
+		Texture playerTexture = new Texture("data/player.png");
+		ActorContainer playerActor = new TransformActorContainer();
+
+		DecalActor playerDecal = new DecalActor();
+		playerDecal.setDecal(Decal.newDecal(new TextureRegion(playerTexture), true));
+		playerDecal.setColor(1.0f, 1.0f, 1.0f, 0.5f);
+		playerDecal.setWidth(256.0f);
+		playerDecal.setHeight(256.0f);
+//		playerDecal.addAction(forever(rotateBy3D(180.0f, 0.0f, 0.0f, 1.0f)));
+
+		DecalActor playerDecal2 = new DecalActor();
+		playerDecal2.setDecal(Decal.newDecal(new TextureRegion(playerTexture), true));
+		playerDecal2.setOrigin(0.0f, 0.0f, 20.0f);
+		playerDecal2.setColor(1.0f, 1.0f, 1.0f, 0.5f);
+		playerDecal2.setWidth(192.0f);
+		playerDecal2.setHeight(192.0f);
+//		playerDecal2.setRotationY(-45.0f);
+
+		playerActor.setPosition(0.0f, -200.0f);
+		playerActor.addActor(playerDecal);
+		playerActor.addActor(playerDecal2);
 
 		playerEntity.setActor(playerActor);
 		playerEntity.addComponent(playerComponent);
