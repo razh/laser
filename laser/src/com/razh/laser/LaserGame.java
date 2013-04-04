@@ -97,7 +97,7 @@ public class LaserGame extends Game {
 //		Gdx.gl20.glCullFace(GL20.GL_BACK);
 
 		// Depth testing.
-		Gdx.gl.glDepthFunc(GL20.GL_LESS);
+		Gdx.gl.glDepthFunc(GL20.GL_ALWAYS);
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
 		mSpriteBatch = new SpriteBatch();

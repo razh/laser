@@ -22,10 +22,6 @@ import com.razh.laser.components.MissilePathComponent;
 import com.razh.laser.components.PlayerComponent;
 import com.razh.laser.sprites.SpriteActor;
 
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-import static com.razh.laser.Actor3D.*;
-
 public class EntityFactory {
 	public static Entity createEmitter() {
 		MeshActor actor = new MeshActor();
@@ -155,11 +151,11 @@ public class EntityFactory {
 		laserComponent.getBeamWidth().set(-10.0f, 10.0f);
 		laserComponent.setBeamLength(3000.0f);
 
-		laserComponent.getSegmentWidth().set(10.0f, 30.0f);
+		laserComponent.getSegmentWidth().set(20.0f, 30.0f);
 		laserComponent.getSegmentLength().set(700.0f, 1500.0f);
 		laserComponent.getSegmentVelocity().set(6000.0f, 10000.0f);
 
-		laserComponent.setLayerCount(30);
+		laserComponent.setLayerCount(20);
 
 		Texture playerTexture = new Texture("data/player.png");
 		ActorContainer playerActor = new TransformActorContainer();
@@ -173,7 +169,7 @@ public class EntityFactory {
 
 		DecalActor playerDecal2 = new DecalActor();
 		playerDecal2.setDecal(Decal.newDecal(new TextureRegion(playerTexture), true));
-		playerDecal2.setOrigin(0.0f, 0.0f, 20.0f);
+		playerDecal2.setOrigin(-16.0f, 0.0f, 20.0f);
 		playerDecal2.setColor(1.0f, 1.0f, 1.0f, 0.5f);
 		playerDecal2.setWidth(192.0f);
 		playerDecal2.setHeight(192.0f);

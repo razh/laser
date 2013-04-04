@@ -101,8 +101,8 @@ public class ShaderStage extends Stage {
 		time += 0.01f;
 		Camera camera = getCamera();
 		camera.position.x = (float) (200.0f * Math.cos(time));
-		camera.position.y = (float) (200.0f * Math.sin(time)) - 200.0f;
-		camera.position.z = (float) (200.0f * Math.abs(Math.cos(time))) + 400.0f;
+		camera.position.y = (float) (100.0f * Math.sin(time)) - 500.0f;
+		camera.position.z = (float) (200.0f * Math.abs(Math.cos(time))) + 150.0f;
 		camera.lookAt(0, 0, 0);
 
 		super.act(delta);
