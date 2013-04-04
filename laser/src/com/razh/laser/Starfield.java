@@ -50,6 +50,8 @@ public class Starfield extends ActorContainer {
 			actor.setDecal(Decal.newDecal(mStars[MathUtils.random(mStars.length)]));
 			actor.setWidth(mStarWidth.random());
 			actor.setHeight(mStarHeight.random());
+
+			addActor(actor);
 		}
 	}
 

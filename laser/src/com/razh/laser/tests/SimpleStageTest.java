@@ -369,6 +369,7 @@ public class SimpleStageTest extends StageTest {
 		decalComponent.setOrigin(0.0f, 200.0f, 0.0f);
 		decalComponent.setWidth(200.0f);
 		decalComponent.setHeight(200.0f);
+		decalComponent.setBillboard(true);
 
 		DecalActor decalComponent2 = new DecalActor();
 		decalComponent2.setDecal(Decal.newDecal(new TextureRegion(texture2), true));

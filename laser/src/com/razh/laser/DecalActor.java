@@ -1,5 +1,6 @@
 package com.razh.laser;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
@@ -10,6 +11,7 @@ public class DecalActor extends Actor3D {
 	private static final Vector3 mTempVector = new Vector3();
 
 	private Decal mDecal;
+	private boolean mBillboard;
 
 	@Override
 	public void act(float delta) {
@@ -18,10 +20,15 @@ public class DecalActor extends Actor3D {
 		Color color = getColor();
 		mDecal.setColor(color.r, color.g, color.b, color.a);
 
-		mDecal.getRotation().idt();
-		mDecal.rotateX(getRotationX());
-		mDecal.rotateY(getRotationY());
-		mDecal.rotateZ(getRotation() + getRotationZ());
+		if (mBillboard) {
+			Camera camera = getStage().getCamera();
+			mDecal.lookAt(camera.position, camera.up);
+		} else {
+			mDecal.getRotation().idt();
+			mDecal.rotateX(getRotationX());
+			mDecal.rotateY(getRotationY());
+			mDecal.rotateZ(getRotation() + getRotationZ());
+		}
 
 		// Set tempVector to origin.
 		mTempVector.set(getOriginX(), getOriginY(), getOriginZ());
@@ -46,5 +53,13 @@ public class DecalActor extends Actor3D {
 
 	public void setDecal(Decal decal) {
 		mDecal = decal;
+	}
+
+	public boolean isBillboard() {
+		return mBillboard;
+	}
+
+	public void setBillboard(boolean billboard) {
+		mBillboard = billboard;
 	}
 }
