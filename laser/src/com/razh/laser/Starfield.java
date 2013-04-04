@@ -1,8 +1,27 @@
+package com.razh.laser;
+
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.SnapshotArray;
+import com.razh.laser.math.Range;
+
 public class Starfield extends ActorContainer {
 
+	private TextureRegion[] mStars;
 	private int mStarCount;
 
+	private final Range mStarWidth;
+	private final Range mStarHeight;
+	private final Range mStarAlpha;
+
+	// Do we want to have star movement?
+
 	public Starfield(int starCount) {
+		mStarWidth = new Range();
+		mStarHeight = new Range();
+		mStarAlpha = new Range();
 	}
 
 	public int getStarCount() {
@@ -10,17 +29,7 @@ public class Starfield extends ActorContainer {
 	}
 
 	public void setStarCount(int starCount) {
-		// Remove unwanted actors.
-		if (mStarCount > starCount) {
-			int count = mStarCount - starCount;
-			Actor removedActor;
-			while (count > 0) {
-				removedActor = getActors().removeIndex(count + starCount - 1);
-				removedActor.remove();
-
-				count--;
-			}
-		}
+		trim(starCount);
 
 		mStarCount = starCount;
 		// Add any necessary actors.
@@ -33,9 +42,26 @@ public class Starfield extends ActorContainer {
 		SnapshotArray<Actor> actors = getActors();
 		int size = actors.size;
 
-		SpriteActor actor;
+		DecalActor actor;
 		for (int i = size; i < mStarCount; i++) {
-			actor = new SpriteActor();
+			actor = new DecalActor();
+
+			// Set random sprite.
+			actor.setDecal(Decal.newDecal(mStars[MathUtils.random(mStars.length)]));
+			actor.setWidth(mStarWidth.random());
+			actor.setHeight(mStarHeight.random());
 		}
+	}
+
+	public Range getStarWidth() {
+		return mStarWidth;
+	}
+
+	public Range getStarHeight() {
+		return mStarHeight;
+	}
+
+	public Range getStarAlpha() {
+		return mStarAlpha;
 	}
 }

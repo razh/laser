@@ -42,4 +42,18 @@ public class ActorContainer extends EntityActor {
 
 		return true;
 	}
+
+	public void trim(int newCount) {
+		// Remove unwanted actors.
+		if (getActors().size > newCount) {
+			int count = getActors().size - newCount;
+			Actor removedActor;
+			while (count > 0) {
+				removedActor = getActors().removeIndex(count + newCount - 1);
+				removedActor.remove();
+
+				count--;
+			}
+		}
+	}
 }

@@ -204,6 +204,8 @@ public class MissilePathComponent extends Component {
 	 * @param segmentCount
 	 */
 	public void setSegmentCount(int segmentCount) {
+		mPathActors.trim(segmentCount);
+
 		mSegmentCount = segmentCount;
 		mPathActors.getActors().ensureCapacity(mSegmentCount);
 		allocatePathActors();
