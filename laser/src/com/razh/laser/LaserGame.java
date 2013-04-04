@@ -22,9 +22,9 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
-import com.razh.laser.images.DistanceField;
 import com.razh.laser.screens.BasicScreen;
 import com.razh.laser.screens.GameScreen;
+import com.razh.laser.textures.DistanceField;
 
 public class LaserGame extends Game {
 

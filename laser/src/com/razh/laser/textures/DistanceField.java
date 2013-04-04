@@ -1,4 +1,4 @@
-package com.razh.laser.images;
+package com.razh.laser.textures;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;

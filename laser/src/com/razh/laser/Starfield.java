@@ -9,19 +9,30 @@ import com.razh.laser.math.Range;
 
 public class Starfield extends ActorContainer {
 
-	private TextureRegion[] mStars;
+	private TextureRegion[] mStarTextures;
 	private int mStarCount;
 
 	private final Range mStarWidth;
 	private final Range mStarHeight;
 	private final Range mStarAlpha;
 
+	private final Range mStarPositionX;
+	private final Range mStarPositionY;
+	private final Range mStarPositionZ;
+
 	// Do we want to have star movement?
 
-	public Starfield(int starCount) {
+	public Starfield(TextureRegion[] starTextures, int starCount) {
 		mStarWidth = new Range();
 		mStarHeight = new Range();
 		mStarAlpha = new Range();
+
+		mStarPositionX = new Range();
+		mStarPositionY = new Range();
+		mStarPositionZ = new Range();
+
+		mStarTextures = starTextures;
+		setStarCount(starCount);
 	}
 
 	public int getStarCount() {
@@ -47,9 +58,15 @@ public class Starfield extends ActorContainer {
 			actor = new DecalActor();
 
 			// Set random sprite.
-			actor.setDecal(Decal.newDecal(mStars[MathUtils.random(mStars.length)]));
+			actor.setDecal(Decal.newDecal(mStarTextures[MathUtils.random(mStarTextures.length)]));
 			actor.setWidth(mStarWidth.random());
 			actor.setHeight(mStarHeight.random());
+			actor.setPosition(mStarPositionX.random(),
+			                  mStarPositionY.random(),
+			                  mStarPositionZ.random());
+			actor.setRotation(MathUtils.random(360.0f),
+			                  MathUtils.random(360.0f),
+			                  MathUtils.random(360.0f));
 
 			addActor(actor);
 		}
@@ -65,5 +82,17 @@ public class Starfield extends ActorContainer {
 
 	public Range getStarAlpha() {
 		return mStarAlpha;
+	}
+
+	public Range getStarPositionX() {
+		return mStarPositionX;
+	}
+
+	public Range getStarPositionY() {
+		return mStarPositionY;
+	}
+
+	public Range getStarPositionZ() {
+		return mStarPositionZ;
 	}
 }

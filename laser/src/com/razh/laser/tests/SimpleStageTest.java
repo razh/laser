@@ -24,6 +24,7 @@ import com.razh.laser.MeshActor;
 import com.razh.laser.Shader;
 import com.razh.laser.ShaderGroup;
 import com.razh.laser.ShaderStage;
+import com.razh.laser.Starfield;
 import com.razh.laser.TransformActorContainer;
 import com.razh.laser.components.LaserComponent;
 import com.razh.laser.components.MissileComponent;
@@ -423,5 +424,8 @@ public class SimpleStageTest extends StageTest {
 
 		LaserComponent laserComponent = (LaserComponent) player.getComponentOfType(LaserComponent.class);
 		stage.addActorContainer(laserComponent.getLaserActors());
+
+		// Starfield.
+		Starfield starField = new Starfield();
 	}
 }
