@@ -73,9 +73,7 @@ public class ShaderStage extends Stage {
 	@Override
 	public void draw() {
 		// Draw decals with negative z-coordinate.
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		mDecalGroup.drawBehind(mDecalBatch);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
 		// Draw meshes.
 		Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -90,9 +88,7 @@ public class ShaderStage extends Stage {
 		super.draw();
 
 		// Draw decals with positive z-coordinate.
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		mDecalGroup.drawAfter(mDecalBatch);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 	}
 
 	public float time = 0.0f;
@@ -100,9 +96,9 @@ public class ShaderStage extends Stage {
 	public void act(float delta) {
 		time += 0.01f;
 		Camera camera = getCamera();
-		camera.position.x = (float) (200.0f * Math.cos(time));
-		camera.position.y = (float) (100.0f * Math.sin(time)) - 500.0f;
-		camera.position.z = (float) (200.0f * Math.abs(Math.cos(time))) + 150.0f;
+		camera.position.x = (float) (50.0f * Math.cos(time));
+		camera.position.y = (float) (50.0f * Math.sin(time)) - 50.0f;
+		camera.position.z = (float) (200.0f * Math.abs(Math.cos(time))) + 250.0f;
 		camera.lookAt(0, 0, 0);
 
 		super.act(delta);

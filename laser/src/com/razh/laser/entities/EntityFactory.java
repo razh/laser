@@ -175,7 +175,6 @@ public class EntityFactory {
 		playerDecal2.setHeight(192.0f);
 //		playerDecal2.setRotationY(-45.0f);
 
-		playerActor.setPosition(0.0f, -200.0f);
 		playerActor.addActor(playerDecal);
 		playerActor.addActor(playerDecal2);
 
