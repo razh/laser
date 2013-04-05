@@ -65,9 +65,6 @@ public class Starfield extends ActorContainer {
 			actor.setPosition(mStarPositionX.random(),
 			                  mStarPositionY.random(),
 			                  mStarPositionZ.random());
-			actor.setRotation(MathUtils.random(360.0f),
-			                  MathUtils.random(360.0f),
-			                  MathUtils.random(360.0f));
 		}
 
 		actorArray.end();

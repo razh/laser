@@ -35,9 +35,12 @@ public class PlayerComponent extends PhysicsComponent {
 
 	public void turnLeft(boolean turnLeft) {
 		mTurningLeft = turnLeft;
+		// TODO: Probably a better way to do this.
+		mTurningRight = !turnLeft;
 	}
 
 	public void turnRight(boolean turnRight) {
 		mTurningRight = turnRight;
+		mTurningLeft = !turnRight;
 	}
 }

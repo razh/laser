@@ -430,12 +430,12 @@ public class SimpleStageTest extends StageTest {
 		Texture star = new Texture("data/star.png");
 		TextureRegion[] region = new TextureRegion[1];
 		region[0] = new TextureRegion(star);
-		Starfield starField = new Starfield(region, 30);
+		Starfield starField = new Starfield(region, 100);
 		starField.getStarAlpha().set(0.25f, 1.0f);
 		starField.getStarSize().set(1.0f, 24.0f);
-		starField.getStarPositionX().set(-halfWidth, halfWidth);
-		starField.getStarPositionY().set(-halfHeight, halfHeight);
-		starField.getStarPositionZ().set(-300.0f, -1000.0f);
+		starField.getStarPositionX().set(-5 * halfWidth, 5 * halfWidth);
+		starField.getStarPositionY().set(-5 * halfHeight, 5 * halfHeight);
+		starField.getStarPositionZ().set(-750.0f, -1500.0f);
 		starField.randomize();
 
 		stage.addActorContainer(starField);
