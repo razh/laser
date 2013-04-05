@@ -37,6 +37,7 @@ import com.razh.laser.sprites.DashedRingSpriteActor;
 import com.razh.laser.sprites.ProceduralSpriteActor;
 import com.razh.laser.sprites.SpriteActor;
 import com.razh.laser.sprites.SpriteActor.Origin;
+import com.razh.laser.textures.TextureUtils;
 
 public class SimpleStageTest extends StageTest {
 
@@ -311,6 +312,7 @@ public class SimpleStageTest extends StageTest {
 		decal4.setHeight(200.0f);
 		decal4.setOrigin(50.0f, 0.0f, 5.0f);
 		decal4.setPosition(-0.5f * halfWidth, -0.5f * halfHeight, 100.0f);
+		decal4.setBillboard(true);
 
 		stage.addActor(decal4);
 
@@ -370,7 +372,6 @@ public class SimpleStageTest extends StageTest {
 		decalComponent.setOrigin(0.0f, 200.0f, 0.0f);
 		decalComponent.setWidth(200.0f);
 		decalComponent.setHeight(200.0f);
-		decalComponent.setBillboard(true);
 
 		DecalActor decalComponent2 = new DecalActor();
 		decalComponent2.setDecal(Decal.newDecal(new TextureRegion(texture2), true));
@@ -426,6 +427,17 @@ public class SimpleStageTest extends StageTest {
 		stage.addActorContainer(laserComponent.getLaserActors());
 
 		// Starfield.
-		Starfield starField = new Starfield();
+		Texture star = new Texture("data/star.png");
+		TextureRegion[] region = new TextureRegion[1];
+		region[0] = new TextureRegion(star);
+		Starfield starField = new Starfield(region, 30);
+		starField.getStarAlpha().set(0.25f, 1.0f);
+		starField.getStarSize().set(1.0f, 24.0f);
+		starField.getStarPositionX().set(-halfWidth, halfWidth);
+		starField.getStarPositionY().set(-halfHeight, halfHeight);
+		starField.getStarPositionZ().set(-300.0f, -1000.0f);
+		starField.randomize();
+
+		stage.addActorContainer(starField);
 	}
 }

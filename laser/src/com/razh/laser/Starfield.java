@@ -12,8 +12,7 @@ public class Starfield extends ActorContainer {
 	private TextureRegion[] mStarTextures;
 	private int mStarCount;
 
-	private final Range mStarWidth;
-	private final Range mStarHeight;
+	private final Range mStarSize;
 	private final Range mStarAlpha;
 
 	private final Range mStarPositionX;
@@ -23,8 +22,7 @@ public class Starfield extends ActorContainer {
 	// Do we want to have star movement?
 
 	public Starfield(TextureRegion[] starTextures, int starCount) {
-		mStarWidth = new Range();
-		mStarHeight = new Range();
+		mStarSize = new Range();
 		mStarAlpha = new Range();
 
 		mStarPositionX = new Range();
@@ -49,6 +47,32 @@ public class Starfield extends ActorContainer {
 		allocateStarActors();
 	}
 
+	/**
+	 * Randomly positions, resizes, and rotates all actors.
+	 */
+	public void randomize() {
+		SnapshotArray<Actor> actorArray = getActors();
+		Actor[] actors = actorArray.begin();
+
+		DecalActor actor;
+		float size;
+		for (int i = 0, n = actorArray.size; i < n; i++) {
+			actor = (DecalActor) actors[i];
+
+			size = mStarSize.random();
+			actor.setWidth(size);
+			actor.setHeight(size);
+			actor.setPosition(mStarPositionX.random(),
+			                  mStarPositionY.random(),
+			                  mStarPositionZ.random());
+			actor.setRotation(MathUtils.random(360.0f),
+			                  MathUtils.random(360.0f),
+			                  MathUtils.random(360.0f));
+		}
+
+		actorArray.end();
+	}
+
 	public void allocateStarActors() {
 		SnapshotArray<Actor> actors = getActors();
 		int size = actors.size;
@@ -58,26 +82,15 @@ public class Starfield extends ActorContainer {
 			actor = new DecalActor();
 
 			// Set random sprite.
-			actor.setDecal(Decal.newDecal(mStarTextures[MathUtils.random(mStarTextures.length)]));
-			actor.setWidth(mStarWidth.random());
-			actor.setHeight(mStarHeight.random());
-			actor.setPosition(mStarPositionX.random(),
-			                  mStarPositionY.random(),
-			                  mStarPositionZ.random());
-			actor.setRotation(MathUtils.random(360.0f),
-			                  MathUtils.random(360.0f),
-			                  MathUtils.random(360.0f));
+			actor.setDecal(Decal.newDecal(mStarTextures[MathUtils.random(mStarTextures.length - 1)], true));
+			actor.setBillboard(true);
 
 			addActor(actor);
 		}
 	}
 
-	public Range getStarWidth() {
-		return mStarWidth;
-	}
-
-	public Range getStarHeight() {
-		return mStarHeight;
+	public Range getStarSize() {
+		return mStarSize;
 	}
 
 	public Range getStarAlpha() {

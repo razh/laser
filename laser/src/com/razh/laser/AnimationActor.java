@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.razh.laser.sprites.SpriteActor;
+import com.razh.laser.textures.TextureUtils;
 
 public class AnimationActor extends SpriteActor {
 
@@ -51,31 +52,12 @@ public class AnimationActor extends SpriteActor {
 	 */
 	public static AnimationActor create(Texture sheet, int frameCount, float frameTime, int rows, int columns) {
 		TextureRegion[][] regions = TextureRegion.split(sheet, sheet.getWidth() / columns, sheet.getHeight() / rows);
-		TextureRegion[] frames = addFrames(regions, frameCount, rows, columns);
+		TextureRegion[] frames = TextureUtils.flatten(regions, frameCount, rows, columns);
 
 		AnimationActor actor = new AnimationActor();
 		actor.setSprite(new Sprite());
 		actor.setAnimation(new Animation(frameTime, frames));
 
 		return actor;
-	}
-
-	private static TextureRegion[] addFrames(TextureRegion[][] regions, int frameCount, int rows, int columns) {
-		TextureRegion[] frames = new TextureRegion[frameCount];
-
-		int index = 0;
-		int i, j;
-		for (i = 0; i < rows; i++) {
-			for (j = 0; j < columns; j++) {
-				frames[index++] = regions[i][j];
-
-				// Stop when we've added all the frames we want.
-				if (index >= frameCount) {
-					return frames;
-				}
-			}
-		}
-
-		return frames;
 	}
 }
